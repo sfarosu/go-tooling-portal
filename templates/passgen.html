@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="icon" href="../assets/custom/img/tools.svg">
+    <title>RandomPasswordGenerator</title>
+    <!-- Bootstrap core CSS -->
+    <link href="../assets/bootstrap4/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="../assets/custom/css/jumbotron.css" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/htpasswd">HTPasswordGenerator</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/passgen">RandomPasswordGenerator</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/ssh">SSHKeyGenerator</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <main role="main">
+      <div class="jumbotron" style="padding: 1.5rem 1.5rem;">
+        <div class="container">
+          <h1 class="display-3">RandomPasswordGenerator</h1>
+          <p>Use this tool to generate a random password</p>
+        </div>
+      </div>
+
+      <div class="container">
+        <form name="passgen" onsubmit="return validatePassgenSelection()" action="/passgen-process" method="POST" enctype="multipart/form-data">
+          <h5>Select the characters type and password length:</h5>
+          <p></p>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" checked class="custom-control-input" name="uppercase" id="uppercase" value="checked">
+            <label class="custom-control-label" for="uppercase">Upper case letters (A..Z)</label>
+            <p></p>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" checked class="custom-control-input" name="lowercase" id="lowercase" value="checked">
+            <label class="custom-control-label" for="lowercase">Lower case letters (a..z)</label>
+            <p></p>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" checked class="custom-control-input" name="numbers" id="numbers" value="checked">
+            <label class="custom-control-label" for="numbers">Numbers (0..9)</label>
+            <p></p>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" name="symbols" id="symbols" value="checked">
+            <label class="custom-control-label" for="symbols">Special characters (#..?)</label>
+            <p></p>
+          </div>
+          <div class="form-group">
+            <label for="user">Password length: </label>
+            <input style="max-width: 80px;" type="number" class="form-control" id="number" name="number" value="12">
+            <small class="form-text text-muted">Password must contain between 4 and 64 characters.</small>
+          </div>
+          <p></p>
+          <p></p>
+          <button type="submit" class="btn btn-primary">Create password</button>
+          <hr>
+        </form>
+      </div> <!-- /container -->
+    </main>
+
+    <script src="../assets/custom/js/custom.js" ></script>
+    <script src="../assets/custom/js/jquery-slim.min.js" ></script>
+    <script>window.jQuery || document.write('<script src="../assets/custom/js/jquery-slim.min.js"><\/script>')</script>
+    <script src="../assets/bootstrap4/js/bootstrap.bundle.min.js" ></script>
+  </body>
+
+</html>

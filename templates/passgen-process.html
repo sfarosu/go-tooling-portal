@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="icon" href="../assets/custom/img/tools.svg">
+    <title>RandomPasswordGenerator</title>
+    <!-- Bootstrap core CSS -->
+    <link href="../assets/bootstrap4/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="../assets/custom/css/jumbotron.css" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/htpasswd">HTPasswordGenerator</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/passgen">RandomPasswordGenerator</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/ssh">SSHKeyGenerator</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <main role="main">
+      <div class="jumbotron" style="padding: 1.5rem 1.5rem;">
+        <div class="container">
+          <h1 class="display-3">RandomPasswordGenerator</h1>
+          <p>Here are the details:</p>
+        </div>
+      </div>
+
+      <div class="container">
+        <form name="passgen">
+          <h5>You have selected:</h5>
+          <p></p>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" disabled {{ .Uppercase}} class="custom-control-input" name="uppercase" id="uppercase">
+            <label class="custom-control-label" for="uppercase">Upper case letters (A..Z)</label>
+            <p></p>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" disabled {{ .Lowercase}} class="custom-control-input" name="lowercase" id="lowercase">
+            <label class="custom-control-label" for="lowercase">Lower case letters (a..z)</label>
+            <p></p>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" disabled {{ .Numbers}} class="custom-control-input" name="numbers" id="numbers">
+            <label class="custom-control-label" for="numbers">Numbers (0..9)</label>
+            <p></p>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" disabled {{ .Symbols}} class="custom-control-input" name="symbols" id="symbols">
+            <label class="custom-control-label" for="symbols">Special characters (#..?)</label>
+            <p></p>
+          </div>
+          <div class="form-group">
+            <label for="user">Password length: </label>
+            <input style="max-width: 80px;" type="number" readonly class="form-control" id="number" name="number" value="{{ .Length}}">
+          </div>
+          <hr>
+          <div class="form-group">
+            <label for="result">Your random password is:</label>
+            <input style="max-width: 620px" type="text" name="result" class="form-control" id="result" readonly value="{{ .Result}}">
+          </div>
+          <button type="button" class="btn btn-success" onclick="copyToClipboard('result')">Copy to clipboard</button>
+          <button type="button" class="btn btn-primary" onclick="location.href='/passgen'">New random password</button>
+          <p></p>
+        </form>
+        <hr>
+      </div> <!-- /container -->
+    </main>
+
+    <script src="../assets/custom/js/custom.js" ></script>
+    <script src="../assets/custom/js/jquery-slim.min.js" ></script>
+    <script>window.jQuery || document.write('<script src="../assets/custom/js/jquery-slim.min.js"><\/script>')</script>
+    <script src="../assets/bootstrap4/js/bootstrap.bundle.min.js" ></script>
+  </body>
+
+</html>
