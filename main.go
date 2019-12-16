@@ -7,6 +7,8 @@ import (
 	"os"
 	"strings"
 	"time"
+
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 // BuildVersion for the app
@@ -41,6 +43,8 @@ func main() {
 	fileServerTmp := http.FileServer(http.Dir("./tmp"))
 	http.Handle("/tmp/", http.StripPrefix("/tmp", disableDirListing(fileServerTmp)))
 
+        http.Handle("/metrics", promhttp.Handler())
+
 	http.HandleFunc("/", index)
 	http.HandleFunc("/htpasswd", htpasswd)
 	http.HandleFunc("/htpasswd-process", htpasswdProcess)
@@ -57,8 +61,6 @@ func main() {
 	appPath, _ := os.Getwd()
 	log.Println("Tooling-portal " + BuildVersion + " started on host " + hostname +":8080")
 	log.Println("Application path: " + appPath)
-
-	
 
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {

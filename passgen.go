@@ -7,6 +7,16 @@ import (
 	"time"
 	"strconv"
 	"log"
+
+    "github.com/prometheus/client_golang/prometheus"
+    "github.com/prometheus/client_golang/prometheus/promauto"
+)
+
+var (
+    passGen = promauto.NewCounter(prometheus.CounterOpts{
+        Name: "passwords_generated_total",
+        Help: "The total number of generated passwords",
+    })
 )
 
 func passgen(w http.ResponseWriter, r *http.Request) {
@@ -74,6 +84,8 @@ func passgenProcess(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println(r.URL.String(), r.Method, r.RemoteAddr, r.Proto, r.Header.Get("User-Agent"))
 	tpl.ExecuteTemplate(w, "passgen-process.html", data)
+
+	passGen.Inc()
 }
 
 func randomString(size int, Uppercase bool, Lowercase bool, Numbers bool, Specials bool) (string, error) {
@@ -92,7 +104,7 @@ func randomString(size int, Uppercase bool, Lowercase bool, Numbers bool, Specia
 	
 	optionsActive := 0 /* we use this to count how many choices the user has selected  */
 	
-	/* define the categories/slices and their content */	
+	/* define the categories/slices and their content */
 	var uppercase = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 	var lowercase = []rune("abcdefghijklmnopqrstuvwxyz")
 	var numbers = []rune("0123456789")
@@ -132,7 +144,7 @@ func randomString(size int, Uppercase bool, Lowercase bool, Numbers bool, Specia
 		partialResult = append(partialResult, specials[rand.Intn(len(specials))])
 	}
 	
-	/* finalresult is composed of 2 slices and because append always adds the second slice to the end of the first one we use the last FOR to randomize everything */ 
+	/* finalresult is composed of 2 slices and because append always adds the second slice to the end of the first one we use the last FOR to randomize everything */
 	finalResult := make([]rune, size - optionsActive)
 	for i := range finalResult {
 		finalResult[i] = selectedList[rand.Intn(len(selectedList))]

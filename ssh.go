@@ -8,6 +8,16 @@ import (
 	"os/exec"
 	"log"
 	"time"
+
+    "github.com/prometheus/client_golang/prometheus"
+    "github.com/prometheus/client_golang/prometheus/promauto"
+)
+
+var (
+    sshKeyGen = promauto.NewCounter(prometheus.CounterOpts{
+        Name: "ssh_key_generated_total",
+        Help: "The total number of generated ssh keys",
+    })
 )
 
 func ssh(w http.ResponseWriter, r *http.Request) {
@@ -55,6 +65,8 @@ func sshProcessKeypair(w http.ResponseWriter, r *http.Request) {
 	/* call the keysCleanup() function to delete the keys older than 5 minutes */
 	clean := keysCleanup
 	time.AfterFunc(5 * time.Minute, clean)
+
+	sshKeyGen.Inc()
 }
 
 /* Helper functions */
@@ -86,7 +98,6 @@ func generateKeyPair(email string, pass string, usePass string) (string, string,
 	privateKeyContent, err := ioutil.ReadFile("tmp/id_rsa-"+randomNumber)
 	if err != nil {
 		log.Println(err)
-		
 	}
 	publicKeyContent, err := ioutil.ReadFile("tmp/id_rsa-"+randomNumber+".pub")
 	if err != nil {

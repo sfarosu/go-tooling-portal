@@ -6,6 +6,16 @@ import (
 	"strings"
 	"errors"
 	"log"
+
+    "github.com/prometheus/client_golang/prometheus"
+    "github.com/prometheus/client_golang/prometheus/promauto"
+)
+
+var (
+    htpassGen = promauto.NewCounter(prometheus.CounterOpts{
+        Name: "ht_passwords_generated_total",
+        Help: "The total number of generated htpasswords",
+    })
 )
 
 func htpasswd(w http.ResponseWriter, r *http.Request) {
@@ -44,6 +54,8 @@ func htpasswdProcess(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println(r.URL.String(), r.Method, r.RemoteAddr, r.Proto, r.Header.Get("User-Agent"))
 	tpl.ExecuteTemplate(w, "htpasswd-process.html", data)
+
+	htpassGen.Inc()
 }
 
 func generateHtpass(uname string, pass string, alg string) (string, error) {
