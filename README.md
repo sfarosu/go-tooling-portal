@@ -33,14 +33,14 @@ All the builds and tests on host machine were done using rpm packages (no pip pa
 	- create your go folders `mkdir -p ~/go/{bin,pkg,src} && mkdir -p ~/go/src/github.com/sfarosu`
 	- git clone the repo: `cd ~/go/src/github.com/sfarosu && git clone https://github.com/sfarosu/go-tooling-portal.git && cd go-tooling-portal && git checkout master`
 - Build the app: `cd ~/go/src/github.com/sfarosu/go-tooling-portal && go build ~/go/src/github.com/sfarosu/go-tooling-portal/cmd/go-tooling-portal/`
-- Run the app: `./tooling-portal`
+- Run the app: `./go-tooling-portal`
 - Access it in your browser at: [http://localhost:8080](http://localhost:8080)
 
 ## Build your docker image
 
 - Make sure you have docker and git installed on your machine
 - Git clone the repo: `cd ~ && git clone https://github.com/sfarosu/go-tooling-portal.git && cd ~/go-tooling-portal && git checkout master`
-- Build the image: `cd ~/go-tooling-portal && docker build build/ -t go-tooling-portal`
+- Build the image: `cd ~/go-tooling-portal && docker build -t go-tooling-portal -f build/Dockerfile .`
 - Run the container daemonized : `docker run -d -p 8080:8080 go-tooling-portal`
 - Access it in your browser at: [http://localhost:8080](http://localhost:8080)
 
