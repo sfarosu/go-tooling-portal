@@ -2,7 +2,7 @@
 
 ## What is it?
 
-![Dashboard](./assets/custom/img/preview.gif "Dashboard")
+![Dashboard](web/assets/custom/img/preview.gif "Dashboard")
 
 This portal is a simple/fast webapp that uses golang for backend and provides our users with some tooling for daily tasks:
 
@@ -29,8 +29,10 @@ All the builds and tests on host machine were done using rpm packages (no pip pa
 ## How to run it locally without containers
 
 - Install golang on your local vm (go >= 1.12.4)
-- Git clone the repo: `cd ~ && https://github.com/sfarosu/go-tooling-portal.git && git checkout master`
-- Build the app: `go build`
+	- on linux, export your GOPATH `echo "export GOPATH=$HOME/go" >> ~/.bashrc`
+	- create your go folders `mkdir -p ~/go/{bin,pkg,src} && mkdir -p ~/go/src/github.com/sfarosu`
+	- git clone the repo: `cd ~/go/src/github.com/sfarosu && git clone https://github.com/sfarosu/go-tooling-portal.git && git checkout master`
+- Build the app: `cd ~/go/src/github.com/sfarosu && go build ~/go/src/github.com/sfarosu/go-tooling-portal/cmd/go-tooling-portal/`
 - Run the app: `./tooling-portal`
 - Access it in your browser at: [http://localhost:8080](http://localhost:8080)
 
@@ -38,7 +40,7 @@ All the builds and tests on host machine were done using rpm packages (no pip pa
 
 - Make sure you have docker and git installed on your machine
 - Git clone the repo: `cd ~ && git clone https://github.com/sfarosu/go-tooling-portal.git && git checkout master`
-- Build the image: `docker build . -t go-tooling-portal`
+- Build the image: `docker build /build -t go-tooling-portal`
 - Run the container daemonized : `docker run -d -p 8080:8080 go-tooling-portal`
 - Access it in your browser at: [http://localhost:8080](http://localhost:8080)
 

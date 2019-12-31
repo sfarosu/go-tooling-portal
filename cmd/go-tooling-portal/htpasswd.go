@@ -35,7 +35,7 @@ func htpasswdProcess(w http.ResponseWriter, r *http.Request) {
     pass := r.FormValue("password")
     alg := r.FormValue("algorithm")
 
-    /* call the generateHtpass function */
+    // call the generateHtpass function
     ht, err := generateHtpass(uname, pass, alg)
     if err != nil {
         log.Println(err)
@@ -59,7 +59,7 @@ func htpasswdProcess(w http.ResponseWriter, r *http.Request) {
 }
 
 func generateHtpass(uname string, pass string, alg string) (string, error) {
-    /* error handling for username and password length */
+    // error handling for username and password length
     if uname == "" {
         return "", errors.New("You must specify a username")
     }
@@ -75,4 +75,4 @@ func generateHtpass(uname string, pass string, alg string) (string, error) {
     result := string(uname)+":"+string(htpasswd)
 
     return string(result), nil
-}
+}    

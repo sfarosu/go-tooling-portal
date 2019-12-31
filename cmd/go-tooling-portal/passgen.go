@@ -32,7 +32,7 @@ func passgenProcess(w http.ResponseWriter, r *http.Request) {
         http.Redirect(w, r, "/passgen", http.StatusSeeOther)
     }
 
-    /* Get the checkbox status from the user and convert it to bool before sending it to the randomString() function */
+    // Get the checkbox status from the user and convert it to bool before sending it to the randomString() function
     upper := r.FormValue("uppercase")
     upperBool := false; _ = upperBool
     if len(upper) != 0 {
@@ -59,7 +59,7 @@ func passgenProcess(w http.ResponseWriter, r *http.Request) {
 
     length := r.FormValue("number")
 
-    lengthInt, err := strconv.Atoi(length) /* convert length string to int */
+    lengthInt, err := strconv.Atoi(length) // convert length string to int
     generatedRamdomPassord, err := randomString(lengthInt, upperBool, lowerBool, numbersBool, symbolsBool)
     if err != nil {
         log.Println(err)
@@ -87,7 +87,7 @@ func passgenProcess(w http.ResponseWriter, r *http.Request) {
 }
 
 func randomString(size int, Uppercase bool, Lowercase bool, Numbers bool, Specials bool) (string, error) {
-    /* error handling for the 2 inputs, string size can't be lower than 4 or higher than 64 AND at least one option should be selected */
+    // error handling for the 2 inputs, string size can't be lower than 4 or higher than 64 AND at least one option should be selected
     if size < 4 {
         return "", errors.New("String length must be at least 4 chars long")
     }
@@ -98,17 +98,17 @@ func randomString(size int, Uppercase bool, Lowercase bool, Numbers bool, Specia
         return "", errors.New("At least one of the categories must be chosen")
     }
 
-    rand.Seed(time.Now().UnixNano()) /* used so that the shuffled result is NOT always the same */
+    rand.Seed(time.Now().UnixNano()) // used so that the shuffled result is NOT always the same
 
-    optionsActive := 0 /* we use this to count how many choices the user has selected  */
+    optionsActive := 0 // we use this to count how many choices the user has selected
 
-    /* define the categories/slices and their content */
+    // define the categories/slices and their content
     var uppercase = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
     var lowercase = []rune("abcdefghijklmnopqrstuvwxyz")
     var numbers = []rune("0123456789")
     var specials = []rune(";#$%&'()*+,-.:;<=>?@[]^_`{|}~")
 
-    /* selectedlist contains all the categories/chars types the user selects */
+    // selectedlist contains all the categories/chars types the user selects
     var selectedList = []rune{}
     if Uppercase == true {
         selectedList = append(selectedList, uppercase...)
@@ -127,7 +127,7 @@ func randomString(size int, Uppercase bool, Lowercase bool, Numbers bool, Specia
         optionsActive ++
     }
 
-    /* partialResult makes sure that at least ONE element is added from each category the user selects */
+    // partialResult makes sure that at least ONE element is added from each category the user selects
     var partialResult = []rune{}
     if Uppercase == true {
         partialResult = append(partialResult, uppercase[rand.Intn(len(uppercase))])
@@ -142,14 +142,14 @@ func randomString(size int, Uppercase bool, Lowercase bool, Numbers bool, Specia
         partialResult = append(partialResult, specials[rand.Intn(len(specials))])
     }
 
-    /* finalresult is composed of 2 slices and because append always adds the second slice to the end of the first one we use the last FOR to randomize everything */
+    // finalresult is composed of 2 slices and because append always adds the second slice to the end of the first one we use the last FOR to randomize everything
     finalResult := make([]rune, size - optionsActive)
     for i := range finalResult {
         finalResult[i] = selectedList[rand.Intn(len(selectedList))]
     }
     finalResult = append(finalResult, partialResult ...)
 
-    /* now that the finalresult is complete we shuffle everything */
+    // now that the finalresult is complete we shuffle everything
     for x := len(finalResult) - 1; x > 0; x-- {
         y := rand.Intn(x + 1)
         finalResult[x], finalResult[y] = finalResult[y], finalResult[x]

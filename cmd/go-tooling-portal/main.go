@@ -11,14 +11,14 @@ import (
     "github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-/* BuildVersion for the app */
+// BuildVersion for the app
 const BuildVersion string = "version 1.0"
 
 var tpl *template.Template
 
 func init() {
     tpl = template.Must(template.ParseGlob("web/templates/*html"))
-    log.SetOutput(os.Stdout) /* Change the device for logging to stdout */
+    log.SetOutput(os.Stdout) // Change the device for logging to stdout
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
@@ -43,6 +43,9 @@ func main() {
     fileServerTmp := http.FileServer(http.Dir("web/tmp"))
     http.Handle("/tmp/", http.StripPrefix("/tmp", disableDirListing(fileServerTmp)))
 
+    fileServerTemplates := http.FileServer(http.Dir("web/templates"))
+    http.Handle("/templates/", http.StripPrefix("/templates", disableDirListing(fileServerTemplates)))
+
     http.Handle("/metrics", promhttp.Handler())
 
     http.HandleFunc("/", index)
@@ -53,9 +56,9 @@ func main() {
     http.HandleFunc("/ssh", ssh)
     http.HandleFunc("/ssh-process-keygen", sshProcessKeypair)
 
-    /* call the keysCleanup() function to purge any keys from disc */
+    // call the keysCleanup() function to purge any keys from disc
     clean := keysCleanup
-    time.AfterFunc(3 * time.Second, clean) /* call AfterFunc 3 seconds after app startup */
+    time.AfterFunc(3 * time.Second, clean) // call AfterFunc 3 seconds after app startup
 
     hostname, _ := os.Hostname()
     appPath, _ := os.Getwd()
