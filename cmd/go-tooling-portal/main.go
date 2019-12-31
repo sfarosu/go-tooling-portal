@@ -17,7 +17,7 @@ const BuildVersion string = "version 1.0"
 var tpl *template.Template
 
 func init() {
-    tpl = template.Must(template.ParseGlob("../../web/templates/*html"))
+    tpl = template.Must(template.ParseGlob("web/templates/*html"))
     log.SetOutput(os.Stdout) /* Change the device for logging to stdout */
 }
 
@@ -37,10 +37,10 @@ func index(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-    fileServerAssets := http.FileServer(http.Dir("../../web/assets"))
+    fileServerAssets := http.FileServer(http.Dir("web/assets"))
     http.Handle("/assets/", http.StripPrefix("/assets", disableDirListing(fileServerAssets)))
 
-    fileServerTmp := http.FileServer(http.Dir("../../web/tmp"))
+    fileServerTmp := http.FileServer(http.Dir("web/tmp"))
     http.Handle("/tmp/", http.StripPrefix("/tmp", disableDirListing(fileServerTmp)))
 
     http.Handle("/metrics", promhttp.Handler())
