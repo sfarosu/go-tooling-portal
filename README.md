@@ -37,7 +37,7 @@ All the builds and tests on host machine were done using rpm packages (no pip pa
 ## Build your docker image
 
 - Make sure you have docker and git installed on your machine
-- Git clone the repo: `cd ~ && https://github.com/sfarosu/go-tooling-portal.git && git checkout master`
+- Git clone the repo: `cd ~ && git clone https://github.com/sfarosu/go-tooling-portal.git && git checkout master`
 - Build the image: `docker build . -t go-tooling-portal`
 - Run the container daemonized : `docker run -d -p 8080:8080 go-tooling-portal`
 - Access it in your browser at: [http://localhost:8080](http://localhost:8080)

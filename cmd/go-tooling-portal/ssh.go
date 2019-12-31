@@ -89,17 +89,17 @@ func generateKeyPair(email string, pass string, usePass string) (string, string,
     }
 
     /* generate the key pair and place it under tmp/ with the format id_rsa-randomnumber / id_rsa-samerandomnumber.pub */
-    keygenCmd := exec.Command("ssh-keygen", "-t", "rsa", "-b", "4096", "-C", email, "-N", pass, "-f", "tmp/id_rsa-"+randomNumber, "-q")
+    keygenCmd := exec.Command("ssh-keygen", "-t", "rsa", "-b", "4096", "-C", email, "-N", pass, "-f", "../../web/tmp/id_rsa-"+randomNumber, "-q")
     outputKeygenCmd, err := keygenCmd.CombinedOutput()
     if err != nil {
         log.Println(fmt.Sprint(err) + ": " + string(outputKeygenCmd))
     }
 
-    privateKeyContent, err := ioutil.ReadFile("tmp/id_rsa-"+randomNumber)
+    privateKeyContent, err := ioutil.ReadFile("../../web/tmp/id_rsa-"+randomNumber)
     if err != nil {
         log.Println(err)
     }
-    publicKeyContent, err := ioutil.ReadFile("tmp/id_rsa-"+randomNumber+".pub")
+    publicKeyContent, err := ioutil.ReadFile("../../web/tmp/id_rsa-"+randomNumber+".pub")
     if err != nil {
         log.Println(err)
     }
@@ -107,15 +107,16 @@ func generateKeyPair(email string, pass string, usePass string) (string, string,
     privateKeyFileName := "id_rsa-"+randomNumber
     publicKeyFileName := "id_rsa-"+randomNumber+".pub"
 
-    return string(privateKeyContent), string(publicKeyContent), string(privateKeyFileName), string(publicKeyFileName), nil      
+    return string(privateKeyContent), string(publicKeyContent), string(privateKeyFileName), string(publicKeyFileName), nil
 }
 
 func keysCleanup() {
     /* cleanup the tmp folder; key age deletion is defined in the time.Afterfunc function */
-    cleanupCmd := exec.Command("find", "tmp/", "-type", "f", "-name", "id_rsa*", "-mmin", "+0", "-exec", "rm", "{}", ";")
+    cleanupCmd := exec.Command("find", "../../web/tmp/", "-type", "f", "-name", "id_rsa*", "-mmin", "+0", "-exec", "rm", "{}", ";")
     outputCleanupCmd, err := cleanupCmd.CombinedOutput()
     if err != nil {
         log.Println(fmt.Sprint(err) + ": " + string(outputCleanupCmd))
+    } else {
+        log.Println("SSH keys stored locally have been purged !")
     }
-    log.Println("SSH keys stored locally have been purged !")
 }
