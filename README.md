@@ -46,18 +46,19 @@ ___
 - Run the container daemonized : `docker run -d -p 8080:8080 go-tooling-portal`
 - Access it in your browser at: [http://localhost:8080](http://localhost:8080)
 
+### Docker run - use the prebuilt image from docker hub
+
+- `docker run -d -p 8080:8080 docker.io/sfarosu/go-tooling-portal`
+- Access it in your browser at: [http://localhost:8080](http://localhost:8080)
+
 ### Docker compose
 
 - Run it with: `docker-compose -f deployments/docker-compose/docker-compose.yaml up`
 - Stop it with: `docker-compose -f deployments/docker-compose/docker-compose.yaml down`
+- Access it in your browser at: [http://localhost:8080](http://localhost:8080)
 
 ### Kubernetes
 
 - create the deployment: `kubectl create -f deployments/kubernetes/deployment.yaml`
 - create the svc: `kubectl create -f deployments/kubernetes/svc.yaml`
 - create your kubernetes/ingress or openshift/route
-
-### Use the prebuilt image from docker hub
-
-- `docker run -d -p 8080:8080 docker.io/sfarosu/go-tooling-portal`
-___
