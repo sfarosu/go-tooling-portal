@@ -1,5 +1,5 @@
-#FROM golang:1.13-stretch
-FROM i386/golang:1.13-stretch
+FROM golang:1.13-stretch
+#FROM i386/golang:1.13-stretch
 
 # Multi-stage builds are not supported on docker version 1.12/1.13 - thus in openshift 3.X
 
@@ -7,11 +7,7 @@ WORKDIR /go/src/go-tooling-portal
 
 COPY . /go/src/go-tooling-portal/
 
-#RUN CGO_ENABLED=0 go build /go/src/go-tooling-portal/cmd/go-tooling-portal -a -installsuffix nocgo -o /go/bin/go-tooling-portal/ . && \
-#    mkdir /app && \
-#    cp /go/bin/go-tooling-portal /app/go-tooling-portal
-
-RUN go build -o /go/bin/go-tooling-portal ./cmd/go-tooling-portal && \
+RUN CGO_ENABLED=0 go build -a -installsuffix nocgo -o /go/bin/go-tooling-portal ./cmd/go-tooling-portal && \
     rm -Rf /go/src/go-tooling-portal && \
     mkdir /app && \
     mv /go/bin/go-tooling-portal /app/go-tooling-portal
@@ -33,7 +29,3 @@ ENTRYPOINT [ "/app/build/uid_entrypoint.sh" ]
 USER 10001
 
 CMD [ "./go-tooling-portal" ]
-
-
-
-
