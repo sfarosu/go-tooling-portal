@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: go-tooling-portal
+  name: go-tooling-portal
+spec:
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: go-tooling-portal
+  sessionAffinity: None
+  type: ClusterIP

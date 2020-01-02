@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-tooling-portal
+  labels:
+    app: go-tooling-portal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: go-tooling-portal
+  template:
+    metadata:
+      labels:
+        app: go-tooling-portal
+    spec:
+      containers:
+      - name: go-tooling-portal
+        image: docker.io/sfarosu/go-tooling-portal:latest
+        ports:
+        - containerPort: 8080
