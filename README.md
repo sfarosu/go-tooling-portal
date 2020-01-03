@@ -30,8 +30,8 @@ ___
 
 - Install golang on your local vm (go >= 1.12.4)
 	- on linux, export your GOPATH `echo "export GOPATH=$HOME/go" >> ~/.bashrc`
-	- create your go folders `mkdir -p ~/go/{bin,pkg,src} && mkdir -p ~/go/src/github.com/sfarosu`
-	- git clone the repo: `cd ~/go/src/github.com/sfarosu && git clone https://github.com/sfarosu/go-tooling-portal.git && cd go-tooling-portal && git checkout master`
+	- create your go folders `mkdir -p ~/go/{bin,pkg,src}`
+- Get the app: `go get github.com/sfarosu/go-tooling-portal/...`   (...) will pull both the app module and it's dependencies (prometheus)
 - Build the app: `cd ~/go/src/github.com/sfarosu/go-tooling-portal && go build ~/go/src/github.com/sfarosu/go-tooling-portal/cmd/go-tooling-portal/`
 - Run the app: `./go-tooling-portal`
 - Access it in your browser at: [http://localhost:8080](http://localhost:8080)
