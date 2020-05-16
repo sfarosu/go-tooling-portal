@@ -20,7 +20,7 @@ RUN rm -Rf /app/.git* /app/cmd /app/deployments /app/go.* && \
     chown -R 10001:root /app && \
     chgrp -R 0 /app && \
     chmod -R g=u /app /etc/passwd && \
-    chmod o+x /app/build/uid_entrypoint.sh
+    chmod a+x-w /app/build/uid_entrypoint.sh
     
 EXPOSE 8080
 
@@ -29,3 +29,4 @@ ENTRYPOINT [ "/app/build/uid_entrypoint.sh" ]
 USER 10001
 
 CMD [ "./go-tooling-portal" ]
+
