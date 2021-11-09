@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: go-tooling-portal
-        image: docker.io/sfarosu/go-tooling-portal:latest
+        image: sfarosu/go-tooling-portal:latest
         ports:
         - containerPort: 8080
