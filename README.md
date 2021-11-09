@@ -4,11 +4,12 @@
 
 ![Dashboard](web/assets/custom/img/preview.gif "Dashboard")
 
-This portal is a simple/fast webapp that uses golang for backend and provides our users with some tooling for daily tasks:
+This portal is a simple and fast webapp that provides users with some self-hosted tooling to avoid unsecure internet generators:
 
-- **HTPasswordGenerator**: this tool can generate an openshift compatible htpassword and more
-- **RandomPasswordGenerator**: this tool can generate a variable length, multicase, multisymbol password
+- **HTPasswordGenerator**: this tool can generate htpasswords (MD5, MD-5 Apache variant and crypt)
+- **RandomPasswordGenerator**: this tool can generate a variable length, multi-case, multi-symbol password
 - **SSHKeyGenerator**: this tool can generate ssh/rsa keys with or without passwords
+- **JsonPrettifier**: this tool can prettify/indent a complicated Json
 ___
 ## General information
 
@@ -20,21 +21,22 @@ ___
 ___
 ## Build/prerequisites details
 
-All the builds and tests on host machine were done using rpm packages (no pip packages) :
+All the builds and tests on host machine were done using :
 
-- CentOS Linux release 7.6.1810 (Core)
-- docker-client-1.13.1-94.gitb2f74b2.el7.centos.x86_64
-- go version go1.12.4 linux/amd64
+- Pop!_OS 21.04
+- docker 20.10.7
+- go version go1.16.2 linux/amd64
 ___
 ## How to run it locally without containers
 
-- Install golang on your local vm (go >= 1.12.4)
-	- on linux, export your GOPATH `echo "export GOPATH=$HOME/go" >> ~/.bashrc`
-	- create your go folders `mkdir -p ~/go/{bin,pkg,src}`
-- Get the app: `go get github.com/sfarosu/go-tooling-portal/...`   (...) will pull both the app module and it's dependencies (prometheus)
-- Build the app: `cd ~/go/src/github.com/sfarosu/go-tooling-portal && go build ~/go/src/github.com/sfarosu/go-tooling-portal/cmd/go-tooling-portal/`
+- Install golang on your local vm (go >= 1.16.2)
+    - on linux, export your GOPATH `echo "export GOPATH=$HOME/go" >> ~/.bashrc`
+    - create your go folders `mkdir -p ~/go/{bin,pkg,src}`
+- Get the app: `cd ~/go/src/ && git clone https://github.com/sfarosu/go-tooling-portal.git`
+- Build the app: `cd ~/go/src/github.com/sfarosu/go-tooling-portal && go build .`
 - Run the app: `./go-tooling-portal`
 - Access it in your browser at: [http://localhost:8080](http://localhost:8080)
+  - metrics available at: [http://localhost:8080/metrics](http://localhost:8080/metrics) 
 ___
 ## Run it inside containers
 
@@ -42,13 +44,13 @@ ___
 
 - Make sure you have docker and git installed on your machine
 - Git clone the repo: `cd ~ && git clone https://github.com/sfarosu/go-tooling-portal.git && cd ~/go-tooling-portal && git checkout master`
-- Build the image: `cd ~/go-tooling-portal && docker build -t go-tooling-portal -f build/Dockerfile .`
+- Build the image: `cd ~/go-tooling-portal && docker build -t sfarosu/go-tooling-portal:latest -f build/Dockerfile .`
 - Run the container daemonized : `docker run -d -p 8080:8080 go-tooling-portal`
 - Access it in your browser at: [http://localhost:8080](http://localhost:8080)
 
 ### Docker run - use the prebuilt image from docker hub
 
-- `docker run -d -p 8080:8080 docker.io/sfarosu/go-tooling-portal`
+- `docker run -d -p 8080:8080 sfarosu/go-tooling-portal:latest`
 - Access it in your browser at: [http://localhost:8080](http://localhost:8080)
 
 ### Docker compose

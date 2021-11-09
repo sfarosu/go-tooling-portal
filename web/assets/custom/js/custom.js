@@ -48,7 +48,7 @@ function validatePassgenSelection(){
 function validateSshEmailPass() {
   var x = document.forms["sshkeygen"]["email"].value;
   var y = document.forms["sshkeygen"]["pass"].value;
-  if (x.length == 0) {
+  if (x.length === 0) {
     alert("You must enter an e-mail address !");
     return false;
   }
@@ -60,6 +60,23 @@ function validateSshEmailPass() {
   } else {
     document.getElementById("pass").value = ""; //we make sure that if the user selects yes, inserts few chars and then selects no, the password field is empty
   }
+}
+
+function validateJson() {
+  var x = document.forms["jsonprettify"]["text"].value;
+
+  if (x.length === 0) {
+    alert("Textbox is empty !");
+    return false;
+  }
+
+  try {
+    JSON.parse(x);
+  } catch (e) {
+    alert("Json is not valid !");
+    return false;
+  }
+  return true;
 }
 
 function copyToClipboard(elemId) {
