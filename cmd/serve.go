@@ -1,12 +1,13 @@
 package cmd
 
 import (
-	"github.com/sfarosu/go-tooling-portal/cmd/helper"
-	"github.com/sfarosu/go-tooling-portal/cmd/version"
 	"log"
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/sfarosu/go-tooling-portal/cmd/helper"
+	"github.com/sfarosu/go-tooling-portal/cmd/version"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
@@ -32,6 +33,8 @@ func Serve() {
 	http.HandleFunc("/ssh-process-keygen", sshProcessKeypair)
 	http.HandleFunc("/jsonprettify", jsonprettify)
 	http.HandleFunc("/jsonprettify-process", jsonprettifyProcess)
+	http.HandleFunc("/formatconvert", formatConvert)
+	http.HandleFunc("/formatconvert-process", formatConvertProcess)
 
 	// call AfterFunc 3 seconds after app startup to purge ssh keys from disc
 	time.AfterFunc(3*time.Second, helper.KeysCleanup)

@@ -79,10 +79,20 @@ function validateJson() {
   return true;
 }
 
+function validateConvert() {
+  var x = document.forms["formatconvert"]["text"].value;
+
+  if (x.length === 0) {
+    alert("Textbox is empty !");
+    return false;
+  }
+  return true;
+}
+
 function copyToClipboard(elemId) {
   var copyText = document.getElementById(elemId);
   copyText.select();
-  document.execCommand("copy");
+  navigator.clipboard.writeText(copyText.value);
 }
 
 // function validateFileSelection(file) {
@@ -93,5 +103,3 @@ function copyToClipboard(elemId) {
 //     return false;
 //   }
 // }
-
-
