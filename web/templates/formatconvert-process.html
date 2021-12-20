@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <link rel="icon" href="../assets/custom/img/tools.svg">
-    <title>Json Prettifier</title>
+    <title>Format Convertor</title>
     <!-- Bootstrap core CSS -->
     <link href="../assets/bootstrap4/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -53,7 +53,7 @@
     <main role="main">
       <div class="jumbotron" style="padding: 1.5rem 1.5rem;">
         <div class="container">
-          <h1 class="display-3">Json Prettifier</h1>
+          <h1 class="display-3">Format Convertor</h1>
         </div>
       </div>
 
@@ -65,7 +65,7 @@
               <form name="initialJson" >
                 <div class="form-group">
                   <label for="initialJson"></label>
-                  <textarea class="form-control" rows="20" id="initialJson" name="initialJson" readonly>{{ .Text}}</textarea>
+                  <textarea class="form-control" rows="20" id="initialJson" name="initialJson" readonly>{{ .InsertedText}}</textarea>
                 </div>
               </form>
               <button type="button" class="btn btn-success" onclick="copyToClipboard('initialJson')">Copy to clipboard</button>
@@ -82,7 +82,7 @@
             </div>
             
           </div>
-          <button type="button" class="btn btn-primary btn-block" onclick="location.href='/jsonprettify'">Prettify a new json</button>
+          <button type="button" class="btn btn-primary btn-block" onclick="location.href='/formatconvert'">New Conversion</button>
           <hr>
         </div>
       </div> <!-- /container -->

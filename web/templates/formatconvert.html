@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <link rel="icon" href="../assets/custom/img/tools.svg">
-    <title>Json Prettifier</title>
+    <title>Format Convertor</title>
     <!-- Bootstrap core CSS -->
     <link href="../assets/bootstrap4/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -53,37 +53,25 @@
     <main role="main">
       <div class="jumbotron" style="padding: 1.5rem 1.5rem;">
         <div class="container">
-          <h1 class="display-3">Json Prettifier</h1>
+          <h1 class="display-3">Format Converter</h1>
+          <p>Transform YAML to JSON and viceversa</p>
         </div>
       </div>
 
       <div class="container" style="max-width: 1440px;">
         <div class="container" style="max-width: 1440px;">
           <div class="row" >
-            <div class="col" style="padding: 0px 5px 20px 0px;">
-              <p class="text-success text-center">Initial Json:</p>
-              <form name="initialJson" >
+            <div class="col" style="padding: 20px;">
+              <h5>Insert Yaml or Json contents below:</h5>
+              <form name="formatconvert" style="max-width: 90%;" onsubmit="return validateConvert()" action="/formatconvert-process" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
-                  <label for="initialJson"></label>
-                  <textarea class="form-control" rows="20" id="initialJson" name="initialJson" readonly>{{ .Text}}</textarea>
+                  <label for="text"></label>
+                  <textarea class="form-control" rows="20" id="text" name="text"></textarea>
                 </div>
+                <button type="submit" class="btn btn-primary">Transform</button>
               </form>
-              <button type="button" class="btn btn-success" onclick="copyToClipboard('initialJson')">Copy to clipboard</button>
             </div>
-            <div class="col" style="padding: 0px 0px 20px 5px;">
-              <p class="text-success text-center">Processed Json:</p>
-              <form name="processedJson">
-                <div class="form-group">
-                  <label for="processedJson"></label>
-                  <textarea class="form-control" rows="20" id="processedJson" name="processedJson" readonly>{{ .Result}}</textarea>
-                </div>
-              </form>
-              <button type="button" class="btn btn-success" onclick="copyToClipboard('processedJson')">Copy to clipboard</button>
-            </div>
-            
           </div>
-          <button type="button" class="btn btn-primary btn-block" onclick="location.href='/jsonprettify'">Prettify a new json</button>
-          <hr>
         </div>
       </div> <!-- /container -->
     </main>

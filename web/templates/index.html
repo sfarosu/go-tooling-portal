@@ -48,6 +48,9 @@
           <li class="nav-item">
             <a class="nav-link" href="/jsonprettify">JsonPrettifier</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/formatconvert">FormatConvert</a>
+          </li>
         </ul>
       </div>
       </nav>
@@ -59,7 +62,6 @@
           <div class="row">
             <div class="col-xs-6">
               <h1 class="display-1">Tooling Portal</h1>
-              <p>This portal contains different tools helpful for our users.</p>
             </div>
             <div class="col-xs-6" style="max-width: 100px;padding: 20px ;">
               <img src="../assets/custom/img/tools.svg" class="img-fluid w-100" alt="Tools image">
@@ -71,27 +73,28 @@
         <div class="row">
           <div class="col-md-6">
             <h2 class="text-primary">HTPasswordGenerator</h2>
-            <p>Use htpasswd to encrypt passwords. Choose between 3 algorithms: </p>
-            <h6>-apr1 : MD5-based password algorithm, Apache variant</h6>
-            <h6>-1 : MD5-based password algorithm</h6>
-            <h6>-crypt : standard Unix password algorithm</h6>
-
+            <p> Generate a htpassword (multiple algorithms available) </p>
             <p><a class="btn btn-secondary" href="/htpasswd" role="button">htpasswdgen &raquo;</a></p>
           </div>
           <div class="col-md-6">
             <h2 class="text-primary">RandomPasswordGenerator</h2>
-            <p>This tool generates a variable length, multicase, multisymbol password. Serverside, we don't store any information.</p>
+            <p> Generate a variable length, multicase, multisymbol password.</p>
             <p><a class="btn btn-secondary" href="/passgen" role="button">randpassgen &raquo;</a></p>
           </div>
           <div class="col-md-6">
             <h2 class="text-primary">SSHKeyGenerator</h2>
-            <p>Use this tool to generate a new ssh/rsa keypair.</p>
+            <p> Generate a new ssh/rsa keypair</p>
             <p><a class="btn btn-secondary" href="/ssh" role="button">sshkeygen &raquo;</a></p>
           </div>
           <div class="col-md-6">
             <h2 class="text-primary">JSONPrettifier</h2>
-            <p>Use this tool to prettify/indent a complicated Json.</p>
+            <p> Prettify/indent a complicated Json</p>
             <p><a class="btn btn-secondary" href="/jsonprettify" role="button">jsonprettify &raquo;</a></p>
+          </div>
+          <div class="col-md-6">
+            <h2 class="text-primary">FormatConverter</h2>
+            <p> Transform YAML to JSON and viceversa</p>
+            <p><a class="btn btn-secondary" href="/formatconvert" role="button">formatconvert &raquo;</a></p>
           </div>
         </div>
         <hr>
@@ -99,7 +102,7 @@
     </main>
 
     <footer class="container">
-      <p>&copy; Tooling Portal</p>
+      <p>{{ .AppVersion}}</p>
     </footer>
     <script src="../assets/custom/js/jquery-slim.min.js" ></script>
     <script>window.jQuery || document.write('<script src="../assets/custom/js/jquery-slim.min.js"><\/script>')</script>

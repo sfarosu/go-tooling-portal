@@ -1,6 +1,8 @@
 package helper
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -10,6 +12,8 @@ import (
 	"os/exec"
 	"strings"
 	"time"
+
+	"gopkg.in/yaml.v3"
 )
 
 func DisableDirListing(next http.Handler) http.Handler {
@@ -41,7 +45,7 @@ func RandomString(size int, Uppercase bool, Lowercase bool, Numbers bool, Specia
 	if size > 64 {
 		return "", errors.New("string length most not exceed 64 chars")
 	}
-	if Uppercase == false && Lowercase == false && Numbers == false && Specials == false {
+	if !Uppercase && !Lowercase && !Numbers && !Specials {
 		return "", errors.New("at least one of the categories must be chosen")
 	}
 
@@ -57,35 +61,35 @@ func RandomString(size int, Uppercase bool, Lowercase bool, Numbers bool, Specia
 
 	// selectedList contains all the categories/chars types the user selects
 	var selectedList []rune
-	if Uppercase == true {
+	if Uppercase {
 		selectedList = append(selectedList, uppercase...)
 		optionsActive++
 	}
-	if Lowercase == true {
+	if Lowercase {
 		selectedList = append(selectedList, lowercase...)
 		optionsActive++
 	}
-	if Numbers == true {
+	if Numbers {
 		selectedList = append(selectedList, numbers...)
 		optionsActive++
 	}
-	if Specials == true {
+	if Specials {
 		selectedList = append(selectedList, specials...)
 		optionsActive++
 	}
 
 	// partialResult makes sure that at least ONE element is added from each category the user selects
 	var partialResult []rune
-	if Uppercase == true {
+	if Uppercase {
 		partialResult = append(partialResult, uppercase[rand.Intn(len(uppercase))])
 	}
-	if Lowercase == true {
+	if Lowercase {
 		partialResult = append(partialResult, lowercase[rand.Intn(len(lowercase))])
 	}
-	if Numbers == true {
+	if Numbers {
 		partialResult = append(partialResult, numbers[rand.Intn(len(numbers))])
 	}
-	if Specials == true {
+	if Specials {
 		partialResult = append(partialResult, specials[rand.Intn(len(specials))])
 	}
 
@@ -105,9 +109,57 @@ func RandomString(size int, Uppercase bool, Lowercase bool, Numbers bool, Specia
 }
 
 func ReadFile(filePath string) []byte {
-	byteData, errReadFile := os.ReadFile(filePath)
-	if errReadFile != nil {
-		log.Println("error reading file: ", errReadFile)
+	byteData, err := os.ReadFile(filePath)
+	if err != nil {
+		log.Println("error reading file: ", err)
 	}
 	return byteData
+}
+
+func PrettyJSON(insertedText string) bytes.Buffer {
+	var pretty bytes.Buffer
+
+	err := json.Indent(&pretty, []byte(insertedText), "", "    ")
+	if err != nil {
+		log.Println("error indenting JSON: ", err)
+	}
+
+	return pretty
+}
+
+func MarshalJSON(data interface{}) []byte {
+	byteData, err := json.MarshalIndent(data, "", " ")
+	if err != nil {
+		log.Println("failed to marshal JSON: ", err)
+	}
+	return byteData
+}
+
+func UnmarshalJSON(byteData []byte) (map[string]interface{}, error) {
+	var jsonData map[string]interface{}
+	err := json.Unmarshal([]byte(byteData), &jsonData)
+	if err != nil {
+		log.Println("error unmarshaling JSON: ", err)
+	}
+	return jsonData, err
+}
+
+func MarshalYAML(data interface{}) []byte {
+	var byteData bytes.Buffer
+	yamlEncoder := yaml.NewEncoder(&byteData)
+	yamlEncoder.SetIndent(2)
+	err := yamlEncoder.Encode(&data)
+	if err != nil {
+		log.Println("error marshaling YAML: ", err)
+	}
+	return byteData.Bytes()
+}
+
+func UnmarshalYAML(byteData []byte) (map[string]interface{}, error) {
+	var yamlData map[string]interface{}
+	err := yaml.Unmarshal([]byte(byteData), &yamlData)
+	if err != nil {
+		log.Println("error unmarshaling YAML: ", err)
+	}
+	return yamlData, err
 }

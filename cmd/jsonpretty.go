@@ -1,13 +1,13 @@
 package cmd
 
 import (
-	"bytes"
-	"encoding/json"
-	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/promauto"
-	"github.com/sfarosu/go-tooling-portal/cmd/tmpl"
 	"log"
 	"net/http"
+
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
+	"github.com/sfarosu/go-tooling-portal/cmd/helper"
+	"github.com/sfarosu/go-tooling-portal/cmd/tmpl"
 )
 
 var (
@@ -35,18 +35,14 @@ func jsonprettifyProcess(w http.ResponseWriter, r *http.Request) {
 
 	insertedText := r.FormValue("text")
 
-	var pretty bytes.Buffer
-	errIndent := json.Indent(&pretty, []byte(insertedText), "", "    ")
-	if errIndent != nil {
-		log.Println("error indenting the json", errIndent)
-	}
+	result := helper.PrettyJSON(insertedText)
 
 	data := struct {
 		Text   string
 		Result string
 	}{
 		Text:   insertedText,
-		Result: pretty.String(),
+		Result: result.String(),
 	}
 
 	log.Println(r.URL.String(), r.Method, r.RemoteAddr, r.Proto, r.Header.Get("User-Agent"))

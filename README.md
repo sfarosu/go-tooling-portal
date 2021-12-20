@@ -4,12 +4,16 @@
 
 ![Dashboard](web/assets/custom/img/preview.gif "Dashboard")
 
-This portal is a simple and fast webapp that provides users with some self-hosted tooling to avoid unsecure internet generators:
+Simple and fast webapp that provides users with some self-hosted tooling to avoid insecure internet generators:
 
-- **HTPasswordGenerator**: this tool can generate htpasswords (MD5, MD-5 Apache variant and crypt)
-- **RandomPasswordGenerator**: this tool can generate a variable length, multi-case, multi-symbol password
-- **SSHKeyGenerator**: this tool can generate ssh/rsa keys with or without passwords
-- **JsonPrettifier**: this tool can prettify/indent a complicated Json
+- **HTPasswordGenerator**: generate htpasswords (MD5, MD-5 Apache variant and crypt)
+- **RandomPasswordGenerator**: generate a variable length, multi-case, multi-symbol password
+- **SSHKeyGenerator**: generate ssh/rsa keys with or without passwords
+- **JsonPrettifier**: prettify/indent a complicated Json
+- **FormatConverter**: transform YAML to JSON and viceversa
+
+To be added in the future releases:
+- **EpochTimeConverter**: unix timestamp conversions
 ___
 ## General information
 
@@ -23,9 +27,9 @@ ___
 
 All the builds and tests on host machine were done using :
 
-- Pop!_OS 21.04
+- Pop!_OS 21.10
 - docker 20.10.7
-- go version go1.16.2 linux/amd64
+- go version go1.17 linux/amd64
 ___
 ## How to run it locally without containers
 
