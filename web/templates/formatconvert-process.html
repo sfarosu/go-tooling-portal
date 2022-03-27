@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <link rel="icon" href="../assets/custom/img/tools.svg">
-    <title>Format Convertor</title>
+    <title>Format Converter</title>
     <!-- Bootstrap core CSS -->
     <link href="../assets/bootstrap4/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -44,7 +44,10 @@
             <a class="nav-link" href="/jsonprettify">JsonPrettifier</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/formatconvert">FormatConvert</a>
+            <a class="nav-link" href="/formatconvert">FormatConverter</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/timeconvert">TimeConverter</a>
           </li>
         </ul>
       </div>
@@ -53,39 +56,35 @@
     <main role="main">
       <div class="jumbotron" style="padding: 1.5rem 1.5rem;">
         <div class="container">
-          <h1 class="display-3">Format Convertor</h1>
+          <h1 class="display-3">Format Converter</h1>
         </div>
       </div>
-
       <div class="container" style="max-width: 1440px;">
         <div class="container" style="max-width: 1440px;">
           <div class="row" >
             <div class="col" style="padding: 0px 5px 20px 0px;">
-              <p class="text-success text-center">Initial Json:</p>
-              <form name="initialJson" >
+              <p class="text-success text-center">Input:</p>
+              <form name="input" >
                 <div class="form-group">
-                  <label for="initialJson"></label>
-                  <textarea class="form-control" rows="20" id="initialJson" name="initialJson" readonly>{{ .InsertedText}}</textarea>
+                  <textarea class="form-control" rows="20" id="input" name="input" readonly>{{ .InsertedText }}</textarea>
                 </div>
               </form>
-              <button type="button" class="btn btn-success" onclick="copyToClipboard('initialJson')">Copy to clipboard</button>
+              <button type="button" class="btn btn-success" onclick="copyToClipboard('input')">Copy to clipboard</button>
             </div>
             <div class="col" style="padding: 0px 0px 20px 5px;">
-              <p class="text-success text-center">Processed Json:</p>
-              <form name="processedJson">
+              <p class="text-success text-center">Output:</p>
+              <form name="output">
                 <div class="form-group">
-                  <label for="processedJson"></label>
-                  <textarea class="form-control" rows="20" id="processedJson" name="processedJson" readonly>{{ .Result}}</textarea>
+                  <textarea class="form-control" rows="20" id="output" name="output" readonly>{{ .Result }}</textarea>
                 </div>
               </form>
-              <button type="button" class="btn btn-success" onclick="copyToClipboard('processedJson')">Copy to clipboard</button>
+              <button type="button" class="btn btn-success" onclick="copyToClipboard('output')">Copy to clipboard</button>
             </div>
-            
           </div>
           <button type="button" class="btn btn-primary btn-block" onclick="location.href='/formatconvert'">New Conversion</button>
           <hr>
         </div>
-      </div> <!-- /container -->
+      </div>
     </main>
 
     <script src="../assets/custom/js/custom.js" ></script>

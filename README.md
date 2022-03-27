@@ -4,16 +4,18 @@
 
 ![Dashboard](web/assets/custom/img/preview.gif "Dashboard")
 
-Simple and fast webapp that provides users with some self-hosted tooling to avoid insecure internet generators:
+Simple and fast webapp that provides users with some self-hosted tooling to avoid insecure internet generators/processors:
 
 - **HTPasswordGenerator**: generate htpasswords (MD5, MD-5 Apache variant and crypt)
 - **RandomPasswordGenerator**: generate a variable length, multi-case, multi-symbol password
 - **SSHKeyGenerator**: generate ssh/rsa keys with or without passwords
-- **JsonPrettifier**: prettify/indent a complicated Json
+- **JsonPrettifier**: prettify/indent a complex Json
 - **FormatConverter**: transform YAML to JSON and viceversa
+- **EpochTimeConverter**: transform unix timestamp to human time and viceversa
 
 To be added in the future releases:
-- **EpochTimeConverter**: unix timestamp conversions
+- **Base64Encoder**: encode/decode data in Base64 format
+- **URLEnconder**: encode/decode special characters in URLs
 ___
 ## General information
 

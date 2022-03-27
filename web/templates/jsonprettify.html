@@ -44,7 +44,10 @@
             <a class="nav-link" href="/jsonprettify">JsonPrettifier</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/formatconvert">FormatConvert</a>
+            <a class="nav-link" href="/formatconvert">FormatConverter</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/timeconvert">TimeConverter</a>
           </li>
         </ul>
       </div>
@@ -57,7 +60,6 @@
           <p>Use this tool to prettify/indent a json file</p>
         </div>
       </div>
-
       <div class="container" style="max-width: 1440px;">
         <div class="container" style="max-width: 1440px;">
           <div class="row" >
@@ -65,15 +67,14 @@
               <h5>Insert json contents below:</h5>
               <form name="jsonprettify" style="max-width: 90%;" onsubmit="return validateJson()" action="/jsonprettify-process" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
-                  <label for="text"></label>
-                  <textarea class="form-control" rows="20" id="text" name="text"></textarea>
+                  <textarea class="form-control" rows="20" id="text" name="text" required placeholder='{"name":"test.com","messages":["msg 1","msg 2","msg 3"],"age":100}'></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Prettify json</button>
               </form>
             </div>
           </div>
         </div>
-      </div> <!-- /container -->
+      </div>
     </main>
 
     <script src="../assets/custom/js/custom.js" ></script>

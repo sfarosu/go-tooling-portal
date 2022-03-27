@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="icon" href="../assets/custom/img/tools.svg">
+    <title>Time Converter</title>
+    <!-- Bootstrap core CSS -->
+    <link href="../assets/bootstrap4/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="../assets/custom/css/jumbotron.css" rel="stylesheet">
+  </head>
+  <body onload="getClientTimeZone()">
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/htpasswd">HTPasswordGenerator</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/passgen">RandomPasswordGenerator</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/ssh">SSHKeyGenerator</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/jsonprettify">JsonPrettifier</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/formatconvert">FormatConverter</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/timeconvert">TimeConverter</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <main role="main">
+      <div class="jumbotron" style="padding: 1.5rem 1.5rem;">
+        <div class="container">
+          <h1 class="display-3">Time Converter</h1>
+          <p>Use this tool to convert epoch time entries to human readable format and viceversa</p>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <form name="epochform" id="epochform" action="/timeconvert-process" method="POST" enctype="multipart/form-data">
+              <!-- The 2 textareas are used to pass data between javascript and go -->
+              <textarea id="browserTimeZoneFromEpochForm" name="browserTimeZoneFromEpochForm" hidden></textarea>
+              <textarea id="epochToHuman" name="epochToHuman" hidden></textarea>
+              <label>Current UTC epoch time:</label>
+              <small class="form-text text-muted">Digits required: seconds (9 or 10), milliseconds (12 or 13), microseconds(15 or 16)</small>
+              <div class="form-row">
+                <div class="col-5">
+                  <input type="text" required class="form-control text-center" id="epochtime" name="epochtime" onchange="disableEpochTimeFormatSelect()" pattern="[0-9]{9}|[0-9]{10}|[0-9]{12}|[0-9]{13}|[0-9]{15}|[0-9]{16}" title="Insert 9/10, 12/13 or 15/16 digits (seconds, milliseconds or microseconds)" value="{{ .CurrentUTCEpochTimeSeconds }}">
+                </div>
+                <div class="col-4">
+                  <select class="form-control" id="epochTimeFormat" onchange="changeEpochTimeFormat('epochtime','epochTimeFormat')">
+                    <option value="{{ .CurrentUTCEpochTimeSeconds }}">Seconds</option>
+                    <option value="{{ .CurrentUTCEpochTimeMilli }}">Milliseconds</option>
+                    <option value="{{ .CurrentUTCEpochTimeMicro }}">Microseconds</option>
+                  </select>
+                </div>
+              </div>
+              <p></p>
+              <button type="submit" class="btn btn-primary" onclick="getSelectedTimeConversion('epochform')">Convert to human time format</button>
+            </form>
+          </div>
+          <div class="col">
+            <form name="humanform" id="humanform" action="/timeconvert-process" method="POST" enctype="multipart/form-data">
+              <!-- The 2 textareas are used to pass data between javascript and go -->
+              <textarea id="browserTimeZoneFromHumanForm" name="browserTimeZoneFromHumanForm" hidden></textarea>
+              <textarea id="humanToEpoch" name="humanToEpoch" hidden></textarea>
+              <label>Current UTC human time:</label>
+              <div class="form-row">
+                <div class="col-2">
+                  <small class="form-text text-muted text-center">Year</small>
+                  <input type="text" required class="form-control text-center" id="year" name="year" pattern="[0-9]{4}" title="Insert 4 digits (numeric values only)" value="{{ .CurrentUTCYear }}">
+                </div>
+                <div class="col-2">
+                  <small class="form-text text-muted text-center">Month</small>
+                  <input type="text" required class="form-control text-center" id="month" name="month" pattern="[0-9]{2}" title="Insert 2 digits (numeric values only)" value="{{ .CurrentUTCMonth }}">
+                </div>
+                <div class="col-2">
+                  <small class="form-text text-muted text-center">Day</small>
+                  <input type="text" required class="form-control text-center" id="day" name="day" pattern="[0-9]{2}" title="Insert 2 digits (numeric values only)" value="{{ .CurrentUTCDay }}">
+                </div>
+                <div class="col-2">
+                  <small class="form-text text-muted text-center">Hour</small>
+                  <input type="text" required class="form-control text-center" id="hour" name="hour" pattern="[0-9]{2}" title="Insert 2 digits (numeric values only)" value="{{ .CurrentUTCHour }}">
+                </div>
+                <div class="col-2">
+                  <small class="form-text text-muted text-center">Minute</small>
+                  <input type="text" required class="form-control text-center" id="minute" name="minute" pattern="[0-9]{2}" title="Insert 2 digits (numeric values only)" value="{{ .CurrentUTCMinute }}">
+                </div>
+                <div class="col-2">
+                  <small class="form-text text-muted text-center">Second</small>
+                  <input type="text" required class="form-control text-center" id="second" name="second" pattern="[0-9]{2}" title="Insert 2 digits (numeric values only)" value="{{ .CurrentUTCSecond }}">
+                </div>
+              </div>
+              <p></p>
+              <button type="submit" class="btn btn-primary" onclick="getSelectedTimeConversion('humanform')">Convert to epoch time format</button>
+            </form>
+          </div>
+        </div>
+        <hr>
+      </div>
+    </main>
+
+    <script src="../assets/custom/js/custom.js" ></script>
+    <script src="../assets/custom/js/jquery-slim.min.js" ></script>
+    <script>window.jQuery || document.write('<script src="../assets/custom/js/jquery-slim.min.js"><\/script>')</script>
+    <script src="../assets/bootstrap4/js/bootstrap.bundle.min.js" ></script>
+  </body>
+
+</html>

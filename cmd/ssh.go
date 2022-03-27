@@ -1,14 +1,14 @@
 package cmd
 
 import (
-	"errors"
 	"fmt"
-	"github.com/sfarosu/go-tooling-portal/cmd/helper"
-	"github.com/sfarosu/go-tooling-portal/cmd/tmpl"
 	"log"
 	"net/http"
 	"os/exec"
 	"time"
+
+	"github.com/sfarosu/go-tooling-portal/cmd/helper"
+	"github.com/sfarosu/go-tooling-portal/cmd/tmpl"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -80,16 +80,6 @@ func sshProcessKeypair(w http.ResponseWriter, r *http.Request) {
 }
 
 func generateKeyPair(email string, pass string, usePass string, bitSize string) (string, string, string, string, error) {
-	// error handling for email and password length
-	if email == "" {
-		return "", "", "", "", errors.New("email field can't be empty")
-	}
-
-	if usePass == "yes" {
-		if (pass == "") || (len(pass) < 8) || (len(pass) > 64) {
-			return "", "", "", "", errors.New("you must specify a password and it must be at least 8 characters long")
-		}
-	}
 
 	// generate a randomNumber to make sure keys filenames are unique
 	randomNumber, errRandom := helper.RandomString(16, false, false, true, false)

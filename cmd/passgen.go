@@ -1,13 +1,14 @@
 package cmd
 
 import (
+	"log"
+	"net/http"
+	"strconv"
+
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/sfarosu/go-tooling-portal/cmd/helper"
 	"github.com/sfarosu/go-tooling-portal/cmd/tmpl"
-	"log"
-	"net/http"
-	"strconv"
 )
 
 var (
@@ -58,16 +59,16 @@ func passgenProcess(w http.ResponseWriter, r *http.Request) {
 		symbolsBool = true
 	}
 
-	length := r.FormValue("number")
+	length := r.FormValue("length")
 
-	passLength, errConversion := strconv.Atoi(length) // convert length string to int
-	if errConversion != nil {
-		log.Println("error converting string to int: ", errConversion)
+	passLength, err := strconv.Atoi(length)
+	if err != nil {
+		log.Println("error converting string to int: ", err)
 	}
 
-	generatedRandomPassword, errRandom := helper.RandomString(passLength, upperBool, lowerBool, numbersBool, symbolsBool)
-	if errRandom != nil {
-		log.Println("error generating a random string: ", errRandom)
+	generatedRandomPassword, err := helper.RandomString(passLength, upperBool, lowerBool, numbersBool, symbolsBool)
+	if err != nil {
+		log.Println("error generating a random string: ", err)
 	}
 
 	data := struct {
