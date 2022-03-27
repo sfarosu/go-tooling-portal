@@ -44,7 +44,10 @@
             <a class="nav-link" href="/jsonprettify">JsonPrettifier</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/formatconvert">FormatConvert</a>
+            <a class="nav-link" href="/formatconvert">FormatConverter</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/timeconvert">TimeConverter</a>
           </li>
         </ul>
       </div>
@@ -56,7 +59,6 @@
           <h1 class="display-3">Json Prettifier</h1>
         </div>
       </div>
-
       <div class="container" style="max-width: 1440px;">
         <div class="container" style="max-width: 1440px;">
           <div class="row" >
@@ -64,8 +66,7 @@
               <p class="text-success text-center">Initial Json:</p>
               <form name="initialJson" >
                 <div class="form-group">
-                  <label for="initialJson"></label>
-                  <textarea class="form-control" rows="20" id="initialJson" name="initialJson" readonly>{{ .Text}}</textarea>
+                  <textarea class="form-control" rows="20" id="initialJson" name="initialJson" readonly>{{ .Text }}</textarea>
                 </div>
               </form>
               <button type="button" class="btn btn-success" onclick="copyToClipboard('initialJson')">Copy to clipboard</button>
@@ -74,18 +75,16 @@
               <p class="text-success text-center">Processed Json:</p>
               <form name="processedJson">
                 <div class="form-group">
-                  <label for="processedJson"></label>
-                  <textarea class="form-control" rows="20" id="processedJson" name="processedJson" readonly>{{ .Result}}</textarea>
+                  <textarea class="form-control" rows="20" id="processedJson" name="processedJson" readonly>{{ .Result }}</textarea>
                 </div>
               </form>
               <button type="button" class="btn btn-success" onclick="copyToClipboard('processedJson')">Copy to clipboard</button>
             </div>
-            
           </div>
           <button type="button" class="btn btn-primary btn-block" onclick="location.href='/jsonprettify'">Prettify a new json</button>
           <hr>
         </div>
-      </div> <!-- /container -->
+      </div>
     </main>
 
     <script src="../assets/custom/js/custom.js" ></script>

@@ -1,16 +1,17 @@
 package main
 
 import (
-	"github.com/sfarosu/go-tooling-portal/cmd"
-	"github.com/sfarosu/go-tooling-portal/cmd/tmpl"
 	"html/template"
 	"log"
 	"os"
+
+	"github.com/sfarosu/go-tooling-portal/cmd"
+	"github.com/sfarosu/go-tooling-portal/cmd/tmpl"
 )
 
 func init() {
 	tmpl.Tpl = template.Must(template.ParseGlob("web/templates/*html"))
-	log.SetOutput(os.Stdout) // Change the device for logging to stdout
+	log.SetOutput(os.Stdout)
 }
 
 func main() {

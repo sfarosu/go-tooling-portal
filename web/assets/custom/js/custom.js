@@ -16,25 +16,7 @@ function deactivateField(elemId) {
   }
 }
 
-function validateUserPass() {
-  var x = document.forms["htpasswd"]["username"].value;
-  var y = document.forms["htpasswd"]["password"].value;
-  if (x == "" || y == "") {
-    alert("Username or password field cannot be empty !");
-    return false;
-  }
-  if (y.length < 8 || y.length > 64) {
-    alert("Password length must contain between 8 and 64 characters !");
-    return false;
-  }
-}
-
 function validatePassgenSelection(){
-  var length = document.forms["passgen"]["number"].value;
-  if (length < 4 || length > 64) {
-    alert("Password length must contain between 4 and 64 characters !");
-    return false;
-  }
   var uppercase = document.getElementById("uppercase");
   var lowercase = document.getElementById("lowercase");
   var numbers = document.getElementById("numbers");
@@ -45,13 +27,9 @@ function validatePassgenSelection(){
   }
 }
 
-function validateSshEmailPass() {
-  var x = document.forms["sshkeygen"]["email"].value;
+function handleSshPasswordField() {
   var y = document.forms["sshkeygen"]["pass"].value;
-  if (x.length === 0) {
-    alert("You must enter an e-mail address !");
-    return false;
-  }
+
   if (document.getElementById('no').selected == false) {
     if (y.length < 8 || y.length > 64)  {
       alert("Password length must contain between 8 and 64 characters !");
@@ -65,25 +43,10 @@ function validateSshEmailPass() {
 function validateJson() {
   var x = document.forms["jsonprettify"]["text"].value;
 
-  if (x.length === 0) {
-    alert("Textbox is empty !");
-    return false;
-  }
-
   try {
     JSON.parse(x);
   } catch (e) {
     alert("Json is not valid !");
-    return false;
-  }
-  return true;
-}
-
-function validateConvert() {
-  var x = document.forms["formatconvert"]["text"].value;
-
-  if (x.length === 0) {
-    alert("Textbox is empty !");
     return false;
   }
   return true;
@@ -95,11 +58,27 @@ function copyToClipboard(elemId) {
   navigator.clipboard.writeText(copyText.value);
 }
 
-// function validateFileSelection(file) {
-//   var selectedfile = document.getElementById(file).value
+function getClientTimeZone() {
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  document.getElementById("browserTimeZoneFromEpochForm").value = timezone;
+  document.getElementById("browserTimeZoneFromHumanForm").value = timezone;
+}
 
-//   if (selectedfile == "") {
-//     alert("You must select a file !");
-//     return false;
-//   }
-// }
+function changeEpochTimeFormat(inputField, selectorField) {
+  document.getElementById(inputField).value = document.getElementById(selectorField).value
+}
+
+function disableEpochTimeFormatSelect() {
+  var inputValue = document.getElementById("epochtime").value;
+  if (inputValue != '') {
+    document.getElementById("epochTimeFormat").setAttribute("disabled", "disabled");
+  }
+}
+
+function getSelectedTimeConversion(sourceForm) {
+  if (sourceForm == 'epochform') {
+    document.getElementById("epochToHuman").value = "true";
+  } else if (sourceForm == 'humanform') {
+    document.getElementById("humanToEpoch").value = "true";
+  }
+}

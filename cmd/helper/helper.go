@@ -3,13 +3,13 @@ package helper
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 	"time"
 
@@ -38,17 +38,6 @@ func KeysCleanup() {
 }
 
 func RandomString(size int, Uppercase bool, Lowercase bool, Numbers bool, Specials bool) (string, error) {
-	// error handling for the 2 inputs, string size can't be lower than 4 or higher than 64 AND at least one option should be selected
-	if size < 4 {
-		return "", errors.New("string length must be at least 4 chars long")
-	}
-	if size > 64 {
-		return "", errors.New("string length most not exceed 64 chars")
-	}
-	if !Uppercase && !Lowercase && !Numbers && !Specials {
-		return "", errors.New("at least one of the categories must be chosen")
-	}
-
 	rand.Seed(time.Now().UnixNano()) // used so that the shuffled result is NOT always the same
 
 	optionsActive := 0 // we use this to count how many choices the user has selected
@@ -162,4 +151,22 @@ func UnmarshalYAML(byteData []byte) (map[string]interface{}, error) {
 		log.Println("error unmarshaling YAML: ", err)
 	}
 	return yamlData, err
+}
+
+func AddSecondDigit(number int) string {
+	if number < 10 {
+		return "0" + strconv.Itoa(number)
+	} else {
+		return strconv.Itoa(number)
+	}
+}
+
+func GetNumberDigitsAmmount(number int64) int {
+	count := 0
+	for number > 0 {
+		number = number / 10
+		count = count + 1
+	}
+
+	return count
 }

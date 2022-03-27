@@ -44,7 +44,10 @@
             <a class="nav-link" href="/jsonprettify">JsonPrettifier</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/formatconvert">FormatConvert</a>
+            <a class="nav-link" href="/formatconvert">FormatConverter</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/timeconvert">TimeConverter</a>
           </li>
         </ul>
       </div>
@@ -57,7 +60,6 @@
           <p>Use this tool to generate a random password</p>
         </div>
       </div>
-
       <div class="container">
         <form name="passgen" onsubmit="return validatePassgenSelection()" action="/passgen-process" method="POST" enctype="multipart/form-data">
           <h5>Select the characters type and password length:</h5>
@@ -83,8 +85,8 @@
             <p></p>
           </div>
           <div class="form-group">
-            <label for="user">Password length: </label>
-            <input style="max-width: 80px;" type="number" class="form-control" id="number" name="number" value="12">
+            <label>Password length:</label>
+            <input style="max-width: 80px;" type="number" class="form-control" id="length" name="length" min="4" max="64" value="12">
             <small class="form-text text-muted">Password must contain between 4 and 64 characters.</small>
           </div>
           <p></p>
@@ -92,7 +94,7 @@
           <button type="submit" class="btn btn-primary">Create password</button>
           <hr>
         </form>
-      </div> <!-- /container -->
+      </div>
     </main>
 
     <script src="../assets/custom/js/custom.js" ></script>

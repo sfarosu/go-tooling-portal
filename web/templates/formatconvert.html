@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <link rel="icon" href="../assets/custom/img/tools.svg">
-    <title>Format Convertor</title>
+    <title>Format Converter</title>
     <!-- Bootstrap core CSS -->
     <link href="../assets/bootstrap4/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -44,7 +44,10 @@
             <a class="nav-link" href="/jsonprettify">JsonPrettifier</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/formatconvert">FormatConvert</a>
+            <a class="nav-link" href="/formatconvert">FormatConverter</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/timeconvert">TimeConverter</a>
           </li>
         </ul>
       </div>
@@ -57,23 +60,21 @@
           <p>Transform YAML to JSON and viceversa</p>
         </div>
       </div>
-
       <div class="container" style="max-width: 1440px;">
         <div class="container" style="max-width: 1440px;">
           <div class="row" >
             <div class="col" style="padding: 20px;">
               <h5>Insert Yaml or Json contents below:</h5>
-              <form name="formatconvert" style="max-width: 90%;" onsubmit="return validateConvert()" action="/formatconvert-process" method="POST" enctype="multipart/form-data">
+              <form name="formatconvert" style="max-width: 90%;" action="/formatconvert-process" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
-                  <label for="text"></label>
-                  <textarea class="form-control" rows="20" id="text" name="text"></textarea>
+                  <textarea class="form-control" rows="20" id="text" name="text" required placeholder='{"name":"test.com","messages":["msg 1","msg 2","msg 3"],"age":100}'></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Transform</button>
               </form>
             </div>
           </div>
         </div>
-      </div> <!-- /container -->
+      </div>
     </main>
 
     <script src="../assets/custom/js/custom.js" ></script>

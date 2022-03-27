@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="icon" href="../assets/custom/img/tools.svg">
+    <title>Time Converter</title>
+    <!-- Bootstrap core CSS -->
+    <link href="../assets/bootstrap4/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="../assets/custom/css/jumbotron.css" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/htpasswd">HTPasswordGenerator</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/passgen">RandomPasswordGenerator</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/ssh">SSHKeyGenerator</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/jsonprettify">JsonPrettifier</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/formatconvert">FormatConverter</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/timeconvert">TimeConverter</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <main role="main">
+      <div class="jumbotron" style="padding: 1.5rem 1.5rem;">
+        <div class="container">
+          <h1 class="display-3">Time Converter</h1>
+          <p>Here are the details:</p>
+        </div>
+      </div>
+      <div class="container">
+        <form name="timecurrent">
+          <div class="row p-2">
+            <div class="col-6">
+              <label>Current UTC epoch time:</label>
+            </div>
+            <div class="col-4">
+              <input type="text" class="form-control text-center" id="currentEpochTimeInput" name="currentEpochTimeInput" readonly value="{{ .CurrentUTCEpochTimeSeconds }}">
+            </div>
+            <div>
+              <select class="form-control" id="currentEpochTimeFormatSelector" onchange="changeEpochTimeFormat('currentEpochTimeInput','currentEpochTimeFormatSelector')">
+                <option value="{{ .CurrentUTCEpochTimeSeconds }}">Seconds</option>
+                <option value="{{ .CurrentUTCEpochTimeMilli }}">Milliseconds</option>
+                <option value="{{ .CurrentUTCEpochTimeMicro }}">Microseconds</option>
+              </select>
+            </div>
+          </div>
+          <div class="row p-2">
+            <div class="col-6">
+              <label>Current UTC human time:</label>
+            </div>
+            <div class="col-4">
+              <input type="text" class="form-control text-center" id="currentUTCHumanTimeInput" name="currentUTCHumanTimeInput" readonly value="{{ .CurrentUTCHumanTime }}">
+            </div>
+            <div class="col-2">
+              <label>Y-M-D H:M:S</label>
+            </div>
+          </div>
+          <div class="row p-2">
+            <div class="col-6">
+              <label>Current UTC LOCAL ({{ .Timezone }}) human time:</label>
+            </div>
+            <div class="col-4">
+              <input type="text" class="form-control text-center" id="currentLOCALHumanTimeInput" name="currentLOCALHumanTimeInput" readonly value="{{ .CurrentLOCALHumanTime }}">
+            </div>
+            <div class="col-2">
+              <label>Y-M-D H:M:S</label>
+            </div>
+          </div>
+        </form>
+        <hr>
+        
+      {{ if not .EpochToHuman }}  
+        <form name="timeconversion-to-human" hidden>
+      {{ end }}
+          <div class="row p-2">
+            <div class="col-6">
+              <label>Converted Epoch to Human UTC time:</label>
+            </div>
+            <div class="col-4">
+              <input type="text" class="form-control text-center" id="convertedEpochToHumanTimeInput" name="convertedEpochToHumanTimeInput" readonly value="{{ .ConvertedEpochToHumanUTC }}">
+            </div>
+            <div class="col-2">
+              <button type="button" class="btn btn-success" onclick="copyToClipboard('convertedEpochToHumanTimeInput')">Copy</button>
+            </div>
+          </div>
+          <div class="row p-2">
+            <div class="col-6">
+              <label>Converted Epoch to Human UTC LOCAL ({{ .Timezone }}) time:</label>
+            </div>
+            <div class="col-4">
+              <input type="text" class="form-control text-center" id="convertedEpochToLocalHumanTimeInput" name="convertedEpochToLocalHumanTimeInput" readonly value="{{ .ConvertedEpochToHumanLOCAL }}">
+            </div>
+            <div class="col-2">
+              <button type="button" class="btn btn-success" onclick="copyToClipboard('convertedEpochToLocalHumanTimeInput')">Copy</button>
+            </div>
+          </div>
+        </form>
+
+      {{ if not .HumanToEpoch }}
+        <form name="timeconversion-to-epoch" hidden>
+      {{ end }}    
+          <div class="row p-2">
+            <div class="col-6">
+              <label>Converted Human to Epoch UTC time:</label>
+            </div>
+            <div class="col-3">
+              <input type="text" class="form-control text-center" id="convertedHumanToEpochTimeInput" name="convertedHumanToEpochTimeInput" readonly value="{{ .ConvertedHumanToEpochTimeSeconds }}">
+            </div>
+            <div>
+              <select class="form-control" id="convertedHumanToEpochTimeSelector" onchange="changeEpochTimeFormat('convertedHumanToEpochTimeInput','convertedHumanToEpochTimeSelector')">
+                <option value="{{ .ConvertedHumanToEpochTimeSeconds }}">Seconds</option>
+                <option value="{{ .ConvertedHumanToEpochTimeMilli }}">Milliseconds</option>
+                <option value="{{ .ConvertedHumanToEpochTimeMicro }}">Microseconds</option>
+              </select>
+            </div>
+            <div class="col-1">
+              <button type="button" class="btn btn-success" onclick="copyToClipboard('convertedHumanToEpochTimeInput')">Copy</button>
+            </div>
+          </div>
+        </form>
+        <button type="button" class="btn btn-primary" onclick="location.href='/timeconvert'">New time conversion</button>
+        <hr>
+      </div>
+    </main>
+
+    <script src="../assets/custom/js/custom.js" ></script>
+    <script src="../assets/custom/js/jquery-slim.min.js" ></script>
+    <script>window.jQuery || document.write('<script src="../assets/custom/js/jquery-slim.min.js"><\/script>')</script>
+    <script src="../assets/bootstrap4/js/bootstrap.bundle.min.js" ></script>
+  </body>
+
+</html>

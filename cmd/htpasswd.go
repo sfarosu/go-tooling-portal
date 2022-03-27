@@ -1,12 +1,12 @@
 package cmd
 
 import (
-	"errors"
-	"github.com/sfarosu/go-tooling-portal/cmd/tmpl"
 	"log"
 	"net/http"
 	"os/exec"
 	"strings"
+
+	"github.com/sfarosu/go-tooling-portal/cmd/tmpl"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -39,7 +39,6 @@ func htpasswdProcess(w http.ResponseWriter, r *http.Request) {
 	pass := r.FormValue("password")
 	alg := r.FormValue("algorithm")
 
-	// call the generateHtpass function
 	ht, errGenerateHtpass := generateHtpass(uname, pass, alg)
 	if errGenerateHtpass != nil {
 		log.Println("error generating htpassword", errGenerateHtpass)
@@ -68,14 +67,6 @@ func htpasswdProcess(w http.ResponseWriter, r *http.Request) {
 }
 
 func generateHtpass(uname string, pass string, alg string) (string, error) {
-	// error handling for username and password length
-	if uname == "" {
-		return "", errors.New("you must specify a username")
-	}
-	if pass == "" {
-		return "", errors.New("you must specify a password")
-	}
-
 	htpasswd, errCmd := exec.Command("openssl", "passwd", alg, pass).Output()
 	if errCmd != nil {
 		log.Println("Openssl command execution failed !")

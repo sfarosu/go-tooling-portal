@@ -35,6 +35,8 @@ func Serve() {
 	http.HandleFunc("/jsonprettify-process", jsonprettifyProcess)
 	http.HandleFunc("/formatconvert", formatConvert)
 	http.HandleFunc("/formatconvert-process", formatConvertProcess)
+	http.HandleFunc("/timeconvert", timeconvert)
+	http.HandleFunc("/timeconvert-process", timeconvertProcess)
 
 	// call AfterFunc 3 seconds after app startup to purge ssh keys from disc
 	time.AfterFunc(3*time.Second, helper.KeysCleanup)
