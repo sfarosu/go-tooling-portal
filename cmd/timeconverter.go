@@ -72,11 +72,15 @@ func timeconvertProcess(w http.ResponseWriter, r *http.Request) {
 	var loc *time.Location
 	var insertedHumanTime string
 	var insertedHumanTimeParser time.Time
+	var err error
 
 	if r.FormValue("epochToHuman") == "true" {
 		epochToHuman = true
 		timezone = r.FormValue("browserTimeZoneFromEpochForm")
-		loc, _ = time.LoadLocation(timezone)
+		loc, err = time.LoadLocation(timezone)
+		if err != nil {
+			log.Printf("error loading location '%v': %v", timezone, err)
+		}
 		insertedEpochTime, _ = strconv.ParseInt(r.FormValue("epochtime"), 10, 64)
 		switch {
 		case helper.GetNumberDigitsAmmount(insertedEpochTime) == 9 || helper.GetNumberDigitsAmmount(insertedEpochTime) == 10:
@@ -92,13 +96,18 @@ func timeconvertProcess(w http.ResponseWriter, r *http.Request) {
 	} else if r.FormValue("humanToEpoch") == "true" {
 		humanToEpoch = true
 		timezone = r.FormValue("browserTimeZoneFromHumanForm")
-		loc, _ = time.LoadLocation(timezone)
+		loc, err = time.LoadLocation(timezone)
+		if err != nil {
+			log.Printf("error loading location '%v': %v", timezone, err)
+		}
 		insertedHumanTime = r.FormValue("year") + "-" + r.FormValue("month") + "-" + r.FormValue("day") + "T" + r.FormValue("hour") + ":" + r.FormValue("minute") + ":" + r.FormValue("second") + " " + "UTC"
 		layout := "2006-01-02T15:04:05 MST"
-		insertedHumanTimeParser, _ = time.Parse(layout, insertedHumanTime)
+		insertedHumanTimeParser, err = time.Parse(layout, insertedHumanTime)
+		if err != nil {
+			log.Printf("error parsing inserted human time '%v' using layout '%v': %v", insertedHumanTime, layout, err)
+		}
 	}
 
-	// Populate data struct
 	data := struct {
 		Timezone                         string
 		EpochToHuman                     bool
