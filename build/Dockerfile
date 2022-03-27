@@ -11,7 +11,7 @@ RUN go mod download && \
 # Run image
 FROM alpine:3.13
 
-RUN apk update && apk add --no-cache --upgrade openssh-client openssl
+RUN apk update && apk add --no-cache --upgrade openssh-client openssl tzdata
 
 WORKDIR /app
 
