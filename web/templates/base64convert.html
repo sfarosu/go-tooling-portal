@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <link rel="icon" href="../assets/custom/img/tools.svg">
-    <title>HTPasswordGenerator</title>
+    <title>Base64 Converter</title>
     <!-- Bootstrap core CSS -->
     <link href="../assets/bootstrap4/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -59,39 +59,39 @@
     <main role="main">
       <div class="jumbotron" style="padding: 1.5rem 1.5rem;">
         <div class="container">
-          <h1 class="display-3">HTPasswordGenerator</h1>
-          <p>Here are the details:</p>
+          <h1 class="display-3">Base64Converter</h1>
+          <p>Encode/decode data in Base64 format</p>
         </div>
       </div>
-      <div class="container">
-        <form style="max-width: 730px;" name="htpasswd">
-          <div class="form-group">
-            <label>Username:</label>
-            <input type="text" class="form-control" id="user" name="username" aria-describedby="emailHelp" readonly value="{{ .Username }}">
+      <div class="container" style="max-width: 1440px;">
+        <div class="container" style="max-width: 1440px;">
+          <div class="row" >
+            <div class="col" style="padding: 20px;">
+              <h5>Insert data to encode/decode in/from base64 format:</h5>
+              <form name="base64convert" style="max-width: 90%;" action="/base64convert-process" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                  <textarea class="form-control" rows="10" id="text" name="text" required placeholder='aW5zZXJ0c3RyaW5nCg=='></textarea>
+                </div>
+                <div class="form-group">
+                  <label>Operation:</label>
+                  <select style="max-width: 110px;" class="custom-select" id="operation" name="operation">
+                    <option value="decode">decode</option>
+                    <option value="encode">encode</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Format:</label>
+                  <select style="max-width: 130px;" class="custom-select" id="format" name="format">
+                    <option value="standard">standard</option>
+                    <option value="url-compatible">url-compatible</option>
+                  </select>
+                </div>
+                <hr>
+                <button type="submit" class="btn btn-primary">Encode/Decode</button>
+              </form>
+            </div>
           </div>
-          <div class="form-group">
-            <label>Password:</label>
-            <input type="password" name="password" class="form-control" id="pass" readonly value="{{ .Password }}">
-          </div>
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" onclick="revealPassword('pass')" class="custom-control-input" id="showpass">
-            <label class="custom-control-label" for="showpass">Show Password</label>
-            <p></p>
-          </div>
-          <div class="form-group">
-            <label>Your chosen algorithm is:</label>
-            <input type="text" name="algorithm" class="form-control" id="algorithm" readonly value="{{ .Algorithm }}">
-          </div>
-          <hr></hr>
-          <div class="form-group">
-            <label>Your htpassword is:</label>
-            <input type="text" name="result" class="form-control" id="result" readonly value="{{ .Result }}">
-          </div>
-          <button type="button" class="btn btn-success" onclick="copyToClipboard('result')">Copy to clipboard</button>
-          <button type="button" class="btn btn-primary" onclick="location.href='/htpasswd'">New htpasswd</button>
-          <p></p>
-        </form>
-        <hr>
+        </div>
       </div>
     </main>
 

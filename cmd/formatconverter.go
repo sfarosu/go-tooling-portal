@@ -33,15 +33,13 @@ func formatConvertProcess(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/formatconvert", http.StatusSeeOther)
 	}
 
-	insertedText := r.FormValue("text")
-
-	result := transformToFormat(insertedText)
+	result := transformToFormat(r.FormValue("text"))
 
 	data := struct {
 		InsertedText string
 		Result       string
 	}{
-		InsertedText: insertedText,
+		InsertedText: r.FormValue("text"),
 		Result:       result,
 	}
 

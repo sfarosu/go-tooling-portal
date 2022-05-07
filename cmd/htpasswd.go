@@ -35,13 +35,9 @@ func htpasswdProcess(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/htpasswd", http.StatusSeeOther)
 	}
 
-	uname := strings.ToLower(r.FormValue("username"))
-	pass := r.FormValue("password")
-	alg := r.FormValue("algorithm")
-
-	ht, errGenerateHtpass := generateHtpass(uname, pass, alg)
-	if errGenerateHtpass != nil {
-		log.Println("error generating htpassword", errGenerateHtpass)
+	ht, err := generateHtpass(strings.ToLower(r.FormValue("username")), r.FormValue("password"), r.FormValue("algorithm"))
+	if err != nil {
+		log.Println("error generating htpassword", err)
 	}
 
 	data := struct {
@@ -50,9 +46,9 @@ func htpasswdProcess(w http.ResponseWriter, r *http.Request) {
 		Algorithm string
 		Result    string
 	}{
-		Username:  uname,
-		Password:  pass,
-		Algorithm: alg,
+		Username:  strings.ToLower(r.FormValue("username")),
+		Password:  r.FormValue("password"),
+		Algorithm: r.FormValue("algorithm"),
 		Result:    ht,
 	}
 
