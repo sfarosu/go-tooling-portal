@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <link rel="icon" href="../assets/custom/img/tools.svg">
-    <title>HTPasswordGenerator</title>
+    <title>Base64 Converter</title>
     <!-- Bootstrap core CSS -->
     <link href="../assets/bootstrap4/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -59,39 +59,34 @@
     <main role="main">
       <div class="jumbotron" style="padding: 1.5rem 1.5rem;">
         <div class="container">
-          <h1 class="display-3">HTPasswordGenerator</h1>
-          <p>Here are the details:</p>
+          <h1 class="display-3">Base64Converter</h1>
         </div>
       </div>
-      <div class="container">
-        <form style="max-width: 730px;" name="htpasswd">
-          <div class="form-group">
-            <label>Username:</label>
-            <input type="text" class="form-control" id="user" name="username" aria-describedby="emailHelp" readonly value="{{ .Username }}">
+      <div class="container" style="max-width: 1440px;">
+        <div class="container" style="max-width: 1440px;">
+          <div class="row" >
+            <div class="col" style="padding: 0px 5px 20px 0px;">
+              <p class="text-success text-center">Input:</p>
+              <form name="input" >
+                <div class="form-group">
+                  <textarea class="form-control" rows="15" id="input" name="input" readonly>{{ .InsertedText }}</textarea>
+                </div>
+              </form>
+              <button type="button" class="btn btn-success" onclick="copyToClipboard('input')">Copy to clipboard</button>
+            </div>
+            <div class="col" style="padding: 0px 0px 20px 5px;">
+              <p class="text-success text-center">Output:</p>
+              <form name="output">
+                <div class="form-group">
+                  <textarea class="form-control" rows="15" id="output" name="output" readonly>{{ .Result }}</textarea>
+                </div>
+              </form>
+              <button type="button" class="btn btn-success" onclick="copyToClipboard('output')">Copy to clipboard</button>
+            </div>
           </div>
-          <div class="form-group">
-            <label>Password:</label>
-            <input type="password" name="password" class="form-control" id="pass" readonly value="{{ .Password }}">
-          </div>
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" onclick="revealPassword('pass')" class="custom-control-input" id="showpass">
-            <label class="custom-control-label" for="showpass">Show Password</label>
-            <p></p>
-          </div>
-          <div class="form-group">
-            <label>Your chosen algorithm is:</label>
-            <input type="text" name="algorithm" class="form-control" id="algorithm" readonly value="{{ .Algorithm }}">
-          </div>
-          <hr></hr>
-          <div class="form-group">
-            <label>Your htpassword is:</label>
-            <input type="text" name="result" class="form-control" id="result" readonly value="{{ .Result }}">
-          </div>
-          <button type="button" class="btn btn-success" onclick="copyToClipboard('result')">Copy to clipboard</button>
-          <button type="button" class="btn btn-primary" onclick="location.href='/htpasswd'">New htpasswd</button>
-          <p></p>
-        </form>
-        <hr>
+          <button type="button" class="btn btn-primary btn-block" onclick="location.href='/base64convert'">New Conversion</button>
+          <hr>
+        </div>
       </div>
     </main>
 

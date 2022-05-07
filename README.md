@@ -12,10 +12,10 @@ Simple and fast webapp that provides users with some self-hosted tooling to avoi
 - **JsonPrettifier**: prettify/indent a complex Json
 - **FormatConverter**: transform YAML to JSON and viceversa
 - **EpochTimeConverter**: transform unix timestamp to human time and viceversa
+- **Base64Converter**: encode/decode data in Base64 format
 
 To be added in the future releases:
-- **Base64Encoder**: encode/decode data in Base64 format
-- **URLEnconder**: encode/decode special characters in URLs
+- **URLConverter**: encode/decode special characters in URLs
 ___
 ## General information
 
@@ -29,14 +29,16 @@ ___
 
 All the builds and tests on host machine were done using :
 
-- Pop!_OS 21.10
-- docker 20.10.7
-- go version go1.17 linux/amd64
+- Pop!_OS 22.04
+- docker 20.10.12
+- go version go1.18 linux/amd64
 ___
 ## How to run it locally without containers
 
-- Install golang on your local vm (go >= 1.16.2)
-    - on linux, export your GOPATH `echo "export GOPATH=$HOME/go" >> ~/.bashrc`
+- Install golang on your local vm (go >= 1.18)
+    - on linux, export:
+      - `echo "export GOPATH=$HOME/go" >> ~/.bashrc`
+      - `echo "export GO111MODULE=on" >> ~/.bashrc`
     - create your go folders `mkdir -p ~/go/{bin,pkg,src}`
 - Get the app: `cd ~/go/src/ && git clone https://github.com/sfarosu/go-tooling-portal.git`
 - Build the app: `cd ~/go/src/github.com/sfarosu/go-tooling-portal && go build .`
@@ -51,7 +53,7 @@ ___
 - Make sure you have docker and git installed on your machine
 - Git clone the repo: `cd ~ && git clone https://github.com/sfarosu/go-tooling-portal.git && cd ~/go-tooling-portal && git checkout master`
 - Build the image: `cd ~/go-tooling-portal && docker build -t sfarosu/go-tooling-portal:latest -f build/Dockerfile .`
-- Run the container daemonized : `docker run -d -p 8080:8080 go-tooling-portal`
+- Run the container daemonized : `docker run -d -p 8080:8080 sfarosu/go-tooling-portal`
 - Access it in your browser at: [http://localhost:8080](http://localhost:8080)
 
 ### Docker run - use the prebuilt image from docker hub

@@ -49,6 +49,9 @@
           <li class="nav-item">
             <a class="nav-link" href="/timeconvert">TimeConverter</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/base64convert">Base64Converter</a>
+          </li>
         </ul>
       </div>
     </nav>
@@ -57,19 +60,19 @@
       <div class="jumbotron" style="padding: 1.5rem 1.5rem;">
         <div class="container">
           <h1 class="display-3">Json Prettifier</h1>
-          <p>Use this tool to prettify/indent a json file</p>
+          <p>Use this tool to prettify/indent JSON data</p>
         </div>
       </div>
       <div class="container" style="max-width: 1440px;">
         <div class="container" style="max-width: 1440px;">
           <div class="row" >
             <div class="col" style="padding: 20px;">
-              <h5>Insert json contents below:</h5>
+              <h5>Insert Json contents below:</h5>
               <form name="jsonprettify" style="max-width: 90%;" onsubmit="return validateJson()" action="/jsonprettify-process" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                   <textarea class="form-control" rows="20" id="text" name="text" required placeholder='{"name":"test.com","messages":["msg 1","msg 2","msg 3"],"age":100}'></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Prettify json</button>
+                <button type="submit" class="btn btn-primary">Prettify Json</button>
               </form>
             </div>
           </div>

@@ -36,12 +36,8 @@ func sshProcessKeypair(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Redirect(w, r, "/ssh", http.StatusSeeOther)
 	}
-	email := r.FormValue("email")
-	pass := r.FormValue("password")
-	usePass := r.FormValue("usepass")
-	bitSize := r.FormValue("bitsize")
 
-	privateKeyContent, publicKeyContent, privateKeyFileName, publicKeyFileName, errGenerateKeyPair := generateKeyPair(email, pass, usePass, bitSize)
+	privateKeyContent, publicKeyContent, privateKeyFileName, publicKeyFileName, errGenerateKeyPair := generateKeyPair(r.FormValue("email"), r.FormValue("password"), r.FormValue("usepass"), r.FormValue("bitsize"))
 	if errGenerateKeyPair != nil {
 		log.Println("error generating ssh key pair: ", errGenerateKeyPair)
 	}
@@ -56,10 +52,10 @@ func sshProcessKeypair(w http.ResponseWriter, r *http.Request) {
 		PrivateKeyFileName string
 		PublicKeyFileName  string
 	}{
-		Email:              email,
-		Pass:               pass,
-		UsePass:            usePass,
-		BitSize:            bitSize,
+		Email:              r.FormValue("email"),
+		Pass:               r.FormValue("password"),
+		UsePass:            r.FormValue("usepass"),
+		BitSize:            r.FormValue("bitsize"),
 		PrivateKeyContent:  privateKeyContent,
 		PublicKeyContent:   publicKeyContent,
 		PrivateKeyFileName: privateKeyFileName,
@@ -82,9 +78,9 @@ func sshProcessKeypair(w http.ResponseWriter, r *http.Request) {
 func generateKeyPair(email string, pass string, usePass string, bitSize string) (string, string, string, string, error) {
 
 	// generate a randomNumber to make sure keys filenames are unique
-	randomNumber, errRandom := helper.RandomString(16, false, false, true, false)
-	if errRandom != nil {
-		log.Println("error generating a random string: ", errRandom)
+	randomNumber, err := helper.RandomString(16, false, false, true, false)
+	if err != nil {
+		log.Println("error generating a random string: ", err)
 	}
 
 	// generate the key pair and place it under tmp/ with the format id_rsa-randomNumber / id_rsa-sameRandomNumber.pub

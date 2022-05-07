@@ -33,15 +33,13 @@ func jsonprettifyProcess(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/jsonprettify", http.StatusSeeOther)
 	}
 
-	insertedText := r.FormValue("text")
-
-	result := helper.PrettyJSON(insertedText)
+	result := helper.PrettyJSON(r.FormValue("text"))
 
 	data := struct {
 		Text   string
 		Result string
 	}{
-		Text:   insertedText,
+		Text:   r.FormValue("text"),
 		Result: result.String(),
 	}
 
