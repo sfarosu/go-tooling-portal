@@ -13,9 +13,8 @@ Simple and fast webapp that provides users with some self-hosted tooling to avoi
 - **FormatConverter**: transform YAML to JSON and viceversa
 - **EpochTimeConverter**: transform unix timestamp to human time and viceversa
 - **Base64Converter**: encode/decode data in Base64 format
+- **URLDecoder**: decode special characters in URLs
 
-To be added in the future releases:
-- **URLConverter**: encode/decode special characters in URLs
 ___
 ## General information
 
