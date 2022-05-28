@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <link rel="icon" href="../assets/custom/img/tools.svg">
-    <title>RandomPasswordGenerator</title>
+    <title>URL Decoder</title>
     <!-- Bootstrap core CSS -->
     <link href="../assets/bootstrap4/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -62,48 +62,25 @@
     <main role="main">
       <div class="jumbotron" style="padding: 1.5rem 1.5rem;">
         <div class="container">
-          <h1 class="display-3">RandomPasswordGenerator</h1>
-          <p>Here are the details:</p>
+          <h1 class="display-3">URLDecoder</h1>
+          <p>Decode URL data</p>
         </div>
       </div>
-      <div class="container">
-        <form name="passgen">
-          <h5>You have selected:</h5>
-          <p></p>
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" disabled {{ .Uppercase}} class="custom-control-input" name="uppercase" id="uppercase">
-            <label class="custom-control-label" for="uppercase">Upper case letters (A..Z)</label>
-            <p></p>
+      <div class="container" style="max-width: 1440px;">
+        <div class="container" style="max-width: 1440px;">
+          <div class="row" >
+            <div class="col" style="padding: 20px;">
+              <h5>Insert data to url decode:</h5>
+              <form name="urldecode" style="max-width: 90%;" action="/urldecode-process" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                  <textarea class="form-control" rows="10" id="text" name="text" required placeholder='https://example.com/foo+bar%21?service=ab%2Bc&product=de%24f'></textarea>
+                </div>
+                <hr>
+                <button type="submit" class="btn btn-primary">Decode</button>
+              </form>
+            </div>
           </div>
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" disabled {{ .Lowercase}} class="custom-control-input" name="lowercase" id="lowercase">
-            <label class="custom-control-label" for="lowercase">Lower case letters (a..z)</label>
-            <p></p>
-          </div>
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" disabled {{ .Numbers}} class="custom-control-input" name="numbers" id="numbers">
-            <label class="custom-control-label" for="numbers">Numbers (0..9)</label>
-            <p></p>
-          </div>
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" disabled {{ .Symbols}} class="custom-control-input" name="symbols" id="symbols">
-            <label class="custom-control-label" for="symbols">Special characters (#..?)</label>
-            <p></p>
-          </div>
-          <div class="form-group">
-            <label>Password length:</label>
-            <input style="max-width: 80px;" type="number" readonly class="form-control" id="number" name="number" value="{{ .Length }}">
-          </div>
-          <hr>
-          <div class="form-group">
-            <label>Your random password is:</label>
-            <input style="max-width: 620px" type="text" name="result" class="form-control" id="result" readonly value="{{ .Result }}">
-          </div>
-          <button type="button" class="btn btn-success" onclick="copyToClipboard('result')">Copy to clipboard</button>
-          <button type="button" class="btn btn-primary" onclick="location.href='/passgen'">New random password</button>
-          <p></p>
-        </form>
-        <hr>
+        </div>
       </div>
     </main>
 

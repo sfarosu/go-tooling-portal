@@ -39,6 +39,8 @@ func Serve() {
 	http.HandleFunc("/timeconvert-process", timeconvertProcess)
 	http.HandleFunc("/base64convert", base64convert)
 	http.HandleFunc("/base64convert-process", base64convertProcess)
+	http.HandleFunc("/urldecode", urlDecode)
+	http.HandleFunc("/urldecode-process", urlDecodeProcess)
 
 	// call AfterFunc 3 seconds after app startup to purge ssh keys from disc
 	time.AfterFunc(3*time.Second, helper.KeysCleanup)
