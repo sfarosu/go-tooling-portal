@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -32,7 +33,7 @@ func urlDecode(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Redirect(w, r, "/urldecode", http.StatusSeeOther)
 	}
-	log.Println(r.URL.String(), r.Method, r.RemoteAddr, r.Proto, r.Header.Get("User-Agent"))
+	log.Println(r.Method, r.URL.String(), r.Proto, r.RemoteAddr, r.Header.Get("User-Agent"))
 	errExec := tmpl.Tpl.ExecuteTemplate(w, "urldecode.html", nil)
 	if errExec != nil {
 		log.Println("error executing template: ", errExec)
@@ -44,7 +45,7 @@ func urlDecodeProcess(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/urldecode-process", http.StatusSeeOther)
 	}
 
-	result := decode(r.FormValue("text"))
+	result := decode(strings.TrimSpace(r.FormValue("text")))
 
 	data := struct {
 		InsertedText string
@@ -54,7 +55,7 @@ func urlDecodeProcess(w http.ResponseWriter, r *http.Request) {
 		Result:       string(result),
 	}
 
-	log.Println(r.URL.String(), r.Method, r.RemoteAddr, r.Proto, r.Header.Get("User-Agent"))
+	log.Println(r.Method, r.URL.String(), r.Proto, r.RemoteAddr, r.Header.Get("User-Agent"))
 	errExec := tmpl.Tpl.ExecuteTemplate(w, "urldecode-process.html", data)
 	if errExec != nil {
 		log.Println("error executing template: ", errExec)

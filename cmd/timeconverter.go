@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
@@ -48,7 +49,7 @@ func timeconvert(w http.ResponseWriter, r *http.Request) {
 		CurrentUTCSecond:           helper.AddSecondDigit(nowUTC.Second()),
 	}
 
-	log.Println(r.URL.String(), r.Method, r.RemoteAddr, r.Proto, r.Header.Get("User-Agent"))
+	log.Println(r.Method, r.URL.String(), r.Proto, r.RemoteAddr, r.Header.Get("User-Agent"))
 	errExec := tmpl.Tpl.ExecuteTemplate(w, "timeconvert.html", data)
 	if errExec != nil {
 		log.Println("error executing template: ", errExec)
@@ -81,7 +82,7 @@ func timeconvertProcess(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Printf("error loading location '%v': %v", timezone, err)
 		}
-		insertedEpochTime, _ = strconv.ParseInt(r.FormValue("epochtime"), 10, 64)
+		insertedEpochTime, _ = strconv.ParseInt(strings.TrimSpace(r.FormValue("epochtime")), 10, 64)
 		switch {
 		case helper.GetNumberDigitsAmmount(insertedEpochTime) == 9 || helper.GetNumberDigitsAmmount(insertedEpochTime) == 10:
 			convertedEpochToHumanUTC = time.Unix(insertedEpochTime, 0).UTC()
@@ -100,7 +101,7 @@ func timeconvertProcess(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Printf("error loading location '%v': %v", timezone, err)
 		}
-		insertedHumanTime = r.FormValue("year") + "-" + r.FormValue("month") + "-" + r.FormValue("day") + "T" + r.FormValue("hour") + ":" + r.FormValue("minute") + ":" + r.FormValue("second") + " " + "UTC"
+		insertedHumanTime = strings.TrimSpace(r.FormValue("year")) + "-" + strings.TrimSpace(r.FormValue("month")) + "-" + strings.TrimSpace(r.FormValue("day")) + "T" + strings.TrimSpace(r.FormValue("hour")) + ":" + strings.TrimSpace(r.FormValue("minute")) + ":" + strings.TrimSpace(r.FormValue("second")) + " " + "UTC"
 		layout := "2006-01-02T15:04:05 MST"
 		insertedHumanTimeParser, err = time.Parse(layout, insertedHumanTime)
 		if err != nil {
@@ -140,7 +141,7 @@ func timeconvertProcess(w http.ResponseWriter, r *http.Request) {
 		ConvertedHumanToEpochTimeNano:    insertedHumanTimeParser.UnixNano(),
 	}
 
-	log.Println(r.URL.String(), r.Method, r.RemoteAddr, r.Proto, r.Header.Get("User-Agent"))
+	log.Println(r.Method, r.URL.String(), r.Proto, r.RemoteAddr, r.Header.Get("User-Agent"))
 	errExec := tmpl.Tpl.ExecuteTemplate(w, "timeconvert-process.html", data)
 	if errExec != nil {
 		log.Println("Error executing template: ", errExec)

@@ -22,7 +22,7 @@ func passgen(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Redirect(w, r, "/passgen", http.StatusSeeOther)
 	}
-	log.Println(r.URL.String(), r.Method, r.RemoteAddr, r.Proto, r.Header.Get("User-Agent"))
+	log.Println(r.Method, r.URL.String(), r.Proto, r.RemoteAddr, r.Header.Get("User-Agent"))
 	errExec := tmpl.Tpl.ExecuteTemplate(w, "passgen.html", nil)
 	if errExec != nil {
 		log.Println("error executing template: ", errExec)
@@ -87,7 +87,7 @@ func passgenProcess(w http.ResponseWriter, r *http.Request) {
 		Result:    generatedRandomPassword,
 	}
 
-	log.Println(r.URL.String(), r.Method, r.RemoteAddr, r.Proto, r.Header.Get("User-Agent"))
+	log.Println(r.Method, r.URL.String(), r.Proto, r.RemoteAddr, r.Header.Get("User-Agent"))
 	errExec := tmpl.Tpl.ExecuteTemplate(w, "passgen-process.html", data)
 	if errExec != nil {
 		log.Println("error executing template: ", errExec)

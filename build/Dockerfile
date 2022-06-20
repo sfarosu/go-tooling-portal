@@ -5,8 +5,13 @@ WORKDIR /go/src/go-tooling-portal
 
 COPY . /go/src/go-tooling-portal
 
+ENV GO111MODULE=on \
+    GOOS=linux \
+    GOARCH=amd64 \
+    CGO_ENABLED=0
+
 RUN go mod download && \
-    CGO_ENABLED=0 go build -o go-tooling-portal
+    go build -o go-tooling-portal -ldflags "-X 'github.com/sfarosu/go-tooling-portal/cmd/version.BuildDate=$(date '+%Y-%m-%d %H:%M:%S')'-X 'github.com/sfarosu/go-tooling-portal/cmd/version.GitCommitHash=$(git rev-parse --short HEAD)'"
 
 # Run image
 FROM alpine:3.13

@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/prometheus/client_golang v1.12.2
+	go.uber.org/automaxprocs v1.5.1
 	gopkg.in/yaml.v3 v3.0.1
 )
 

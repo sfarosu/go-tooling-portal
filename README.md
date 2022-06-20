@@ -16,6 +16,7 @@ Simple and fast webapp that provides users with some self-hosted tooling to avoi
 - **URLDecoder**: decode special characters in URLs
 
 ___
+
 ## General information
 
 - Html by boostrap4 jumbotron: https://getbootstrap.com/docs/4.0/examples/jumbotron/ 
@@ -23,7 +24,9 @@ ___
 - Nothing is stored server-side, no database is used, everything is ephemeral
 - This tool does not need internet access (all the assets are served locally)
 - Works fine even if you are behind a proxy
+
 ___
+
 ## Build/prerequisites details
 
 All the builds and tests on host machine were done using :
@@ -31,7 +34,9 @@ All the builds and tests on host machine were done using :
 - Pop!_OS 22.04
 - docker 20.10.12
 - go version go1.18 linux/amd64
+
 ___
+
 ## How to run it locally without containers
 
 - Install golang on your local vm (go >= 1.18)
@@ -44,7 +49,9 @@ ___
 - Run the app: `./go-tooling-portal`
 - Access it in your browser at: [http://localhost:8080](http://localhost:8080)
   - metrics available at: [http://localhost:8080/metrics](http://localhost:8080/metrics) 
+
 ___
+
 ## Run it inside containers
 
 ### Docker build
