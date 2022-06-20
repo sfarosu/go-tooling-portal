@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os/exec"
+	"strings"
 	"time"
 
 	"github.com/sfarosu/go-tooling-portal/cmd/helper"
@@ -25,7 +26,7 @@ func ssh(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Redirect(w, r, "/ssh", http.StatusSeeOther)
 	}
-	log.Println(r.URL.String(), r.Method, r.RemoteAddr, r.Proto, r.Header.Get("User-Agent"))
+	log.Println(r.Method, r.URL.String(), r.Proto, r.RemoteAddr, r.Header.Get("User-Agent"))
 	errExec := tmpl.Tpl.ExecuteTemplate(w, "ssh.html", nil)
 	if errExec != nil {
 		log.Println("error executing template: ", errExec)
@@ -37,7 +38,7 @@ func sshProcessKeypair(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/ssh", http.StatusSeeOther)
 	}
 
-	privateKeyContent, publicKeyContent, privateKeyFileName, publicKeyFileName, errGenerateKeyPair := generateKeyPair(r.FormValue("email"), r.FormValue("password"), r.FormValue("usepass"), r.FormValue("bitsize"))
+	privateKeyContent, publicKeyContent, privateKeyFileName, publicKeyFileName, errGenerateKeyPair := generateKeyPair(strings.TrimSpace(r.FormValue("email")), strings.TrimSpace(r.FormValue("password")), r.FormValue("usepass"), r.FormValue("bitsize"))
 	if errGenerateKeyPair != nil {
 		log.Println("error generating ssh key pair: ", errGenerateKeyPair)
 	}
@@ -62,7 +63,7 @@ func sshProcessKeypair(w http.ResponseWriter, r *http.Request) {
 		PublicKeyFileName:  publicKeyFileName,
 	}
 
-	log.Println(r.URL.String(), r.Method, r.RemoteAddr, r.Proto, r.Header.Get("User-Agent"))
+	log.Println(r.Method, r.URL.String(), r.Proto, r.RemoteAddr, r.Header.Get("User-Agent"))
 
 	errExec := tmpl.Tpl.ExecuteTemplate(w, "ssh-process-keygen.html", data)
 	if errExec != nil {

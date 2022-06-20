@@ -1,3 +1,5 @@
 package version
 
-const Version string = "version 0.1.5"
+var Version string = "0.1.5"
+var BuildDate string
+var GitCommitHash string

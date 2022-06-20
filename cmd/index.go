@@ -1,10 +1,11 @@
 package cmd
 
 import (
-	"github.com/sfarosu/go-tooling-portal/cmd/tmpl"
-	"github.com/sfarosu/go-tooling-portal/cmd/version"
 	"log"
 	"net/http"
+
+	"github.com/sfarosu/go-tooling-portal/cmd/tmpl"
+	"github.com/sfarosu/go-tooling-portal/cmd/version"
 )
 
 func index(w http.ResponseWriter, r *http.Request) {
@@ -13,12 +14,12 @@ func index(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := struct {
-		AppVersion string
+		Version string
 	}{
-		AppVersion: version.Version,
+		Version: version.Version,
 	}
 
-	log.Println(r.URL.String(), r.Method, r.RemoteAddr, r.Proto, r.Header.Get("User-Agent"))
+	log.Println(r.Method, r.URL.String(), r.Proto, r.RemoteAddr, r.Header.Get("User-Agent"))
 	errExec := tmpl.Tpl.ExecuteTemplate(w, "index.html", data)
 	if errExec != nil {
 		log.Println("error executing template: ", errExec)

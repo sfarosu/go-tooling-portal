@@ -170,3 +170,11 @@ func GetNumberDigitsAmmount(number int64) int {
 
 	return count
 }
+
+func CurrentWorkingDirectory() string {
+	cwd, err := os.Getwd()
+	if err != nil {
+		log.Printf("Error establishing current working directory: %v", err)
+	}
+	return cwd
+}

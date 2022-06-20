@@ -17,12 +17,13 @@ spec:
       containers:
       - name: go-tooling-portal
         image: sfarosu/go-tooling-portal:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080
         resources:
           requests:
-            memory: "32Mi"
-            cpu: "30m"
+            memory: "128Mi"
+            cpu: "100m"
           limits:
             memory: "512Mi"
-            cpu: "500m"
+            cpu: "1"

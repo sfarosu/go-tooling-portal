@@ -3,6 +3,7 @@ package cmd
 import (
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -21,7 +22,7 @@ func formatConvert(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Redirect(w, r, "/formatconvert", http.StatusSeeOther)
 	}
-	log.Println(r.URL.String(), r.Method, r.RemoteAddr, r.Proto, r.Header.Get("User-Agent"))
+	log.Println(r.Method, r.URL.String(), r.Proto, r.RemoteAddr, r.Header.Get("User-Agent"))
 	errExec := tmpl.Tpl.ExecuteTemplate(w, "formatconvert.html", nil)
 	if errExec != nil {
 		log.Println("error executing template: ", errExec)
@@ -33,7 +34,7 @@ func formatConvertProcess(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/formatconvert", http.StatusSeeOther)
 	}
 
-	result := transformToFormat(r.FormValue("text"))
+	result := transformToFormat(strings.TrimSpace(r.FormValue("text")))
 
 	data := struct {
 		InsertedText string
@@ -43,7 +44,7 @@ func formatConvertProcess(w http.ResponseWriter, r *http.Request) {
 		Result:       result,
 	}
 
-	log.Println(r.URL.String(), r.Method, r.RemoteAddr, r.Proto, r.Header.Get("User-Agent"))
+	log.Println(r.Method, r.URL.String(), r.Proto, r.RemoteAddr, r.Header.Get("User-Agent"))
 	errExec := tmpl.Tpl.ExecuteTemplate(w, "formatconvert-process.html", data)
 	if errExec != nil {
 		log.Println("error executing template: ", errExec)

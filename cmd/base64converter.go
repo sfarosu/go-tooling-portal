@@ -4,6 +4,7 @@ import (
 	b64 "encoding/base64"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -21,7 +22,7 @@ func base64convert(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Redirect(w, r, "/base64convert", http.StatusSeeOther)
 	}
-	log.Println(r.URL.String(), r.Method, r.RemoteAddr, r.Proto, r.Header.Get("User-Agent"))
+	log.Println(r.Method, r.URL.String(), r.Proto, r.RemoteAddr, r.Header.Get("User-Agent"))
 	errExec := tmpl.Tpl.ExecuteTemplate(w, "base64convert.html", nil)
 	if errExec != nil {
 		log.Println("error executing template: ", errExec)
@@ -33,7 +34,7 @@ func base64convertProcess(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/base64convert-process", http.StatusSeeOther)
 	}
 
-	result := base64EncDec(r.FormValue("text"), r.FormValue("operation"), r.FormValue("format"))
+	result := base64EncDec(strings.TrimSpace(r.FormValue("text")), r.FormValue("operation"), r.FormValue("format"))
 
 	data := struct {
 		InsertedText string
@@ -43,7 +44,7 @@ func base64convertProcess(w http.ResponseWriter, r *http.Request) {
 		Result:       result,
 	}
 
-	log.Println(r.URL.String(), r.Method, r.RemoteAddr, r.Proto, r.Header.Get("User-Agent"))
+	log.Println(r.Method, r.URL.String(), r.Proto, r.RemoteAddr, r.Header.Get("User-Agent"))
 	errExec := tmpl.Tpl.ExecuteTemplate(w, "base64convert-process.html", data)
 	if errExec != nil {
 		log.Println("error executing template: ", errExec)

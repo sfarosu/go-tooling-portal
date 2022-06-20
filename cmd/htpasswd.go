@@ -23,7 +23,7 @@ func htpasswd(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Redirect(w, r, "/htpasswd", http.StatusSeeOther)
 	}
-	log.Println(r.URL.String(), r.Method, r.RemoteAddr, r.Proto, r.Header.Get("User-Agent"))
+	log.Println(r.Method, r.URL.String(), r.Proto, r.RemoteAddr, r.Header.Get("User-Agent"))
 	errExec := tmpl.Tpl.ExecuteTemplate(w, "htpasswd.html", nil)
 	if errExec != nil {
 		log.Println("error executing template: ", errExec)
@@ -35,7 +35,7 @@ func htpasswdProcess(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/htpasswd", http.StatusSeeOther)
 	}
 
-	ht, err := generateHtpass(strings.ToLower(r.FormValue("username")), r.FormValue("password"), r.FormValue("algorithm"))
+	ht, err := generateHtpass(strings.ToLower(strings.TrimSpace(r.FormValue("username"))), strings.TrimSpace(r.FormValue("password")), r.FormValue("algorithm"))
 	if err != nil {
 		log.Println("error generating htpassword", err)
 	}
@@ -52,7 +52,7 @@ func htpasswdProcess(w http.ResponseWriter, r *http.Request) {
 		Result:    ht,
 	}
 
-	log.Println(r.URL.String(), r.Method, r.RemoteAddr, r.Proto, r.Header.Get("User-Agent"))
+	log.Println(r.Method, r.URL.String(), r.Proto, r.RemoteAddr, r.Header.Get("User-Agent"))
 
 	errExec := tmpl.Tpl.ExecuteTemplate(w, "htpasswd-process.html", data)
 	if errExec != nil {

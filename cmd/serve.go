@@ -1,26 +1,34 @@
 package cmd
 
 import (
+	"flag"
 	"log"
 	"net/http"
-	"os"
+	"runtime"
 	"time"
 
 	"github.com/sfarosu/go-tooling-portal/cmd/helper"
 	"github.com/sfarosu/go-tooling-portal/cmd/version"
+	"go.uber.org/automaxprocs/maxprocs"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func Serve() {
-	fileServerAssets := http.FileServer(http.Dir("web/assets"))
-	http.Handle("/assets/", http.StripPrefix("/assets", helper.DisableDirListing(fileServerAssets)))
+	// Flags
+	addr := flag.String("addr", ":8080", "Network address and port to start on")
+	flag.Parse()
 
-	fileServerTmp := http.FileServer(http.Dir("web/tmp"))
-	http.Handle("/tmp/", http.StripPrefix("/tmp", helper.DisableDirListing(fileServerTmp)))
+	// GOMAXPROCS - respect k8s cpu quota
+	_, errMax := maxprocs.Set()
+	if errMax != nil {
+		log.Printf("Error setting maxprocs: %v", errMax)
+	}
 
-	fileServerTemplates := http.FileServer(http.Dir("web/templates"))
-	http.Handle("/templates/", http.StripPrefix("/templates", helper.DisableDirListing(fileServerTemplates)))
+	// Http handlers
+	http.Handle("/assets/", http.StripPrefix("/assets", helper.DisableDirListing(http.FileServer(http.Dir("web/assets")))))
+	http.Handle("/tmp/", http.StripPrefix("/tmp", helper.DisableDirListing(http.FileServer(http.Dir("web/tmp")))))
+	http.Handle("/templates/", http.StripPrefix("/templates", helper.DisableDirListing(http.FileServer(http.Dir("web/templates")))))
 
 	http.Handle("/metrics", promhttp.Handler())
 
@@ -42,16 +50,23 @@ func Serve() {
 	http.HandleFunc("/urldecode", urlDecode)
 	http.HandleFunc("/urldecode-process", urlDecodeProcess)
 
-	// call AfterFunc 3 seconds after app startup to purge ssh keys from disc
+	// Call AfterFunc 3 seconds after app startup to purge ssh keys from disc
 	time.AfterFunc(3*time.Second, helper.KeysCleanup)
 
-	hostname, _ := os.Hostname()
-	appPath, _ := os.Getwd()
-	log.Println("Tooling-portal " + version.Version + " started on host " + hostname + ":8080")
-	log.Println("Application path: " + appPath)
+	// Startup logging
+	log.Printf("Program listening on '%v', path '%v', GOMAXPROCS '%v'", *addr, helper.CurrentWorkingDirectory(), runtime.GOMAXPROCS(0))
+	log.Printf("Version '%v', BuildDate '%v', GitCommitHash '%v', GoVersion '%v'", version.Version, version.BuildDate, version.GitCommitHash, runtime.Version())
 
-	err := http.ListenAndServe(":8080", nil)
-	if err != nil {
-		log.Fatal("ListenAndServe: ", err, "\nAnother process running on that port?")
+	// Start http server
+	srv := &http.Server{
+		Addr:         *addr,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		IdleTimeout:  120 * time.Second,
 	}
+	err := srv.ListenAndServe()
+	if err != nil {
+		log.Fatalf("Error starting the http server on '%v': %v", *addr, err)
+	}
+
 }
