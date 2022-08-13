@@ -6,7 +6,7 @@
 
 Simple and fast webapp that provides users with some self-hosted tooling to avoid insecure internet generators/processors:
 
-- **HTPasswordGenerator**: generate htpasswords (MD5, MD-5 Apache variant and crypt)
+- **HTPasswordGenerator**: generate htpasswords OR shadow unix standard passwords (MD5/MD-5 Apache variant OR SHA512)
 - **RandomPasswordGenerator**: generate a variable length, multi-case, multi-symbol password
 - **SSHKeyGenerator**: generate ssh/rsa keys with or without passwords
 - **JsonPrettifier**: prettify/indent a complex Json
@@ -15,11 +15,15 @@ Simple and fast webapp that provides users with some self-hosted tooling to avoi
 - **Base64Converter**: encode/decode data in Base64 format
 - **URLDecoder**: decode special characters in URLs
 
+To be added in future releases:
+
+- **TlsCertificateGenerator**: generate self-signed tls certificates
+
 ___
 
 ## General information
 
-- Html by boostrap4 jumbotron: https://getbootstrap.com/docs/4.0/examples/jumbotron/ 
+- Html by boostrap4 [jumbotron](https://getbootstrap.com/docs/4.0/examples/jumbotron)
 - You can install it inside your organization to avoid unsafe online password generators
 - Nothing is stored server-side, no database is used, everything is ephemeral
 - This tool does not need internet access (all the assets are served locally)
@@ -48,7 +52,7 @@ ___
 - Build the app: `cd ~/go/src/github.com/sfarosu/go-tooling-portal && go build .`
 - Run the app: `./go-tooling-portal`
 - Access it in your browser at: [http://localhost:8080](http://localhost:8080)
-  - metrics available at: [http://localhost:8080/metrics](http://localhost:8080/metrics) 
+  - metrics available at: [http://localhost:8080/metrics](http://localhost:8080/metrics)
 
 ___
 
