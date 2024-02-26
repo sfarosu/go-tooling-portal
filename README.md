@@ -19,6 +19,8 @@ To be added in future releases:
 
 - generate self-signed tls certificates
 - generate k8s kubeconfig from service-account secret token
+- transform yaml/json to golang struct
+
 
 ___
 
