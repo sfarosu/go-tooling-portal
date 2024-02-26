@@ -1,6 +1,6 @@
 version: '3.1'
 services:
   go-tooling-portal:
-    image: sfarosu/go-tooling-portal:latest
+    image: docker.io/sfarosu/go-tooling-portal:latest
     ports:
       - "8080:8080"

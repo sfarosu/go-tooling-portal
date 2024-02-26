@@ -38,9 +38,11 @@ func KeysCleanup() {
 }
 
 func RandomString(size int, Uppercase bool, Lowercase bool, Numbers bool, Specials bool) (string, error) {
-	rand.Seed(time.Now().UnixNano()) // used so that the shuffled result is NOT always the same
+	source := rand.NewSource(time.Now().UnixNano())
+	rng := rand.New(source)
 
-	optionsActive := 0 // we use this to count how many choices the user has selected
+	// we use this to count how many choices the user has selected
+	optionsActive := 0
 
 	// define the categories/slices and their content
 	var uppercase = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
@@ -91,7 +93,7 @@ func RandomString(size int, Uppercase bool, Lowercase bool, Numbers bool, Specia
 
 	// now that the finalResult is complete we shuffle everything
 	for x := len(finalResult) - 1; x > 0; x-- {
-		y := rand.Intn(x + 1)
+		y := rng.Intn(x + 1)
 		finalResult[x], finalResult[y] = finalResult[y], finalResult[x]
 	}
 	return string(finalResult), nil

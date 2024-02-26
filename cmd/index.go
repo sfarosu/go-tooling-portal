@@ -20,8 +20,9 @@ func index(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println(r.Method, r.URL.String(), r.Proto, r.RemoteAddr, r.Header.Get("User-Agent"))
-	errExec := tmpl.Tpl.ExecuteTemplate(w, "index.html", data)
-	if errExec != nil {
-		log.Println("error executing template: ", errExec)
+	err := tmpl.Tpl.ExecuteTemplate(w, "index.html", data)
+	if err != nil {
+		log.Println("error executing template: ", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
 }

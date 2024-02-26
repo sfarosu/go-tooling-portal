@@ -107,6 +107,8 @@ func timeconvertProcess(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Printf("error parsing inserted human time '%v' using layout '%v': %v", insertedHumanTime, layout, err)
 		}
+	} else {
+		log.Println("cannot establish which timeconverter form was requested")
 	}
 
 	data := struct {
