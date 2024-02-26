@@ -1,64 +1,4 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <link rel="icon" href="../assets/custom/img/tools.svg">
-    <title>Time Converter</title>
-    <!-- Bootstrap core CSS -->
-    <link href="../assets/bootstrap4/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-      }
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-    </style>
-    <!-- Custom styles for this template -->
-    <link href="../assets/custom/css/jumbotron.css" rel="stylesheet">
-  </head>
-  <body onload="getClientTimeZone()">
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/htpasswd">HTPasswordGenerator</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/passgen">RandomPasswordGenerator</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/ssh">SSHKeyGenerator</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/jsonprettify">JsonPrettifier</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/formatconvert">FormatConverter</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/timeconvert">TimeConverter</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/base64convert">Base64Converter</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/urldecode">URLDecoder</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-
+{{ template "header" . }}
     <main role="main">
       <div class="jumbotron" style="padding: 1.5rem 1.5rem;">
         <div class="container">
@@ -131,11 +71,10 @@
         <hr>
       </div>
     </main>
-
-    <script src="../assets/custom/js/custom.js" ></script>
-    <script src="../assets/custom/js/jquery-slim.min.js" ></script>
-    <script>window.jQuery || document.write('<script src="../assets/custom/js/jquery-slim.min.js"><\/script>')</script>
-    <script src="../assets/bootstrap4/js/bootstrap.bundle.min.js" ></script>
-  </body>
-
-</html>
+{{ template "footer" . }}
+<!-- Adding to footer the getClientTimeZone() function ONLY in this timeconvert.html template -->
+<script>
+  window.onload = function() {
+      getClientTimeZone();
+  };
+</script>

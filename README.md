@@ -17,7 +17,10 @@ Simple and fast webapp that provides users with some self-hosted tooling to avoi
 
 To be added in future releases:
 
-- **TlsCertificateGenerator**: generate self-signed tls certificates
+- generate self-signed tls certificates
+- generate k8s kubeconfig from service-account secret token
+- transform yaml/json to golang struct
+
 
 ___
 
@@ -36,14 +39,13 @@ ___
 All the builds and tests on host machine were done using :
 
 - Pop!_OS 22.04
-- docker 20.10.12
-- go version go1.18 linux/amd64
-
+- docker 24.0.7
+- go version go1.21.5 linux/amd64
 ___
 
 ## How to run it locally without containers
 
-- Install golang on your local vm (go >= 1.18)
+- Install golang on your local vm (go >= 1.21)
     - on linux, export:
       - `echo "export GOPATH=$HOME/go" >> ~/.bashrc`
       - `echo "export GO111MODULE=on" >> ~/.bashrc`
@@ -62,13 +64,13 @@ ___
 
 - Make sure you have docker and git installed on your machine
 - Git clone the repo: `cd ~ && git clone https://github.com/sfarosu/go-tooling-portal.git && cd ~/go-tooling-portal && git checkout master`
-- Build the image: `cd ~/go-tooling-portal && docker build -t sfarosu/go-tooling-portal:latest -f build/Dockerfile .`
-- Run the container daemonized : `docker run -d -p 8080:8080 sfarosu/go-tooling-portal`
+- Build the image: `cd ~/go-tooling-portal && docker build -t docker.io/sfarosu/go-tooling-portal:latest -f build/Dockerfile .`
+- Run the container daemonized : `docker run --rm -d -p 8080:8080 docker.io/sfarosu/go-tooling-portal`
 - Access it in your browser at: [http://localhost:8080](http://localhost:8080)
 
 ### Docker run - use the prebuilt image from docker hub
 
-- `docker run -d -p 8080:8080 sfarosu/go-tooling-portal:latest`
+- `docker run --rm -d -p 8080:8080 docker.io/sfarosu/go-tooling-portal:latest`
 - Access it in your browser at: [http://localhost:8080](http://localhost:8080)
 
 ### Docker compose
