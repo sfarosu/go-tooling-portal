@@ -21,8 +21,8 @@ builds:
       - amd64
       - arm64
     ldflags:
-      - -X 'github.com/sfarosu/{{ .ProjectName }}/cmd/version.BuildDate={{.Date}}'
-      - -X 'github.com/sfarosu/{{ .ProjectName }}/cmd/version.GitShortHash={{.ShortCommit}}'
+      - -X 'github.com/sfarosu/{{ .ProjectName }}/cmd/version.BuildDate={{ .Date }}'
+      - -X 'github.com/sfarosu/{{ .ProjectName }}/cmd/version.GitShortHash={{ .ShortCommit }}'
 
 archives:
   - id: release-archive
@@ -94,6 +94,7 @@ docker_manifests:
   image_templates:
     - "docker.io/sfarosu/{{ .ProjectName }}:latest-amd64"
     - "docker.io/sfarosu/{{ .ProjectName }}:latest-arm64"
+
 - name_template: "docker.io/sfarosu/{{ .ProjectName }}:{{ .Version }}"
   image_templates:
     - "docker.io/sfarosu/{{ .ProjectName }}:{{ .Version }}-amd64"

@@ -98,6 +98,8 @@ ___
 - go
 - goreleaser; install [docs](https://goreleaser.com/install/)
 
+> **_NOTE:_** in addition, if running Debian and possibly Ubuntu derivatives, the `qemu-user-static` package needs to be installed as it's needed by docker to build against arm64 arch
+
 ### Prerequisites steps
 
 - your GitHub personal token is exported into the `GITHUB_TOKEN` env var
