@@ -55,7 +55,7 @@ func Serve() {
 
 	// Startup logging
 	log.Printf("Program listening on '%v', path '%v', GOMAXPROCS '%v'", *addr, helper.CurrentWorkingDirectory(), runtime.GOMAXPROCS(0))
-	log.Printf("Version '%v', BuildDate '%v', GitCommitHash '%v', GoVersion '%v'", version.Version, version.BuildDate, version.GitCommitHash, runtime.Version())
+	log.Printf("Version '%v', BuildDate '%v', GitShortHash '%v', GoVersion '%v'", version.Version, version.BuildDate, version.GitShortHash, runtime.Version())
 
 	// Start http server
 	srv := &http.Server{
@@ -68,5 +68,4 @@ func Serve() {
 	if err != nil {
 		log.Fatalf("Error starting the http server on '%v': %v", *addr, err)
 	}
-
 }

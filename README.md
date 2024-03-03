@@ -1,4 +1,4 @@
-# TOOLING PORTAL
+# GO TOOLING PORTAL
 
 ## What is it?
 
@@ -21,7 +21,6 @@ To be added in future releases:
 - generate k8s kubeconfig from service-account secret token
 - transform yaml/json to golang struct
 
-
 ___
 
 ## General information
@@ -39,8 +38,9 @@ ___
 All the builds and tests on host machine were done using :
 
 - Pop!_OS 22.04
-- docker 24.0.7
-- go version go1.21.5 linux/amd64
+- docker 25.0.3
+- go version go1.22.0 linux/amd64
+
 ___
 
 ## How to run it locally without containers
@@ -64,7 +64,7 @@ ___
 
 - Make sure you have docker and git installed on your machine
 - Git clone the repo: `cd ~ && git clone https://github.com/sfarosu/go-tooling-portal.git && cd ~/go-tooling-portal && git checkout master`
-- Build the image: `cd ~/go-tooling-portal && docker build -t docker.io/sfarosu/go-tooling-portal:latest -f build/Dockerfile .`
+- Build the image: `cd ~/go-tooling-portal && docker build -t docker.io/sfarosu/go-tooling-portal:latest -f Dockerfile .`
 - Run the container daemonized : `docker run --rm -d -p 8080:8080 docker.io/sfarosu/go-tooling-portal`
 - Access it in your browser at: [http://localhost:8080](http://localhost:8080)
 
@@ -84,3 +84,33 @@ ___
 - create the deployment: `kubectl create -f deployments/kubernetes/deployment.yaml`
 - create the svc: `kubectl create -f deployments/kubernetes/svc.yaml`
 - create your kubernetes/ingress or openshift/route
+
+___
+
+## GitHub release guide
+
+### Prerequisites tools
+
+- make
+- git
+- docker
+- bumpversion `sudo apt install bumpversion / brew install bumpversion`
+- go
+- goreleaser; install [docs](https://goreleaser.com/install/)
+
+> **_NOTE:_** in addition, if running Debian and possibly Ubuntu derivatives, the `qemu-user-static` package needs to be installed as it's needed by docker to build against arm64 arch
+
+### Prerequisites steps
+
+- your GitHub personal token is exported into the `GITHUB_TOKEN` env var
+- docker is started
+- master branch should be selected and the repo must NOT be in dirty state
+
+### Publish a new GitHub release
+
+```bash
+cd go-tooling-portal
+git checkout master && git pull origin master
+make help # list all available targets
+make all # run all publishing targets
+```

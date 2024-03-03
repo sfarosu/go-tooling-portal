@@ -1,0 +1,21 @@
+FROM alpine:3.19
+
+WORKDIR /app
+
+COPY go-tooling-portal /app/
+COPY web/ /app/web
+COPY scripts/ /app/scripts
+
+RUN chown -R 10001:root /app && \
+    chgrp -R 0 /app && \
+    chmod -R g=u /app /etc/passwd && \
+    chmod -R a+x-w /app/scripts && \
+    chmod a+x-w /app/go-tooling-portal
+
+EXPOSE 8080
+
+ENTRYPOINT [ "/app/scripts/uid_entrypoint.sh" ]
+
+USER 10001
+
+CMD [ "/app/go-tooling-portal" ]
