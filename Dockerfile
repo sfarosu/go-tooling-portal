@@ -1,5 +1,5 @@
 # Builder image
-FROM golang:1.21 as builder
+FROM --platform=linux/amd64 golang:1.22 as builder
 
 WORKDIR /go/src/go-tooling-portal
 
@@ -11,28 +11,28 @@ ENV GO111MODULE=on \
     CGO_ENABLED=0
 
 RUN go mod download && \
-    go build -o go-tooling-portal -ldflags "-X 'github.com/sfarosu/go-tooling-portal/cmd/version.BuildDate=$(date '+%Y-%m-%d %H:%M:%S')'-X 'github.com/sfarosu/go-tooling-portal/cmd/version.GitCommitHash=$(git rev-parse --short HEAD)'"
+    go build -o go-tooling-portal -ldflags "-X 'github.com/sfarosu/go-tooling-portal/cmd/version.BuildDate=$(date '+%Y-%m-%d %H:%M:%S')'-X 'github.com/sfarosu/go-tooling-portal/cmd/version.GitShortHash=$(git rev-parse --short HEAD)'"
 
 # Run image
-FROM alpine:3.18
+FROM --platform=linux/amd64 alpine:3.19
 
 RUN apk update && apk add --no-cache --upgrade openssh-client openssl tzdata
 
 WORKDIR /app
 
 COPY ./web/ ./web
-COPY ./build/ ./build
+COPY ./scripts/ ./scripts
 COPY --from=builder /go/src/go-tooling-portal/go-tooling-portal .
 
 RUN chown -R 10001:root /app && \
     chgrp -R 0 /app && \
     chmod -R g=u /app /etc/passwd && \
-    chmod -R a+x-w /app/build && \
+    chmod -R a+x-w /app/scripts && \
     chmod a+x-w /app/go-tooling-portal
 
 EXPOSE 8080
 
-ENTRYPOINT [ "./build/uid_entrypoint.sh" ]
+ENTRYPOINT [ "./scripts/uid_entrypoint.sh" ]
 
 USER 10001
 
