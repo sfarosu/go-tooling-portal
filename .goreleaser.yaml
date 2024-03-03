@@ -30,7 +30,7 @@ archives:
       - release-build
     format: tar.gz
     files:
-      - build
+      - scripts
       - web
 
 checksum:
