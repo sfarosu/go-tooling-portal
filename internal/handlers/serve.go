@@ -1,14 +1,16 @@
-package cmd
+package handlers
 
 import (
 	"flag"
+	"html/template"
 	"log"
 	"net/http"
 	"runtime"
 	"time"
 
-	"github.com/sfarosu/go-tooling-portal/cmd/helper"
-	"github.com/sfarosu/go-tooling-portal/cmd/version"
+	"github.com/sfarosu/go-tooling-portal/internal/helper"
+	"github.com/sfarosu/go-tooling-portal/internal/tmpl"
+	"github.com/sfarosu/go-tooling-portal/internal/version"
 	"go.uber.org/automaxprocs/maxprocs"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -24,6 +26,8 @@ func Serve() {
 	if errMax != nil {
 		log.Printf("Error setting maxprocs: %v", errMax)
 	}
+
+	tmpl.Tpl = template.Must(template.ParseGlob("web/templates/*html"))
 
 	// Http handlers
 	http.Handle("/assets/", http.StripPrefix("/assets", helper.DisableDirListing(http.FileServer(http.Dir("web/assets")))))

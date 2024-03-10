@@ -11,7 +11,7 @@ ENV GO111MODULE=on \
     CGO_ENABLED=0
 
 RUN go mod download && \
-    go build -o go-tooling-portal -ldflags "-X 'github.com/sfarosu/go-tooling-portal/cmd/version.BuildDate=$(date '+%Y-%m-%d %H:%M:%S')'-X 'github.com/sfarosu/go-tooling-portal/cmd/version.GitShortHash=$(git rev-parse --short HEAD)'"
+    go build -o go-tooling-portal -ldflags "-X 'github.com/sfarosu/go-tooling-portal/internal/version.BuildDate=$(date '+%Y-%m-%d %H:%M:%S')'-X 'github.com/sfarosu/go-tooling-portal/internal/version.GitShortHash=$(git rev-parse --short HEAD)'"
 
 # Run image
 FROM --platform=linux/amd64 alpine:3.19

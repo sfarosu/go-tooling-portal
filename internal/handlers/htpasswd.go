@@ -1,4 +1,4 @@
-package cmd
+package handlers
 
 import (
 	"log"
@@ -6,7 +6,7 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/sfarosu/go-tooling-portal/cmd/tmpl"
+	"github.com/sfarosu/go-tooling-portal/internal/tmpl"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"

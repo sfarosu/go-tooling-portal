@@ -1,4 +1,4 @@
-package cmd
+package handlers
 
 import (
 	b64 "encoding/base64"
@@ -8,7 +8,7 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
-	"github.com/sfarosu/go-tooling-portal/cmd/tmpl"
+	"github.com/sfarosu/go-tooling-portal/internal/tmpl"
 )
 
 var (
