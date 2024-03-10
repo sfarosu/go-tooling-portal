@@ -1,4 +1,4 @@
-package cmd
+package handlers
 
 import (
 	"log"
@@ -9,8 +9,8 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
-	"github.com/sfarosu/go-tooling-portal/cmd/helper"
-	"github.com/sfarosu/go-tooling-portal/cmd/tmpl"
+	"github.com/sfarosu/go-tooling-portal/internal/helper"
+	"github.com/sfarosu/go-tooling-portal/internal/tmpl"
 )
 
 var (

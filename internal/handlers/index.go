@@ -1,11 +1,11 @@
-package cmd
+package handlers
 
 import (
 	"log"
 	"net/http"
 
-	"github.com/sfarosu/go-tooling-portal/cmd/tmpl"
-	"github.com/sfarosu/go-tooling-portal/cmd/version"
+	"github.com/sfarosu/go-tooling-portal/internal/tmpl"
+	"github.com/sfarosu/go-tooling-portal/internal/version"
 )
 
 func index(w http.ResponseWriter, r *http.Request) {

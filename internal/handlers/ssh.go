@@ -1,4 +1,4 @@
-package cmd
+package handlers
 
 import (
 	"fmt"
@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/sfarosu/go-tooling-portal/cmd/helper"
-	"github.com/sfarosu/go-tooling-portal/cmd/tmpl"
+	"github.com/sfarosu/go-tooling-portal/internal/helper"
+	"github.com/sfarosu/go-tooling-portal/internal/tmpl"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"

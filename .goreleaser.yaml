@@ -21,8 +21,8 @@ builds:
       - amd64
       - arm64
     ldflags:
-      - -X 'github.com/sfarosu/{{ .ProjectName }}/cmd/version.BuildDate={{ .Date }}'
-      - -X 'github.com/sfarosu/{{ .ProjectName }}/cmd/version.GitShortHash={{ .ShortCommit }}'
+      - -X 'github.com/sfarosu/{{ .ProjectName }}/internal/version.BuildDate={{ .Date }}'
+      - -X 'github.com/sfarosu/{{ .ProjectName }}/internal/version.GitShortHash={{ .ShortCommit }}'
 
 archives:
   - id: release-archive
@@ -30,7 +30,6 @@ archives:
       - release-build
     format: tar.gz
     files:
-      - scripts
       - web
 
 checksum:
@@ -71,6 +70,7 @@ dockers:
       - "--label=org.opencontainers.image.version={{ .Version }}"
     extra_files:
       - scripts
+      - web
 
   - dockerfile: Dockerfile-Goreleaser
     use: buildx
@@ -88,6 +88,7 @@ dockers:
       - "--label=org.opencontainers.image.version={{ .Version }}"
     extra_files:
       - scripts
+      - web
 
 docker_manifests:
 - name_template: "docker.io/sfarosu/{{ .ProjectName }}:latest"
