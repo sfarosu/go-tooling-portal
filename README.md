@@ -8,7 +8,7 @@ Simple and fast webapp that provides users with some self-hosted tooling to avoi
 
 - **HTPasswordGenerator**: generate htpasswords OR shadow unix standard passwords (MD5/MD-5 Apache variant OR SHA512)
 - **RandomPasswordGenerator**: generate a variable length, multi-case, multi-symbol password
-- **SSHKeyGenerator**: generate ssh/rsa keys with or without passwords
+- **SSHKeyGenerator**: generate SSH key pairs
 - **JsonPrettifier**: prettify/indent a complex Json
 - **FormatConverter**: transform YAML to JSON and viceversa
 - **EpochTimeConverter**: transform unix timestamp to human time and viceversa
@@ -46,10 +46,10 @@ ___
 ## How to run it locally without containers
 
 - Install golang on your local vm (go >= 1.21)
-    - on linux, export:
-      - `echo "export GOPATH=$HOME/go" >> ~/.bashrc`
-      - `echo "export GO111MODULE=on" >> ~/.bashrc`
-    - create your go folders `mkdir -p ~/go/{bin,pkg,src}`
+  - on linux, export:
+    - `echo "export GOPATH=$HOME/go" >> ~/.bashrc`
+    - `echo "export GO111MODULE=on" >> ~/.bashrc`
+  - create your go folders `mkdir -p ~/go/{bin,pkg,src}`
 - Get the app: `cd ~/go/src/ && git clone https://github.com/sfarosu/go-tooling-portal.git`
 - Build the app: `cd ~/go/src/github.com/sfarosu/go-tooling-portal && go build .`
 - Run the app: `./go-tooling-portal`
