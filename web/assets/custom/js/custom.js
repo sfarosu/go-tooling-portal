@@ -82,3 +82,36 @@ function getSelectedTimeConversion(sourceForm) {
     document.getElementById("humanToEpoch").value = "true";
   }
 }
+
+// Display/hide forms depending on a select value
+function toggleForms(selectElementId, optionValues, formGroupIds) {
+  var selectElement = document.getElementById(selectElementId);
+
+  // Hide all form groups initially
+  formGroupIds.forEach(function(formGroupId) {
+      document.getElementById(formGroupId).classList.add('d-none');
+  });
+
+  // Determine which form group to display based on the selected option value
+  var selectedIndex = optionValues.indexOf(selectElement.value);
+  if (selectedIndex !== -1) {
+      document.getElementById(formGroupIds[selectedIndex]).classList.remove('d-none');
+  }
+}
+
+function downloadFile(content, filename) {
+  if (!content) {
+      console.error('Content is empty or not provided.');
+      return;
+  }
+
+  var blob = new Blob([content], { type: 'application/octet-stream' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}

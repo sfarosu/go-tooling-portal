@@ -41,8 +41,8 @@ func Serve() {
 	http.HandleFunc("/htpasswd-process", htpasswdProcess)
 	http.HandleFunc("/passgen", passgen)
 	http.HandleFunc("/passgen-process", passgenProcess)
-	http.HandleFunc("/ssh", ssh)
-	http.HandleFunc("/ssh-process-keygen", sshProcessKeypair)
+	http.HandleFunc("/sshkeygen", sshKeyGen)
+	http.HandleFunc("/sshkeygen-process", sshProcessKeypair)
 	http.HandleFunc("/jsonprettify", jsonprettify)
 	http.HandleFunc("/jsonprettify-process", jsonprettifyProcess)
 	http.HandleFunc("/formatconvert", formatConvert)
@@ -54,12 +54,9 @@ func Serve() {
 	http.HandleFunc("/urldecode", urlDecode)
 	http.HandleFunc("/urldecode-process", urlDecodeProcess)
 
-	// Call AfterFunc 3 seconds after app startup to purge ssh keys from disc
-	time.AfterFunc(3*time.Second, helper.KeysCleanup)
-
 	// Startup logging
-	log.Printf("Program listening on '%v', path '%v', GOMAXPROCS '%v'", *addr, helper.CurrentWorkingDirectory(), runtime.GOMAXPROCS(0))
-	log.Printf("Version '%v', BuildDate '%v', GitShortHash '%v', GoVersion '%v'", version.Version, version.BuildDate, version.GitShortHash, runtime.Version())
+	log.Printf("Program listening on [%v], binary path [%v], GOMAXPROCS [%v]", *addr, helper.CurrentWorkingDirectory(), runtime.GOMAXPROCS(0))
+	log.Printf("Version [%v], BuildDate [%v], GitShortHash [%v], GoVersion [%v]", version.Version, version.BuildDate, version.GitShortHash, runtime.Version())
 
 	// Start http server
 	srv := &http.Server{
@@ -70,6 +67,6 @@ func Serve() {
 	}
 	err := srv.ListenAndServe()
 	if err != nil {
-		log.Fatalf("Error starting the http server on '%v': %v", *addr, err)
+		log.Fatalf("Error starting the http server on [%v]: %v", *addr, err)
 	}
 }

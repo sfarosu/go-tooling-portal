@@ -1,0 +1,63 @@
+{{ template "header" . }}
+    <main role="main">
+      <div class="jumbotron" style="padding: 1.5rem 1.5rem;">
+        <div class="container">
+          <h1 class="display-3">SSHKeyGenerator</h1>
+          <p>Place the private key under <kbd>~/.ssh/</kbd> folder and make sure to run <kbd>chmod 400</kbd> on it</p>
+          <p>Place the public key on the target machine in <kbd>~/.ssh/authorized_keys</kbd></p>
+        </div>
+      </div>
+      <div class="container">
+        <p class="text-center font-weight-bold">Your selection was:</p>
+        <form name="sshkeygen">
+          <div class="row p-1">
+            <div class="col-1 py-2">
+              <label>Algorithm:</label>
+            </div>
+            <div class="col-3">
+              <input type="text" class="form-control" readonly value="{{ .Algorithm }}">
+            </div>
+            <div class="col-1 py-2">
+              <label>Bit size:</label>
+            </div>
+            <div class="col-3">
+              <input type="text" class="form-control" readonly value="{{ .BitSize }}">
+            </div>
+            <div class="col-1 py-2">
+              <label>Email:</label>
+            </div>
+            <div class="col-3">
+              <input type="text" class="form-control" readonly value="{{ .Email }}">
+            </div>
+          </div>
+        </form>
+        <hr>
+      </div>
+      <div class="container" style="max-width: 1440px;">
+        <div class="row" >
+          <div class="col" style="padding: 20px;">
+            <p class="text-center font-weight-bold">Private Key:</p>
+            <form name="privatekey">
+              <div class="form-group">
+                <textarea class="form-control" rows="15" id="privatekeycontent" name="privatekeycontent" readonly>{{ .PrivateKeyContent }}</textarea>
+              </div>
+            </form>
+            <button class="btn btn-secondary" onclick="downloadFile(document.getElementById('privatekeycontent').value, 'id_{{ .Algorithm }}')">Download Private Key</button>
+            <button type="button" class="btn btn-success" onclick="copyToClipboard('privatekeycontent')">Copy to clipboard</button> 
+          </div>
+          <div class="col" style="padding: 20px">
+            <p class="text-center font-weight-bold">Public Key:</p>
+            <form name="publickey">
+              <div class="form-group">
+                <textarea class="form-control" rows="15" id="publickeycontent" name="publickeycontent" readonly>{{ .PublicKeyContent }}</textarea>
+              </div>
+            </form>
+            <button class="btn btn-secondary" onclick="downloadFile(document.getElementById('publickeycontent').value, 'id_{{ .Algorithm }}.pub')">Download Public Key</button>
+            <button type="button" class="btn btn-success" onclick="copyToClipboard('publickeycontent')">Copy to clipboard</button> 
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary btn-block" onclick="location.href='/sshkeygen'">Generate new SSH key</button>
+        <hr>
+      </div>
+    </main>
+{{ template "footer" . }}
