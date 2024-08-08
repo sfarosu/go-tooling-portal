@@ -3,12 +3,10 @@ package helper
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
 	"os"
-	"os/exec"
 	"strconv"
 	"strings"
 	"time"
@@ -24,17 +22,6 @@ func DisableDirListing(next http.Handler) http.Handler {
 		}
 		next.ServeHTTP(w, r)
 	})
-}
-
-func KeysCleanup() {
-	// cleanup the tmp folder; key age deletion is defined in the time.Afterfunc function
-	cleanupCmd := exec.Command("find", "web/tmp/", "-type", "f", "-name", "id_rsa*", "-mmin", "+0", "-exec", "rm", "{}", ";")
-	outputCleanupCmd, err := cleanupCmd.CombinedOutput()
-	if err != nil {
-		log.Println(fmt.Sprint(err) + ": " + string(outputCleanupCmd))
-	} else {
-		log.Println("SSH keys stored locally have been purged !")
-	}
 }
 
 func RandomString(size int, Uppercase bool, Lowercase bool, Numbers bool, Specials bool) (string, error) {

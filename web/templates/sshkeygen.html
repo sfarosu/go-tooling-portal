@@ -1,0 +1,50 @@
+{{ template "header" . }}
+    <main role="main">
+      <div class="jumbotron" style="padding: 1.5rem 1.5rem;">
+        <div class="container">
+          <h1 class="display-3">SSHKeyGenerator</h1>
+          <p>Generate SSH keypairs</p>
+        </div>
+      </div>
+      <div class="container" >
+        <div style="padding-right: 100px;">
+          <form name="sshkeygen" style="max-width: 730px;" action="/sshkeygen-process" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+              <label>SSH key algorithm:</label>
+              <select style="max-width: 588px;" class="custom-select" id="algorithm-select" name="algorithm-select" onchange="toggleForms('algorithm-select', ['ecdsa', 'rsa'], ['ecdsa-bitsize', 'rsa-bitsize'])">
+                <option value="ed25519">ed25519 (best)</option>
+                <option value="ecdsa">ecdsa (balanced)</option>
+                <option value="rsa">rsa (most compatible)</option>
+              </select>
+            </div>
+            <div class="form-group d-none" id="ecdsa-bitsize">
+              <label>SSH key bitsize:</label>
+              <select style="max-width: 608px;" class="custom-select" id="ecdsa-bitsize-select" name="ecdsa-bitsize-select">
+                <option value="521">521</option>
+                <option value="384">384</option>
+                <option value="256">256</option>
+              </select>
+            </div>
+            <div class="form-group d-none" id="rsa-bitsize">
+              <label>SSH key bitsize:</label>
+              <select style="max-width: 608px;" class="custom-select" id="rsa-bitsize-select" name="rsa-bitsize-select">
+                <option value="4096">4096</option>
+                <option value="3072">3072</option>
+                <option value="1024">1024</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>E-mail address to be used inside the key:</label>
+              <input type="email" class="form-control" id="email" name="email" required minlength="5" maxlength="64" placeholder="Your e-mail address">
+              <small class="form-text text-muted">Use lowercase characters only.</small>
+            </div>
+
+            <p></p>
+            <p></p>
+            <button type="submit" class="btn btn-primary">Generate SSH keypair</button>
+          </form>
+        </div>
+        <hr>
+      </div>
+    </main>
+{{ template "footer" . }}
