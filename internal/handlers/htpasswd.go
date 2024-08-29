@@ -1,13 +1,18 @@
 package handlers
 
 import (
+	"errors"
+	"fmt"
 	"log"
 	"net/http"
-	"os/exec"
 	"strings"
 
 	"github.com/sfarosu/go-tooling-portal/internal/tmpl"
 
+	"github.com/GehirnInc/crypt/apr1_crypt"
+	"github.com/GehirnInc/crypt/md5_crypt"
+	"github.com/GehirnInc/crypt/sha256_crypt"
+	"github.com/GehirnInc/crypt/sha512_crypt"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 )
@@ -62,13 +67,69 @@ func htpasswdProcess(w http.ResponseWriter, r *http.Request) {
 	htpassGen.Inc()
 }
 
-func generateHtpass(uname string, pass string, alg string) (string, error) {
-	htpasswd, errCmd := exec.Command("openssl", "passwd", alg, pass).Output()
-	if errCmd != nil {
-		log.Println("Openssl command execution failed !")
+func generateHtpass(username string, password string, algorithm string) (string, error) {
+	switch algorithm {
+	case "apr1":
+		hash, err := apr1crypt(username, password)
+		if err != nil {
+			return "", err
+		}
+		return hash, nil
+	case "1":
+		hash, err := md5crypt(username, password)
+		if err != nil {
+			return "", err
+		}
+		return hash, nil
+	case "5":
+		hash, err := sha256crypt(username, password)
+		if err != nil {
+			return "", err
+		}
+		return hash, nil
+	case "6":
+		hash, err := sha512crypt(username, password)
+		if err != nil {
+			return "", err
+		}
+		return hash, nil
+	default:
+		return "", errors.New("unsupported algorithm; use [apr1], [1], [5] or [6] openssl cryptographic options")
+	}
+}
+
+func apr1crypt(username string, password string) (string, error) {
+	hash, err := apr1_crypt.New().Generate([]byte(password), nil)
+	if err != nil {
+		return "", err
 	}
 
-	result := string(uname) + ":" + string(htpasswd)
+	return fmt.Sprintf("%s:%s", username, hash), nil
+}
 
-	return result, nil
+func md5crypt(username string, password string) (string, error) {
+	hash, err := md5_crypt.New().Generate([]byte(password), nil)
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("%s:%s", username, hash), nil
+}
+
+func sha256crypt(username string, password string) (string, error) {
+	hash, err := sha256_crypt.New().Generate([]byte(password), nil)
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("%s:%s", username, hash), nil
+}
+
+func sha512crypt(username string, password string) (string, error) {
+	hash, err := sha512_crypt.New().Generate([]byte(password), nil)
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("%s:%s", username, hash), nil
 }
