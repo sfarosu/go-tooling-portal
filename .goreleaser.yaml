@@ -1,3 +1,5 @@
+version: 2
+
 project_name: go-tooling-portal
 
 dist: ./dist
@@ -26,9 +28,9 @@ builds:
 
 archives:
   - id: release-archive
-    builds:
+    ids:
       - release-build
-    format: tar.gz
+    formats: [ 'tar.gz' ]
     files:
       - web
 
@@ -36,7 +38,7 @@ checksum:
   name_template: 'checksums.txt'
 
 snapshot:
-  name_template: "SNAPSHOT-{{ .Version }}"
+  version_template: "SNAPSHOT-{{ .Version }}"
 
 changelog:
   sort: asc
