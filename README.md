@@ -39,7 +39,7 @@ All the builds and tests on host machine were done using :
 
 - Pop!_OS 22.04
 - docker 25.0.3
-- go version go1.22.0 linux/amd64
+- go version go1.24.0 linux/amd64
 
 ___
 
