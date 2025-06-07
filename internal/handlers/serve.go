@@ -1,11 +1,15 @@
 package handlers
 
 import (
+	"context"
 	"flag"
 	"html/template"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
 	"runtime"
+	"syscall"
 	"time"
 
 	"github.com/sfarosu/go-tooling-portal/internal/helper"
@@ -54,19 +58,41 @@ func Serve() {
 	http.HandleFunc("/urldecode", urlDecode)
 	http.HandleFunc("/urldecode-process", urlDecodeProcess)
 
-	// Startup logging
-	log.Printf("Program listening on [%v], binary path [%v], GOMAXPROCS [%v]", *addr, helper.CurrentWorkingDirectory(), runtime.GOMAXPROCS(0))
-	log.Printf("Version [%v], BuildDate [%v], GitShortHash [%v], GoVersion [%v]", version.Version, version.BuildDate, version.GitShortHash, runtime.Version())
-
-	// Start http server
+	// Configure the http server
 	srv := &http.Server{
 		Addr:         *addr,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 		IdleTimeout:  120 * time.Second,
 	}
-	err := srv.ListenAndServe()
+
+	// Channel to listen for interrupt or terminate signals
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, syscall.SIGINT, syscall.SIGTERM)
+
+	// Run server in a goroutine
+	go func() {
+		err := srv.ListenAndServe()
+		if err != nil && err != http.ErrServerClosed {
+			log.Fatalf("Error starting the HTTP server on [%v]: %v", *addr, err)
+		}
+	}()
+
+	// Startup logging
+	log.Printf("Program listening on [%v], binary path [%v], GOMAXPROCS [%v]", *addr, helper.CurrentWorkingDirectory(), runtime.GOMAXPROCS(0))
+	log.Printf("Version [%v], BuildDate [%v], GitShortHash [%v], GoVersion [%v]", version.Version, version.BuildDate, version.GitShortHash, runtime.Version())
+
+	// Block until a signal is received
+	<-stop
+	log.Println("Shutting down http server...")
+
+	// Create a context with timeout for shutdown
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	err := srv.Shutdown(ctx)
 	if err != nil {
-		log.Fatalf("Error starting the http server on [%v]: %v", *addr, err)
+		log.Fatalf("Http server forced to shutdown due to context timeout: %v", err)
 	}
+
+	log.Println("Http server exited gracefully")
 }
