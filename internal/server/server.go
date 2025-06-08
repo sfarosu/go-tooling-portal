@@ -9,6 +9,9 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/danielgtaylor/huma/v2"
+	"github.com/danielgtaylor/huma/v2/adapters/humago"
+	"github.com/sfarosu/go-tooling-portal/internal/apis"
 	"github.com/sfarosu/go-tooling-portal/internal/helper"
 	"github.com/sfarosu/go-tooling-portal/internal/logger"
 	"github.com/sfarosu/go-tooling-portal/internal/version"
@@ -22,17 +25,28 @@ func Start(addr string) {
 		logger.Logger.Error("error setting maxprocs", "error", errMax)
 	}
 
-	// Set up a new ServeMux
-	mux := http.NewServeMux()
+	// Setup the ServeMux router
+	router := http.NewServeMux()
+
+	// Setup huma - TODO investigate if we can use a custom logger
+	humaConfig := huma.DefaultConfig(
+		"GO TOOLING PORTAL API",
+		"0.1.0",
+	)
+	apiInstance := humago.New(router, humaConfig)
+
+	// Register the API endpoints
+	apis.RegisterVersion(apiInstance)
+	apis.RegisterHtpasswd(apiInstance)
 
 	// Serve static files from the "web" directory
 	fileServer := http.FileServer(http.Dir("web"))
-	mux.Handle("/", fileServer)
+	router.Handle("/", fileServer)
 
 	// Configure the http server
 	srv := &http.Server{
 		Addr:         addr,
-		Handler:      mux,
+		Handler:      router,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 		IdleTimeout:  120 * time.Second,
