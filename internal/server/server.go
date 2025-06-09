@@ -18,41 +18,30 @@ import (
 	"go.uber.org/automaxprocs/maxprocs"
 )
 
+// server timeouts and configuration values.
+const (
+	serverReadTimeout     = 5 * time.Second
+	serverWriteTimeout    = 10 * time.Second
+	serverIdleTimeout     = 120 * time.Second
+	serverShutdownTimeout = 10 * time.Second
+)
+
+// Start initializes and runs the HTTP server, sets up routing, logging, and handles graceful shutdown.
 func Start(addr string) {
-	// GOMAXPROCS - respect k8s cpu quota
+	// GOMAXPROCS - respect K8S cpu quota
 	_, errMax := maxprocs.Set()
 	if errMax != nil {
 		logger.Logger.Error("error setting maxprocs", "error", errMax)
 	}
 
-	// Setup the ServeMux router
-	router := http.NewServeMux()
+	router := setupRouter()
 
-	// Setup huma - TODO investigate if we can use a custom logger
-	humaConfig := huma.DefaultConfig(
-		"GO TOOLING PORTAL API",
-		"0.1.0",
-	)
-	apiInstance := humago.New(router, humaConfig)
+	srv := setupServer(addr, loggingMiddleware(router))
+	// srv := setupServer(addr, router)
 
-	// Register the API endpoints
-	apis.RegisterVersion(apiInstance)
-	apis.RegisterHtpasswd(apiInstance)
+	startupLogging(addr)
 
-	// Serve static files from the "web" directory
-	fileServer := http.FileServer(http.Dir("web"))
-	router.Handle("/", fileServer)
-
-	// Configure the http server
-	srv := &http.Server{
-		Addr:         addr,
-		Handler:      router,
-		ReadTimeout:  5 * time.Second,
-		WriteTimeout: 10 * time.Second,
-		IdleTimeout:  120 * time.Second,
-	}
-
-	// Channel to listen for interrupt or terminate signals
+	// Channel to listen for interrupt or terminate signals.
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, syscall.SIGINT, syscall.SIGTERM)
 
@@ -65,14 +54,47 @@ func Start(addr string) {
 		}
 	}()
 
-	// Startup logging
+	<-stop
+	logger.Logger.Info("shutting down server")
+	waitForShutdown(srv)
+}
+
+// setupRouter configures the HTTP router, registers the API endpoints, and static file serving.
+func setupRouter() *http.ServeMux {
+	router := http.NewServeMux()
+
+	// Register API endpoints
+	humaConfig := huma.DefaultConfig("Go Tooling API", "0.1.0")
+	humaAPI := humago.New(router, humaConfig)
+	apis.RegisterVersion(humaAPI)
+	apis.RegisterHtpasswd(humaAPI)
+
+	// Serve static files
+	fileServer := http.FileServer(http.Dir("web"))
+	router.Handle("/", fileServer)
+
+	return router
+}
+
+// setupServer creates and configures the HTTP server.
+func setupServer(addr string, handler http.Handler) *http.Server {
+	return &http.Server{
+		Addr:         addr,
+		Handler:      handler,
+		ReadTimeout:  serverReadTimeout,
+		WriteTimeout: serverWriteTimeout,
+		IdleTimeout:  serverIdleTimeout,
+	}
+}
+
+// startupLogging logs startup information about the server and binary file.
+func startupLogging(addr string) {
 	logger.Logger.Info(
 		"server started",
 		"address", addr,
 		"gomaxprocs", runtime.GOMAXPROCS(0),
 		"verbosity", logger.CurrentLevel,
 	)
-
 	logger.Logger.Info(
 		"binary info",
 		"binary_path", helper.CurrentWorkingDirectory(),
@@ -81,19 +103,16 @@ func Start(addr string) {
 		"git_short_hash", version.GitShortHash,
 		"go_version", runtime.Version(),
 	)
+}
 
-	// Block until a signal is received
-	<-stop
-	logger.Logger.Info("shutting down server")
-
-	// Create a context with timeout for shutdown
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+// waitForShutdown gracefully shuts down the HTTP server on interrupt.
+func waitForShutdown(srv *http.Server) {
+	ctx, cancel := context.WithTimeout(context.Background(), serverShutdownTimeout)
 	defer cancel()
 	err := srv.Shutdown(ctx)
 	if err != nil {
 		logger.Logger.Error("server forced to shutdown due to context timeout", "error", err)
 		os.Exit(1)
 	}
-
 	logger.Logger.Info("server exited gracefully")
 }

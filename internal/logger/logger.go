@@ -9,6 +9,7 @@ import (
 var Logger *slog.Logger
 var CurrentLevel string
 
+// Init initializes the global logger with the specified log level.
 func Init(level string) {
 	CurrentLevel = level
 	var slogLevel slog.Level
