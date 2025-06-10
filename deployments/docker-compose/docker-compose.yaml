@@ -1,3 +1,4 @@
+# MOVE from docker-compose to docker compose and also update the docs
 version: '3.1'
 services:
   go-tooling-portal:
