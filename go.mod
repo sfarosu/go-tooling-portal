@@ -5,6 +5,7 @@ go 1.24.3
 require (
 	github.com/GehirnInc/crypt v0.0.0-20230320061759-8cc1b52080c5
 	github.com/danielgtaylor/huma/v2 v2.32.0
+	github.com/google/uuid v1.6.0
 	go.uber.org/automaxprocs v1.6.0
 	gopkg.in/yaml.v3 v3.0.1
 )

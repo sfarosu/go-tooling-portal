@@ -36,7 +36,7 @@ func Start(addr string) {
 
 	router := setupRouter()
 
-	srv := setupServer(addr, loggingMiddleware(router))
+	srv := setupServer(addr, requestIDMiddleware(loggingMiddleware(router)))
 
 	err := startupLogging(addr)
 	if err != nil {

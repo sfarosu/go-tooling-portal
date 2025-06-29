@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestInitSetsLoggerAndLevel(t *testing.T) {
+func TestInit(t *testing.T) {
 	tests := []struct {
 		name         string
 		inputLevel   string

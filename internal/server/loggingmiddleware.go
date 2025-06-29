@@ -23,8 +23,11 @@ func loggingMiddleware(next http.Handler) http.Handler {
 		start := time.Now()
 		rec := &statusRecorder{ResponseWriter: w, status: 200}
 
+		reqID := getRequestID(r.Context())
+
 		logger.Logger.Info(
 			"incoming request",
+			"request_id", reqID,
 			"method", r.Method,
 			"path", r.URL.Path,
 			"protocol", r.Proto,
@@ -40,6 +43,7 @@ func loggingMiddleware(next http.Handler) http.Handler {
 		case rec.status >= 500:
 			logger.Logger.Error(
 				"request completed",
+				"request_id", reqID,
 				"method", r.Method,
 				"path", r.URL.Path,
 				"status", rec.status,
@@ -48,6 +52,7 @@ func loggingMiddleware(next http.Handler) http.Handler {
 		case rec.status >= 400:
 			logger.Logger.Warn(
 				"request completed",
+				"request_id", reqID,
 				"method", r.Method,
 				"path", r.URL.Path,
 				"status", rec.status,
@@ -56,6 +61,7 @@ func loggingMiddleware(next http.Handler) http.Handler {
 		default:
 			logger.Logger.Info(
 				"request completed",
+				"request_id", reqID,
 				"method", r.Method,
 				"path", r.URL.Path,
 				"status", rec.status,
