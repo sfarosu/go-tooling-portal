@@ -41,7 +41,7 @@ func TestPrettyJSON(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := PrettyJSON(tt.insertedText)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("PrettyJSON() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("PrettyJSON() error = [%v], wantErr [%v]", err, tt.wantErr)
 				return
 			}
 			if !tt.wantErr {
@@ -79,11 +79,11 @@ func TestMarshalJSON(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := MarshalJSON(tt.input)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("MarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("MarshalJSON() error = [%v], wantErr [%v]", err, tt.wantErr)
 				return
 			}
 			if !tt.wantErr && !strings.Contains(string(got), tt.want) {
-				t.Errorf("MarshalJSON() = %q, want substring %q", string(got), tt.want)
+				t.Errorf("MarshalJSON() = [%v], want substring [%v]", string(got), tt.want)
 			}
 		})
 	}
@@ -119,11 +119,11 @@ func TestUnmarshalJSON(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := UnmarshalJSON(tt.input)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("UnmarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("UnmarshalJSON() error = [%v], wantErr [%v]", err, tt.wantErr)
 				return
 			}
 			if !tt.wantErr && !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("UnmarshalJSON() = %v, want %v", got, tt.want)
+				t.Errorf("UnmarshalJSON() = [%v], want [%v]", got, tt.want)
 			}
 		})
 	}

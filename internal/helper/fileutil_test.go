@@ -12,6 +12,7 @@ func TestReadFile(t *testing.T) {
 	type args struct {
 		filePath string
 	}
+
 	// Create a temporary file with known content
 	tmpFile, err := os.CreateTemp("", "testfile-*.txt")
 	if err != nil {
@@ -49,11 +50,11 @@ func TestReadFile(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := ReadFile(tt.args.filePath)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("ReadFile() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("ReadFile() error = [%v], wantErr [%v]", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ReadFile() = %v, want %v", got, tt.want)
+				t.Errorf("ReadFile() = [%v], want [%v]", got, tt.want)
 			}
 		})
 	}

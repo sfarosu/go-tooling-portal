@@ -30,14 +30,14 @@ func TestMarshalYAML(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := MarshalYAML(tt.input)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("MarshalYAML() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("MarshalYAML() error = [%v], wantErr [%v]", err, tt.wantErr)
 				return
 			}
 			if !tt.wantErr {
 				gotStr := string(got)
 				for _, substr := range tt.want {
 					if !strings.Contains(gotStr, substr) {
-						t.Errorf("MarshalYAML() output missing substring %q in %q", substr, gotStr)
+						t.Errorf("MarshalYAML() output missing substring [%v] in [%v]", substr, gotStr)
 					}
 				}
 			}
@@ -75,7 +75,7 @@ func TestUnmarshalYAML(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := UnmarshalYAML(tt.input)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("UnmarshalYAML() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("UnmarshalYAML() error = [%v], wantErr [%v]", err, tt.wantErr)
 				return
 			}
 			if !tt.wantErr {
@@ -90,7 +90,7 @@ func TestUnmarshalYAML(t *testing.T) {
 					return
 				}
 				if !reflect.DeepEqual(got, tt.want) {
-					t.Errorf("UnmarshalYAML() = %v, want %v", got, tt.want)
+					t.Errorf("UnmarshalYAML() = [%v], want [%v]", got, tt.want)
 				}
 			}
 		})

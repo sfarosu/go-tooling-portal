@@ -45,15 +45,15 @@ func TestDisableDirListing(t *testing.T) {
 			middleware.ServeHTTP(rr, req)
 
 			if rr.Code != tt.wantStatus {
-				t.Errorf("got status %d, want %d", rr.Code, tt.wantStatus)
+				t.Errorf("got status [%v], want [%v]", rr.Code, tt.wantStatus)
 			}
 			if loc := rr.Header().Get("Location"); loc != tt.wantLocation {
-				t.Errorf("got Location %q, want %q", loc, tt.wantLocation)
+				t.Errorf("got Location [%v], want [%v]", loc, tt.wantLocation)
 			}
 			// Only check body for non-redirect responses
 			if tt.wantStatus != http.StatusSeeOther {
 				if body := rr.Body.String(); body != tt.wantBody {
-					t.Errorf("got body %q, want %q", body, tt.wantBody)
+					t.Errorf("got body [%v], want [%v]", body, tt.wantBody)
 				}
 			}
 		})

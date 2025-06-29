@@ -54,7 +54,7 @@ func TestRandomString(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got := RandomString(tt.size, tt.Uppercase, tt.Lowercase, tt.Numbers, tt.Specials)
 			if len(got) != tt.size {
-				t.Errorf("RandomString() length = %d, want %d", len(got), tt.size)
+				t.Errorf("RandomString() length = [%v], want [%v]", len(got), tt.size)
 			}
 		})
 	}
@@ -79,7 +79,7 @@ func TestAddSecondDigit(t *testing.T) {
 		t.Run(fmt.Sprintf("input=%d", tt.input), func(t *testing.T) {
 			got := AddSecondDigit(tt.input)
 			if got != tt.want {
-				t.Errorf("AddSecondDigit(%d) = %q, want %q", tt.input, got, tt.want)
+				t.Errorf("AddSecondDigit(%v) = [%v], want [%v]", tt.input, got, tt.want)
 			}
 		})
 	}
@@ -101,10 +101,10 @@ func TestGetNumberDigitsAmmount(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		t.Run(fmt.Sprintf("input=%d", tt.input), func(t *testing.T) {
+		t.Run(fmt.Sprintf("input=[%v]", tt.input), func(t *testing.T) {
 			got := GetNumberDigitsAmmount(tt.input)
 			if got != tt.want {
-				t.Errorf("GetNumberDigitsAmmount(%d) = %d, want %d", tt.input, got, tt.want)
+				t.Errorf("GetNumberDigitsAmmount(%v) = [%v], want [%v]", tt.input, got, tt.want)
 			}
 		})
 	}
