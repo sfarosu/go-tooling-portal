@@ -15,7 +15,7 @@ type VersionOutput struct {
 	}
 }
 
-// RegisterVersion registers the /api/version endpoint with the given Huma API.
+// RegisterVersion registers the /api/version endpoint with the given Huma API
 func RegisterVersion(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "get-version",
@@ -26,16 +26,16 @@ func RegisterVersion(api huma.API) {
 		Tags:          []string{"ApiVersion"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Returns the current version of the API.",
+				Description: "Returns the current version of the API",
 			},
 			"500": {
-				Description: "Internal Server Error - Unable to retrieve version information.",
+				Description: "Internal Server Error - Unable to retrieve version information",
 			},
 		},
 	}, func(ctx context.Context, input *struct{}) (*VersionOutput, error) {
 		if version.Version == "" {
-			logger.Logger.Error("Internal Server Error - Unable to retrieve version information.")
-			return nil, huma.Error500InternalServerError("Internal Server Error - Unable to retrieve version information.")
+			logger.Logger.Error("Internal Server Error - Unable to retrieve version information")
+			return nil, huma.Error500InternalServerError("Internal Server Error - Unable to retrieve version information")
 		}
 
 		resp := &VersionOutput{}

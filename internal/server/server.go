@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -12,7 +13,6 @@ import (
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humago"
 	"github.com/sfarosu/go-tooling-portal/internal/apis"
-	"github.com/sfarosu/go-tooling-portal/internal/helper"
 	"github.com/sfarosu/go-tooling-portal/internal/logger"
 	"github.com/sfarosu/go-tooling-portal/internal/version"
 	"go.uber.org/automaxprocs/maxprocs"
@@ -26,7 +26,7 @@ const (
 	serverShutdownTimeout = 10 * time.Second
 )
 
-// Start initializes and runs the HTTP server, sets up routing, logging, and handles graceful shutdown.
+// Start initializes and runs the HTTP server, sets up routing, logging, and handles graceful shutdown
 func Start(addr string) {
 	// GOMAXPROCS - respect K8S cpu quota
 	_, errMax := maxprocs.Set()
@@ -37,11 +37,14 @@ func Start(addr string) {
 	router := setupRouter()
 
 	srv := setupServer(addr, loggingMiddleware(router))
-	// srv := setupServer(addr, router)
 
-	startupLogging(addr)
+	err := startupLogging(addr)
+	if err != nil {
+		logger.Logger.Error("error during startup logging", "error", err)
+		os.Exit(1)
+	}
 
-	// Channel to listen for interrupt or terminate signals.
+	// Channel to listen for interrupt or terminate signals
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, syscall.SIGINT, syscall.SIGTERM)
 
@@ -59,12 +62,12 @@ func Start(addr string) {
 	waitForShutdown(srv)
 }
 
-// setupRouter configures the HTTP router, registers the API endpoints, and static file serving.
+// setupRouter configures the HTTP router, registers the API endpoints, and static file serving
 func setupRouter() *http.ServeMux {
 	router := http.NewServeMux()
 
 	// Register API endpoints
-	humaConfig := huma.DefaultConfig("Go Tooling API", "0.1.0")
+	humaConfig := huma.DefaultConfig("Go Tooling API", "1.0.0")
 	humaAPI := humago.New(router, humaConfig)
 	apis.RegisterVersion(humaAPI)
 	apis.RegisterHtpasswd(humaAPI)
@@ -87,8 +90,13 @@ func setupServer(addr string, handler http.Handler) *http.Server {
 	}
 }
 
-// startupLogging logs startup information about the server and binary file.
-func startupLogging(addr string) {
+// startupLogging logs startup information about the server and binary file
+func startupLogging(addr string) error {
+	cwd, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("error establishing current working directory: %v", err)
+	}
+
 	logger.Logger.Info(
 		"server started",
 		"address", addr,
@@ -97,15 +105,17 @@ func startupLogging(addr string) {
 	)
 	logger.Logger.Info(
 		"binary info",
-		"binary_path", helper.CurrentWorkingDirectory(),
+		"binary_path", cwd,
 		"version", version.Version,
 		"build_date", version.BuildDate,
 		"git_short_hash", version.GitShortHash,
 		"go_version", runtime.Version(),
 	)
+
+	return nil
 }
 
-// waitForShutdown gracefully shuts down the HTTP server on interrupt.
+// waitForShutdown gracefully shuts down the HTTP server on interrupt
 func waitForShutdown(srv *http.Server) {
 	ctx, cancel := context.WithTimeout(context.Background(), serverShutdownTimeout)
 	defer cancel()

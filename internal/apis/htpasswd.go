@@ -23,7 +23,7 @@ type HtpasswdOutput struct {
 	}
 }
 
-// RegisterHtpasswd registers the /api/htpasswd endpoint with the given Huma API.
+// RegisterHtpasswd registers the /api/htpasswd endpoint with the given Huma API
 func RegisterHtpasswd(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "generate-htpasswd",
@@ -34,10 +34,10 @@ func RegisterHtpasswd(api huma.API) {
 		Tags:          []string{"Htpassword"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Generates an htpasswd entry for the given username and password using the specified algorithm.",
+				Description: "Generates an htpasswd entry for the given username and password using the specified algorithm",
 			},
 			"400": {
-				Description: "Bad Request - Invalid input or unsupported algorithm.",
+				Description: "Bad Request - Invalid input or unsupported algorithm",
 			},
 		},
 	}, func(ctx context.Context, input *HtpasswdInput) (*HtpasswdOutput, error) {
