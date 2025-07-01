@@ -13,6 +13,7 @@ import (
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humago"
 	"github.com/sfarosu/go-tooling-portal/internal/apis"
+	"github.com/sfarosu/go-tooling-portal/internal/helper"
 	"github.com/sfarosu/go-tooling-portal/internal/logger"
 	"github.com/sfarosu/go-tooling-portal/internal/version"
 	"go.uber.org/automaxprocs/maxprocs"
@@ -73,9 +74,9 @@ func setupRouter() *http.ServeMux {
 	apis.RegisterHtpasswd(humaAPI)
 	apis.RegisterBase64Converter(humaAPI)
 
-	// Serve static files
-	fileServer := http.FileServer(http.Dir("web"))
-	router.Handle("/", fileServer)
+	// Serve static files and disable directory listing
+	router.Handle("/", http.StripPrefix("/", helper.DisableDirListing("web")(http.FileServer(http.Dir("web")))))
+	router.Handle("/assets/", http.StripPrefix("/assets", helper.DisableDirListing("web/assets")(http.FileServer(http.Dir("web/assets")))))
 
 	return router
 }
