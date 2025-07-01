@@ -1,0 +1,152 @@
+/* =========================
+   Base Layout & Typography
+   ========================= */
+html, body {
+    height: 100%;
+}
+body {
+    min-height: 100vh;
+    background: #3B3B3B;
+    color: #fff;
+    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+}
+.main-content {
+    flex: 1 0 auto;
+    min-height: 0;
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+}
+
+/* =========================
+   Navbar
+   ========================= */
+.navbar {
+    background: #3B3B3B;
+    border-bottom: 1.5px solid #44404d;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+}
+.navbar-brand,
+.navbar-nav .nav-link,
+.navbar-text {
+    color: #fff !important;
+}
+.badge {
+    background: #484848;
+    color: #f1f1f1;
+    font-size: 1em;
+    vertical-align: middle;
+    border-radius: 0.5em;
+    padding: 0.35em 0.7em;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin-left: 0.3em;
+}
+
+/* =========================
+   Dropdown Menu
+   ========================= */
+.dropdown-menu {
+    background-color: #484848;
+    color: #f1f1f1;
+}
+.dropdown-menu a.dropdown-item {
+    color: #f1f1f1;
+}
+.dropdown-menu a.dropdown-item:hover {
+    background-color: #5a5a5a;
+}
+
+/* =========================
+   Cards
+   ========================= */
+.card {
+    background-color: #484848;
+    color: #f1f1f1;
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s;
+}
+.card:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.20);
+}
+.card-title {
+    font-weight: 700;
+}
+.icon-circle {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(37, 117, 252, 0.15);
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+.card-link-override {
+    color: inherit;
+    text-decoration: none;
+    display: block;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+.card-link-override:hover,
+.card-link-override:focus {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.20);
+    transform: translateY(-6px) scale(1.03);
+    text-decoration: none;
+    color: inherit;
+}
+
+/* =========================
+   Buttons
+   ========================= */
+.btn-graphite {
+    background: #3B3B3B;
+    color: #fff;
+    border: 1px solid #5a5263;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s, border 0.2s;
+}
+.btn-graphite:hover,
+.btn-graphite:focus {
+    background: #3B3B3B;
+    color: #fff;
+    border-color: #0d6efd; /* Bootstrap bg-primary */
+    box-shadow: 0 2px 8px rgba(37, 117, 252, 0.15);
+    text-decoration: none;
+}
+
+/* =========================
+   Section Boxes (Bas-relief)
+   ========================= */
+.section-box {
+    background: #3B3B3B;
+    border-radius: 1.5rem;
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    margin-bottom: 2.5rem;
+    /* Softer bas-relief effect: */
+    box-shadow:
+        2px 2px 8px #23232a,   /* softer dark shadow bottom right */
+        -2px -2px 8px #44404d; /* softer light shadow top left */
+    border: 1.5px solid #44404d; /* subtle border */
+}
+
+/* =========================
+   Footer
+   ========================= */
+footer {
+    background: transparent;
+    color: #888;
+    border-top: 1px solid #44404d;
+    text-align: center;
+    padding: 0.5rem 0 0.2rem 0;
+    font-size: 0.95rem;
+    margin-top: 0;
+    letter-spacing: 0.2px;
+    flex-shrink: 0;
+}

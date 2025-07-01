@@ -11,9 +11,9 @@ import (
 
 type HtpasswdInput struct {
 	Body struct {
-		Username  string `json:"username" example:"alice" doc:"Username for the htpasswd entry"`
-		Password  string `json:"password" example:"S3cureP@ssw0rd" doc:"Password for the htpasswd entry"`
-		Algorithm string `json:"algorithm" example:"apr1" doc:"Hashing algorithm to use (apr1, 1, 5, or 6)"`
+		Username  string `json:"username" example:"alice" doc:"Username for the htpasswd entry" minLength:"1"`
+		Password  string `json:"password" example:"S3cureP@ssw0rd" doc:"Password for the htpasswd entry" minLength:"1"`
+		Algorithm string `json:"algorithm" example:"apr1" doc:"Hashing algorithm to use (apr1, 1, 5, or 6)" enum:"apr1,1,5,6"`
 	}
 }
 

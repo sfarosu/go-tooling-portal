@@ -11,9 +11,9 @@ import (
 
 type Base64ConverterInput struct {
 	Body struct {
-		Input     string `json:"input" example:"hello" doc:"String to encode or decode"`
-		Operation string `json:"operation" example:"encode" doc:"Operation to perform: encode or decode"`
-		Format    string `json:"format" example:"standard" doc:"Base64 format: standard or url-compatible"`
+		Input     string `json:"input" example:"hello" doc:"String to encode or decode" minLength:"1"`
+		Operation string `json:"operation" example:"encode" doc:"Operation to perform: encode or decode" enum:"encode,decode"`
+		Format    string `json:"format" example:"standard" doc:"Base64 format: standard or url-compatible" enum:"standard,url-compatible"`
 	}
 }
 
