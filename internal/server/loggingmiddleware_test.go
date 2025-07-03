@@ -14,20 +14,20 @@ import (
 func Test_statusRecorder_WriteHeader(t *testing.T) {
 	tests := []struct {
 		name           string
-		initialStatus  int
-		writeCode      int
+		firstCode      int
+		secondCode     int
 		expectedStatus int
 	}{
 		{
-			name:           "sets status to 404",
-			initialStatus:  200,
-			writeCode:      404,
+			name:           "sets status to 404, ignores second WriteHeader",
+			firstCode:      404,
+			secondCode:     200,
 			expectedStatus: 404,
 		},
 		{
-			name:           "sets status to 201",
-			initialStatus:  200,
-			writeCode:      201,
+			name:           "sets status to 201, ignores second WriteHeader",
+			firstCode:      201,
+			secondCode:     500,
 			expectedStatus: 201,
 		},
 	}
@@ -36,14 +36,15 @@ func Test_statusRecorder_WriteHeader(t *testing.T) {
 			rr := httptest.NewRecorder()
 			rec := &statusRecorder{
 				ResponseWriter: rr,
-				status:         tt.initialStatus,
 			}
-			rec.WriteHeader(tt.writeCode)
+			rec.WriteHeader(tt.firstCode)
+			rec.WriteHeader(tt.secondCode) // This should be ignored
+
 			if rec.status != tt.expectedStatus {
 				t.Errorf("WriteHeader() status = [%v], want [%v]", rec.status, tt.expectedStatus)
 			}
 			if rr.Code != tt.expectedStatus {
-				t.Errorf("WriteHeader() underlying ResponseWriter code = [%v], want [%v]", rr.Code, tt.expectedStatus)
+				t.Errorf("underlying ResponseWriter code = [%v], want [%v]", rr.Code, tt.expectedStatus)
 			}
 		})
 	}

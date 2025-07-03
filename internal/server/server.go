@@ -72,6 +72,7 @@ func setupRouter() *http.ServeMux {
 	humaAPI := humago.New(router, humaConfig)
 	apis.RegisterVersion(humaAPI)
 	apis.RegisterHtpasswd(humaAPI)
+	apis.RegisterHtpasswdHtmx(humaAPI)
 	apis.RegisterBase64Converter(humaAPI)
 
 	// Serve static files and disable directory listing

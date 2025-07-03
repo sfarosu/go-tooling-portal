@@ -7,7 +7,7 @@ html, body {
 body {
     min-height: 100vh;
     background: #3B3B3B;
-    color: #fff;
+    color: #f1f1f1;
     font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
     display: flex;
     flex-direction: column;
@@ -30,7 +30,7 @@ body {
 .navbar-brand,
 .navbar-nav .nav-link,
 .navbar-text {
-    color: #fff !important;
+    color: #f1f1f1 !important;
 }
 .badge {
     background: #484848;
@@ -105,19 +105,27 @@ body {
    Buttons
    ========================= */
 .btn-graphite {
-    background: #3B3B3B;
-    color: #fff;
+    background: #484848;
+    color: #f1f1f1;
     border: 1px solid #5a5263;
     border-radius: 0.5rem;
     font-weight: 600;
-    transition: background 0.2s, color 0.2s, border 0.2s;
+    transition: background 0.2s, color 0.2s, border 0.2s, box-shadow 0.2s;
+    /* Bas-relief effect: */
+    box-shadow:
+        2px 2px 6px #23232a,    /* dark shadow bottom right */
+        -2px -2px 6px #44404d;  /* light shadow top left */
 }
 .btn-graphite:hover,
 .btn-graphite:focus {
     background: #3B3B3B;
-    color: #fff;
-    border-color: #0d6efd; /* Bootstrap bg-primary */
-    box-shadow: 0 2px 8px rgba(37, 117, 252, 0.15);
+    color: #f1f1f1;
+    border-color: #44404d; /* match section-box border */
+    /* Bas-relief + glow border matching section-box */
+    box-shadow:
+        3px 3px 8px #23232a,
+        -3px -3px 8px #44404d,
+        0 0 0 4px rgba(68, 64, 77, 0.35); /* #44404d glow */
     text-decoration: none;
 }
 

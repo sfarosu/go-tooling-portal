@@ -27,7 +27,7 @@ type HtpasswdOutput struct {
 func RegisterHtpasswd(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "generate-htpasswd",
-		Summary:       "Generate Htpasswd",
+		Summary:       "Generate htpasswd; returns a JSON object",
 		Method:        http.MethodPost,
 		Path:          "/api/htpasswd",
 		DefaultStatus: http.StatusOK,
