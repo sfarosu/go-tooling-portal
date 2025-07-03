@@ -15,20 +15,22 @@
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     <!-- Custom styling-->
     <link rel="stylesheet" href="assets/styles.css">
+    <!-- Custom scripts -->
+    <script src="assets/scripts.js"></script>
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 
 <body>
     <!-- Load the shared navbar from navbar.html using htmx (avoids code duplication across pages) -->
-    <div hx-get="navbar.html" hx-trigger="load"></div>
+    <div id="navbar-container" hx-get="navbar-index.html" hx-trigger="load"></div>
 
     <!-- Main Content -->
     <main class="main-content">
         <div class="container">
             <!-- Generators Section -->
             <div class="section-box mb-4">
-                <h3 class="text-white mb-3 mt-2">Generators</h3>
+                <h4 class="text-white mb-4 mt-1">Generators</h4>
                 <div class="row g-4 mb-4">
                     <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                         <a href="htpasswd.html" class="card h-100 card-link-override">
@@ -58,7 +60,7 @@
             </div>
             <div class="section-box mb-4">
                 <!-- Converters Section -->
-                <h3 class="text-white mb-3 mt-2">Converters</h3>
+                <h4 class="text-white mb-4 mt-1">Converters</h4>
                 <div class="row g-4 mb-4">
                     <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                         <a href="base64converter.html" class="card h-100 card-link-override">
@@ -93,4 +95,5 @@
     <div hx-get="footer.html" hx-trigger="load"></div>
 
 </body>
+
 </html>
