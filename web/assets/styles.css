@@ -88,7 +88,7 @@ body {
 .section-box {
     background: #3B3B3B;
     border-radius: 1.5rem;
-   padding: 1rem 1.5rem 1rem 1.5rem;
+    padding: 1rem 1.5rem 1rem 1.5rem;
     margin-bottom: 0.5rem;
     /* Softer bas-relief effect: */
     box-shadow:
@@ -170,6 +170,8 @@ body {
 
 /* =========================
    Forms
+    - custom-input used for input form fields
+    - custom-output used for output display fields (ex. results)
    ========================= */
 .form-control.custom-input,
 .form-select.custom-input {
@@ -191,6 +193,24 @@ body {
   border: 2px solid #5a5a5a;
   color: white;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.20);
+  outline: none;
+}
+
+.form-control.custom-output,
+.form-select.custom-output {
+  background-color: #3B3B3B;
+  border: 2px solid rgba(0, 123, 255, 0.2); /* matches section-box glow */
+  color: #f1f1f1;
+  border-radius: 0.5rem;
+  padding: 0.6rem 1rem;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.05);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.form-control.custom-output:focus,
+.form-select.custom-output:focus {
+  border-color: rgba(0, 123, 255, 0.4); /* stronger glow on focus */
+  box-shadow: 0 0 12px rgba(0, 123, 255, 0.25);
   outline: none;
 }
 
@@ -221,4 +241,18 @@ mark {
   padding: 0 3px;
   border-radius: 3px;
   font-weight: 600;
+}
+
+/* =========================
+   Horizontal Rule
+   ========================= */
+hr {
+    border: none;
+    height: 3px;
+    margin: 2rem 0;
+    background: linear-gradient(to right, #44404d, #5a5a5a, #44404d);
+    border-radius: 1px;
+    box-shadow:
+        1px 1px 4px #23232a,   /* subtle dark shadow bottom right */
+        -1px -1px 4px #44404d; /* subtle light shadow top left */
 }

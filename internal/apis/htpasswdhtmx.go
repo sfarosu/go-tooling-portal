@@ -44,25 +44,16 @@ type HtpasswdHTMXOutput struct {
 }
 
 var htpasswdResultTmpl = template.Must(template.New("htpasswd-result").Parse(`
-<div class="card bg-dark text-white">
-    <div class="card-body">
-        <div class="mb-2">
-            <label class="form-label">Username</label>
-            <input type="text" class="form-control" value="{{.Username}}" readonly>
-        </div>
-        <div class="mb-2">
-            <label class="form-label">Password</label>
-            <input type="text" class="form-control" value="{{.Password}}" readonly>
-        </div>
-        <div class="mb-2">
-            <label class="form-label">Algorithm</label>
-            <input type="text" class="form-control" value="{{.Algorithm}}" readonly>
-        </div>
-        <div class="mb-2">
-            <label class="form-label">Htpasswd</label>
-            <input type="text" class="form-control" value="{{.Htpasswd}}" readonly>
-        </div>
-    </div>
+<div class="d-flex justify-content-center">
+  <div class="input-group" style="max-width: 680px; width: 100%;">
+    <input type="text" class="form-control custom-output" id="htpasswd-result-input"
+      value="{{.Htpasswd}}" readonly aria-label="Generated htpasswd">
+    <button class="btn btn-graphite" type="button"
+      onclick="copyToClipboard('htpasswd-result-input')"
+      aria-label="Copy htpasswd to clipboard" tabindex="-1">
+      <i class="bi bi-clipboard"></i>
+    </button>
+  </div>
 </div>
 `))
 

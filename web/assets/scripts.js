@@ -81,3 +81,42 @@ function setupNavbarSearchInit() {
 document.addEventListener('DOMContentLoaded', () => {
   setupNavbarSearchInit();
 });
+
+// Reusable password visibility toggle
+function togglePasswordVisibility(passwordInputId, iconId) {
+    const passwordInput = document.getElementById(passwordInputId);
+    const icon = document.getElementById(iconId);
+
+    if (!passwordInput) return;
+
+    const isVisible = passwordInput.type === 'text';
+    passwordInput.type = isVisible ? 'password' : 'text';
+
+    if (icon) {
+        icon.className = isVisible ? 'bi bi-eye-slash' : 'bi bi-eye';
+    }
+}
+
+// Function to copy text from an input element to the clipboard
+async function copyToClipboard(elemId) {
+  try {
+    const element = document.getElementById(elemId);
+    if (!element) {
+      console.warn(`Element with id="${elemId}" not found.`);
+      return;
+    }
+
+    // Get text depending on element type
+    const tag = element.tagName.toUpperCase();
+    const text = (tag === 'INPUT' || tag === 'TEXTAREA')
+      ? element.value
+      : element.innerText || element.textContent;
+
+    await navigator.clipboard.writeText(text);
+
+    // Optional: user feedback
+    console.log(`Copied to clipboard: ${text}`);
+  } catch (err) {
+    console.error('Failed to copy text: ', err);
+  }
+}
