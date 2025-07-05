@@ -27,17 +27,18 @@ type HtpasswdOutput struct {
 func RegisterHtpasswd(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "generate-htpasswd",
-		Summary:       "Generate htpasswd; returns a JSON object",
+		Summary:       "generate htpasswd - json",
+		Description:   "Returns a JSON object containg an htpasswd entry for the given username and password using the specified algorithm.",
 		Method:        http.MethodPost,
 		Path:          "/api/htpasswd",
 		DefaultStatus: http.StatusOK,
 		Tags:          []string{"Htpassword"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Generates an htpasswd entry for the given username and password using the specified algorithm",
+				Description: "Successfully generated an htpasswd entry using the specified algorithm for the given username and password",
 			},
 			"400": {
-				Description: "Bad Request - Invalid input or unsupported algorithm",
+				Description: "Bad Request, missing fields or unsupported hashing algorithm (must be one of: bcrypt, md5, sha1, or crypt)",
 			},
 		},
 	}, func(ctx context.Context, input *HtpasswdInput) (*HtpasswdOutput, error) {
@@ -49,7 +50,7 @@ func RegisterHtpasswd(api huma.API) {
 				"algorithm", input.Body.Algorithm,
 				"error", err,
 			)
-			return nil, huma.Error400BadRequest("failed to generate htpasswd: " + err.Error())
+			return nil, huma.Error400BadRequest("htpasswd generation failed:  " + err.Error())
 		}
 
 		resp := &HtpasswdOutput{}

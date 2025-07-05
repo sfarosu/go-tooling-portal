@@ -15,7 +15,7 @@ import (
 type HtpasswdHTMXInput struct {
 	// HtmxHeader stores the value of the HX-Request header, which is sent by HTMX
 	// when making AJAX requests. This allows the handler to detect if the request
-	// originated from an HTMX-enabled frontend and respond with HTML instead of JSON.
+	// originated from an HTMX-enabled frontend and respond with HTML instead of JSON
 	HtmxHeader string `header:"HX-Request"`
 
 	// Body contains the main input fields for the htpasswd generation.
@@ -29,7 +29,7 @@ type HtpasswdHTMXInput struct {
 // Resolve implements the huma.RequestResolver interface.
 // It is called by Huma before the handler to allow custom extraction or transformation
 // of request data. Here, we extract the HX-Request header (sent by HTMX)
-// and store it in the HtmxHeader field for later use in the handler.
+// and store it in the HtmxHeader field for later use in the handler
 // See: https://huma.rocks/features/request-resolvers/
 func (m *HtpasswdHTMXInput) Resolve(ctx huma.Context) []error {
 	m.HtmxHeader = ctx.Header("HX-Request")
@@ -43,6 +43,7 @@ type HtpasswdHTMXOutput struct {
 	Body        []byte `json:"-"` // Body is not serialized to JSON, but used to return HTML content
 }
 
+// HTMX-compatible HTML fragment rendered dynamically by the API and injected into the page via HTMX
 var htpasswdResultTmpl = template.Must(template.New("htpasswd-result").Parse(`
 <div class="d-flex justify-content-center">
   <div class="input-group" style="max-width: 680px; width: 100%;">
@@ -61,20 +62,21 @@ var htpasswdResultTmpl = template.Must(template.New("htpasswd-result").Parse(`
 func RegisterHtpasswdHtmx(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "generate-htpasswd-htmx",
-		Summary:       "Generate htpasswd; returns HTML for HTMX",
+		Summary:       "generate htpasswd - htmx",
+		Description:   "Returns a suitable for HTMX injection HTML object containg an htpasswd entry for the given username and password using the specified algorithm.",
 		Method:        http.MethodPost,
 		Path:          "/api/htpasswd/htmx",
 		DefaultStatus: http.StatusOK,
 		Tags:          []string{"Htpassword"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Generates an htpasswd entry for the given username and password using the specified algorithm and returns HTML for HTMX requests",
+				Description: "Successfully generated an htpasswd entry, responding with HTML content for HTMX requests",
 				Content: map[string]*huma.MediaType{
 					"text/html": {},
 				},
 			},
 			"400": {
-				Description: "Bad Request - Invalid input (including missing HX-Request header) or unsupported algorithm",
+				Description: "Bad Request, invalid input (including missing HX-Request header) or unsupported algorithm",
 			},
 		},
 	}, func(ctx context.Context, input *HtpasswdHTMXInput) (*HtpasswdHTMXOutput, error) {

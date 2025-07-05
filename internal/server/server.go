@@ -74,6 +74,7 @@ func setupRouter() *http.ServeMux {
 	apis.RegisterHtpasswd(humaAPI)
 	apis.RegisterHtpasswdHtmx(humaAPI)
 	apis.RegisterBase64Converter(humaAPI)
+	apis.RegisterBase64ConverterHtmx(humaAPI)
 
 	// Serve static files and disable directory listing
 	router.Handle("/", http.StripPrefix("/", helper.DisableDirListing("web")(http.FileServer(http.Dir("web")))))

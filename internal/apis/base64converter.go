@@ -27,17 +27,18 @@ type Base64ConverterOutput struct {
 func RegisterBase64Converter(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "base64-converter",
-		Summary:       "Base64 Encode/Decode",
+		Summary:       "base64 encode/decode - json",
+		Description:   "Returns a JSON object containg a base64-encoded or decoded result depending on the selected operation.",
 		Method:        http.MethodPost,
 		Path:          "/api/base64converter",
 		DefaultStatus: http.StatusOK,
 		Tags:          []string{"Base64Converter"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Base64 encode or decode result",
+				Description: "Successful response with the base64 encoded or decoded result",
 			},
 			"400": {
-				Description: "Bad Request - Invalid input or operation",
+				Description: "Bad Request, the input data is missing, malformed, or the specified operation is invalid (must be 'encode' or 'decode')",
 			},
 		},
 	}, func(ctx context.Context, input *Base64ConverterInput) (*Base64ConverterOutput, error) {
@@ -50,7 +51,7 @@ func RegisterBase64Converter(api huma.API) {
 				"format", input.Body.Format,
 				"error", err,
 			)
-			return nil, huma.Error400BadRequest("failed to process base64 conversion: " + err.Error())
+			return nil, huma.Error400BadRequest("base64 conversion failed: " + err.Error())
 		}
 
 		resp := &Base64ConverterOutput{}
