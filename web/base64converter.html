@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Base64 Converter</title>
+    <title>Base64 Converter - Go Tooling Portal</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="base64 converter">
     <!-- Bootstrap CSS, Icons and Javascript -->
@@ -47,8 +47,8 @@
                                         <label for="operation" class="form-label">Operation</label>
                                         <select class="form-select custom-input" id="operation" name="operation"
                                             required>
-                                            <option value="decode" selected>decode</option>
-                                            <option value="encode">encode</option>
+                                            <option value="encode" selected>encode</option>
+                                            <option value="decode">decode</option>
                                         </select>
                                     </div>
                                     <div class="col-9 mt-4 text-center">
@@ -60,14 +60,12 @@
                                     </div>
                                 </div>
                             </div>
-
                             <!-- Submit button -->
                             <div class="col-12 mt-5 mb-3 text-center">
                                 <button type="submit" class="btn btn-graphite px-3">Convert</button>
                             </div>
                         </form>
                         <div id="base64converter-result" class="mt-4"></div>
-
                         <!-- CLI command alternatives -->
                         <hr class="my-5">
                         <h5 class="text-center fw-bold mb-5">CLI command alternatives for Linux</h5>
@@ -77,8 +75,8 @@
                                 <label class="form-label text-center w-100">Encode Standard</label>
                                 <div class="input-group">
                                     <pre class="flex-grow-1 mb-0 p-3 bg-dark rounded"
-                                        id="cli-apr1">echo -n "your-text" | base64</pre>
-                                    <button class="btn btn-graphite" type="button" onclick="copyToClipboard('cli-apr1')"
+                                        id="cli-encode-standard">echo -n "your-text" | base64</pre>
+                                    <button class="btn btn-graphite" type="button" onclick="copyToClipboard('cli-encode-standard')"
                                         title="Copy CLI command" aria-label="Copy CLI command">
                                         <i class="bi bi-clipboard"></i>
                                     </button>
@@ -89,8 +87,8 @@
                                 <label class="form-label text-center w-100">Decode Standard</label>
                                 <div class="input-group">
                                     <pre class="flex-grow-1 mb-0 p-3 bg-dark rounded"
-                                        id="cli-md5">echo "eW91ci10ZXh0" | base64 --decode</pre>
-                                    <button class="btn btn-graphite" type="button" onclick="copyToClipboard('cli-md5')"
+                                        id="cli-decode-standard">echo "eW91ci10ZXh0" | base64 --decode</pre>
+                                    <button class="btn btn-graphite" type="button" onclick="copyToClipboard('cli-decode-standard')"
                                         title="Copy CLI command" aria-label="Copy CLI command">
                                         <i class="bi bi-clipboard"></i>
                                     </button>
@@ -101,9 +99,9 @@
                                 <label class="form-label text-center w-100">Encode URL-compatible</label>
                                 <div class="input-group">
                                     <pre class="flex-grow-1 mb-0 p-3 bg-dark rounded"
-                                        id="cli-sha256">echo -n "https://mock.io/search?q=a+b" | base64 | tr '+/' '-_'</pre>
+                                        id="cli-encode-url-compatible">echo -n "https://mock.io/search?q=a+b" | base64 | tr '+/' '-_'</pre>
                                     <button class="btn btn-graphite" type="button"
-                                        onclick="copyToClipboard('cli-sha256')" title="Copy CLI command"
+                                        onclick="copyToClipboard('cli-encode-url-compatible')" title="Copy CLI command"
                                         aria-label="Copy CLI command">
                                         <i class="bi bi-clipboard"></i>
                                     </button>
@@ -114,9 +112,9 @@
                                 <label class="form-label text-center w-100">Decode URL-compatible</label>
                                 <div class="input-group">
                                     <pre class="flex-grow-1 mb-0 p-3 bg-dark rounded"
-                                        id="cli-sha512">echo 'aHR0cHM6Ly9tb2NrLmlvL3NlYXJjaD9xPWErYg==' | tr '_-' '/+' | base64 --decode</pre>
+                                        id="cli-decode-url-compatible">echo 'aHR0cHM6Ly9tb2NrLmlvL3NlYXJjaD9xPWErYg==' | tr '_-' '/+' | base64 --decode</pre>
                                     <button class="btn btn-graphite" type="button"
-                                        onclick="copyToClipboard('cli-sha512')" title="Copy CLI command"
+                                        onclick="copyToClipboard('cli-decode-url-compatible')" title="Copy CLI command"
                                         aria-label="Copy CLI command">
                                         <i class="bi bi-clipboard"></i>
                                     </button>

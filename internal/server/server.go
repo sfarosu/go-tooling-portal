@@ -71,6 +71,7 @@ func setupRouter() *http.ServeMux {
 	humaConfig := huma.DefaultConfig("Go Tooling API", "1.0.0")
 	humaAPI := humago.New(router, humaConfig)
 	apis.RegisterVersion(humaAPI)
+	apis.RegisterVersionHtmx(humaAPI)
 	apis.RegisterHtpasswd(humaAPI)
 	apis.RegisterHtpasswdHtmx(humaAPI)
 	apis.RegisterBase64Converter(humaAPI)

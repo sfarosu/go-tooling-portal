@@ -35,10 +35,10 @@ func RegisterHtpasswd(api huma.API) {
 		Tags:          []string{"Htpassword"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Successfully generated an htpasswd entry using the specified algorithm for the given username and password",
+				Description: "Successfully generated an htpasswd entry using the specified algorithm for the given username and password.",
 			},
 			"400": {
-				Description: "Bad Request, missing fields or unsupported hashing algorithm (must be one of: bcrypt, md5, sha1, or crypt)",
+				Description: "Bad Request, missing fields or unsupported hashing algorithm (must be one of: bcrypt, md5, sha1, or crypt).",
 			},
 		},
 	}, func(ctx context.Context, input *HtpasswdInput) (*HtpasswdOutput, error) {

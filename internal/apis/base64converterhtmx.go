@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"net/http"
+	"strconv"
 	"text/template"
 
 	"github.com/danielgtaylor/huma/v2"
@@ -11,12 +12,12 @@ import (
 	"github.com/sfarosu/go-tooling-portal/internal/service"
 )
 
-// Base64ConverterHTMXInput is the request structure for the /api/base64converter endpoint.
+// Base64ConverterHTMXInput is the request structure for the /api/base64converter/htmx endpoint.
 type Base64ConverterHTMXInput struct {
 	// HtmxHeader stores the value of the HX-Request header, which is sent by HTMX
 	// when making AJAX requests. This allows the handler to detect if the request
 	// originated from an HTMX-enabled frontend and respond with HTML instead of JSON
-	HtmxHeader string `header:"HX-Request"`
+	HtmxHeader bool `header:"HX-Request"`
 
 	Body struct {
 		Input     string `json:"input" example:"hello" doc:"String to encode or decode" minLength:"1"`
@@ -31,12 +32,18 @@ type Base64ConverterHTMXInput struct {
 // and store it in the HtmxHeader field for later use in the handler
 // See: https://huma.rocks/features/request-resolvers/
 func (m *Base64ConverterHTMXInput) Resolve(ctx huma.Context) []error {
-	m.HtmxHeader = ctx.Header("HX-Request")
-
+	val := ctx.Header("HX-Request")
+	parsed, err := strconv.ParseBool(val)
+	if err != nil {
+		// If parsing fails, assume it's not an HTMX request
+		m.HtmxHeader = false
+		return nil
+	}
+	m.HtmxHeader = parsed
 	return nil
 }
 
-// Base64ConverterHTMXOutput is the response structure for the /api/base64converter endpoint
+// Base64ConverterHTMXOutput is the response structure for the /api/base64converter/htmx endpoint
 type Base64ConverterHTMXOutput struct {
 	ContentType string `header:"Content-Type"`
 	Body        []byte `json:"-"` // Body is not serialized to JSON, but used to return HTML content
@@ -69,13 +76,13 @@ func RegisterBase64ConverterHtmx(api huma.API) {
 		Tags:          []string{"Base64Converter"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Successfully converted the input, responding with HTML content for HTMX requests",
+				Description: "Successfully converted the input, responding with HTML content for HTMX requests.",
 				Content: map[string]*huma.MediaType{
 					"text/html": {},
 				},
 			},
 			"400": {
-				Description: "Bad Request, invalid input (including missing HX-Request header) or unsupported operation",
+				Description: "Bad Request, invalid input (including missing HX-Request header) or unsupported operation.",
 			},
 		},
 	}, func(ctx context.Context, input *Base64ConverterHTMXInput) (*Base64ConverterHTMXOutput, error) {
@@ -91,8 +98,8 @@ func RegisterBase64ConverterHtmx(api huma.API) {
 			return nil, huma.Error400BadRequest("base64 conversion failed: " + err.Error())
 		}
 
-		// Render the HTML template and return as a string if this is an HTMX request
-		if input.HtmxHeader == "true" {
+		// Render the HTML template and return as a html block if this is an HTMX request
+		if input.HtmxHeader {
 			var buf bytes.Buffer
 			base64converterResultTmpl.Execute(&buf, map[string]string{
 				"Base64ConversionResult": base64ConversionResult,

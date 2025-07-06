@@ -35,10 +35,10 @@ func RegisterBase64Converter(api huma.API) {
 		Tags:          []string{"Base64Converter"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Successful response with the base64 encoded or decoded result",
+				Description: "Successful response with the base64 encoded or decoded result.",
 			},
 			"400": {
-				Description: "Bad Request, the input data is missing, malformed, or the specified operation is invalid (must be 'encode' or 'decode')",
+				Description: "Bad Request, the input data is missing, malformed, or the specified operation is invalid (must be 'encode' or 'decode').",
 			},
 		},
 	}, func(ctx context.Context, input *Base64ConverterInput) (*Base64ConverterOutput, error) {
