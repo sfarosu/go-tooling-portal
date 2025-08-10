@@ -256,3 +256,14 @@ hr {
         1px 1px 4px #23232a,   /* subtle dark shadow bottom right */
         -1px -1px 4px #44404d; /* subtle light shadow top left */
 }
+
+/* =========================
+   Copied Highlight
+   ========================= */
+.copied-highlight {
+  background-color: #5a5a5a !important;
+  color: #f1f1f1 !important;
+  border-radius: 3px;
+  font-weight: 600;
+  transition: background-color 0.5s;
+}

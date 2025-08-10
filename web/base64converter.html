@@ -73,7 +73,7 @@
                             <!-- Encode Standard -->
                             <div class="col-md-6">
                                 <label class="form-label text-center w-100">Encode Standard</label>
-                                <div class="input-group">
+                                <div class="d-flex flex-nowrap align-items-stretch">
                                     <pre class="flex-grow-1 mb-0 p-3 bg-dark rounded"
                                         id="cli-encode-standard">echo -n "your-text" | base64</pre>
                                     <button class="btn btn-graphite" type="button" onclick="copyToClipboard('cli-encode-standard')"
@@ -85,7 +85,7 @@
                             <!-- Decode Standard -->
                             <div class="col-md-6">
                                 <label class="form-label text-center w-100">Decode Standard</label>
-                                <div class="input-group">
+                                <div class="d-flex flex-nowrap align-items-stretch">
                                     <pre class="flex-grow-1 mb-0 p-3 bg-dark rounded"
                                         id="cli-decode-standard">echo "eW91ci10ZXh0" | base64 --decode</pre>
                                     <button class="btn btn-graphite" type="button" onclick="copyToClipboard('cli-decode-standard')"
@@ -97,7 +97,7 @@
                             <!-- Encode URL-compatible -->
                             <div class="col-md-6">
                                 <label class="form-label text-center w-100">Encode URL-compatible</label>
-                                <div class="input-group">
+                                <div class="d-flex flex-nowrap align-items-stretch">
                                     <pre class="flex-grow-1 mb-0 p-3 bg-dark rounded"
                                         id="cli-encode-url-compatible">echo -n "https://mock.io/search?q=a+b" | base64 | tr '+/' '-_'</pre>
                                     <button class="btn btn-graphite" type="button"
@@ -110,7 +110,7 @@
                             <!-- Decode URL-compatible -->
                             <div class="col-md-6">
                                 <label class="form-label text-center w-100">Decode URL-compatible</label>
-                                <div class="input-group">
+                                <div class="d-flex flex-nowrap align-items-stretch">
                                     <pre class="flex-grow-1 mb-0 p-3 bg-dark rounded"
                                         id="cli-decode-url-compatible">echo 'aHR0cHM6Ly9tb2NrLmlvL3NlYXJjaD9xPWErYg==' | tr '_-' '/+' | base64 --decode</pre>
                                     <button class="btn btn-graphite" type="button"

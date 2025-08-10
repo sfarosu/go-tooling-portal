@@ -114,8 +114,12 @@ async function copyToClipboard(elemId) {
 
     await navigator.clipboard.writeText(text);
 
-    // Optional: user feedback
-    console.log(`Copied to clipboard: ${text}`);
+    // Visual feedback: highlight the element
+    element.classList.add('copied-highlight');
+    setTimeout(() => {
+      element.classList.remove('copied-highlight');
+    }, 700);
+
   } catch (err) {
     console.error('Failed to copy text: ', err);
   }

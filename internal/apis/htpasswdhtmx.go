@@ -95,6 +95,21 @@ func RegisterHtpasswdHtmx(api huma.API) {
 				"algorithm", input.Body.Algorithm,
 				"error", err,
 			)
+			if input.HtmxHeader {
+				// If it's a htmx request, return an HTML fragment with the error content (return code will be 200 as we want to display it in the UI)
+				alert := `
+<div class="d-flex justify-content-center">
+  <div class="input-group" style="max-width: 680px; width: 100%;">
+    <input type="text" class="form-control custom-output is-invalid" id="htpasswd-result-input"
+      value="` + err.Error() + `" readonly aria-label="Error generating htpasswd">
+  </div>
+</div>
+`
+				return &HtpasswdHTMXOutput{
+					ContentType: "text/html; charset=utf-8",
+					Body:        []byte(alert),
+				}, nil
+			}
 			return nil, huma.Error400BadRequest("failed to generate htpasswd: " + err.Error())
 		}
 

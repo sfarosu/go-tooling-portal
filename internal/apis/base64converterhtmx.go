@@ -95,6 +95,21 @@ func RegisterBase64ConverterHtmx(api huma.API) {
 				"format", input.Body.Format,
 				"error", err,
 			)
+			if input.HtmxHeader {
+				// If it's a htmx request, return an HTML fragment with the error content (return code will be 200 as we want to display it in the UI)
+				alert := `
+<div class="d-flex justify-content-center">
+  <div class="input-group" style="max-width: 680px; width: 100%;">
+    <textarea class="form-control custom-output is-invalid"
+      readonly aria-label="Converted result">` + err.Error() + `</textarea>
+  </div>
+</div>
+`
+				return &Base64ConverterHTMXOutput{
+					ContentType: "text/html; charset=utf-8",
+					Body:        []byte(alert),
+				}, nil
+			}
 			return nil, huma.Error400BadRequest("base64 conversion failed: " + err.Error())
 		}
 
