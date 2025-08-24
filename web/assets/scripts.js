@@ -124,3 +124,16 @@ async function copyToClipboard(elemId) {
     console.error('Failed to copy text: ', err);
   }
 }
+
+// Function to initialize all Bootstrap tooltips on the page
+function initBootstrapTooltips() {
+  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+    new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+}
+// Call it when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  initBootstrapTooltips();
+  setupNavbarSearchInit();
+});
