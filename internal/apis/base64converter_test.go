@@ -19,10 +19,8 @@ func TestBase64Converter_Encode(t *testing.T) {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	t.Logf("Response body: %s", rr.Body.String())
-
 	if rr.Code != http.StatusOK {
-		t.Errorf("Expected status 200, got %d", rr.Code)
+		t.Errorf("Expected status 200, got %d, response body %v", rr.Code, rr.Body.String())
 	}
 
 	var out struct {
@@ -49,10 +47,8 @@ func TestBase64Converter_Decode(t *testing.T) {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	t.Logf("Response body: %s", rr.Body.String())
-
 	if rr.Code != http.StatusOK {
-		t.Errorf("Expected status 200, got %d", rr.Code)
+		t.Errorf("Expected status 200, got %d, response body %v", rr.Code, rr.Body.String())
 	}
 
 	var out struct {
@@ -78,9 +74,7 @@ func TestBase64Converter_InvalidOperation(t *testing.T) {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	t.Logf("Response body: %s", rr.Body.String())
-
 	if rr.Code != http.StatusUnprocessableEntity {
-		t.Errorf("Expected status 422, got %d", rr.Code)
+		t.Errorf("Expected status 422, got %d, response body %v", rr.Code, rr.Body.String())
 	}
 }

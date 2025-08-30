@@ -17,7 +17,7 @@ func PrettyJSON(insertedText string) (bytes.Buffer, error) {
 }
 
 // MarshalJSON converts a Go data structure to a JSON byte slice with indentation
-func MarshalJSON(data interface{}) ([]byte, error) {
+func MarshalJSON(data any) ([]byte, error) {
 	byteData, err := json.MarshalIndent(data, "", " ")
 	if err != nil {
 		return nil, fmt.Errorf("error marshaling JSON: %v", err)
@@ -26,8 +26,8 @@ func MarshalJSON(data interface{}) ([]byte, error) {
 }
 
 // UnmarshalJSON converts a JSON byte slice to a Go data structure
-func UnmarshalJSON(byteData []byte) (map[string]interface{}, error) {
-	var jsonData map[string]interface{}
+func UnmarshalJSON(byteData []byte) (map[string]any, error) {
+	var jsonData map[string]any
 	err := json.Unmarshal([]byte(byteData), &jsonData)
 	if err != nil {
 		return nil, fmt.Errorf("error unmarshaling JSON: %v", err)

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Format Converter - Go Tooling Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="format converter">
+    <!-- Bootstrap CSS, Icons and Javascript -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
+    <!-- Custom styling -->
+    <link rel="stylesheet" href="assets/styles.css">
+    <!-- Custom scripts -->
+    <script src="assets/scripts.js"></script>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+
+<body>
+    <!-- Load the shared navbar from navbar.html using htmx (avoids code duplication across pages) -->
+    <div hx-get="navbar.html" hx-trigger="load"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="my-5 ">
+                <h3 class="text-center fw-bold mb-5" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    title="Convert YAML to JSON and viceversa.">
+                    Format Converter
+                </h3>
+                <div class="row g-4 mb-4">
+                    <div class="col-12">
+                    <form class="row g-3" id="formatconverter-form"
+                            hx-post="/api/formatconverter/htmx"
+                            hx-target="#formatconverter-result"
+                            hx-swap="innerHTML"
+                            hx-ext="json-enc">
+                            <!-- Input -->
+                            <div>
+                                <label for="input" class="form-label">Input</label>
+                                <textarea class="form-control custom-input" id="input" name="input" rows="5" required></textarea>
+                            </div>
+                            <!-- Submit button -->
+                            <div class="col-12 mt-5 mb-3 text-center">
+                                <button type="submit" class="btn btn-graphite px-3">Convert</button>
+                            </div>
+                        </form>
+                        <div id="formatconverter-result" class="mt-4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Load the shared footer from footer.html using htmx (avoids code duplication across pages) -->
+    <div hx-get="footer.html" hx-trigger="load"></div>
+
+</body>
+
+</html>

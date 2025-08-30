@@ -19,10 +19,8 @@ func TestHtpasswdHtmx_Valid(t *testing.T) {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	t.Logf("Response body: %s", rr.Body.String())
-
 	if rr.Code != http.StatusOK {
-		t.Errorf("Expected status 200, got %d", rr.Code)
+		t.Errorf("Expected status 200, got %d, response body %v", rr.Code, rr.Body.String())
 	}
 	if !strings.Contains(rr.Body.String(), "alice:") {
 		t.Errorf("Expected htpasswd entry in HTML, got: %s", rr.Body.String())
@@ -43,10 +41,8 @@ func TestHtpasswdHtmx_MissingFields(t *testing.T) {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	t.Logf("Response body: %s", rr.Body.String())
-
 	if rr.Code != http.StatusUnprocessableEntity {
-		t.Errorf("Expected status 422, got %d", rr.Code)
+		t.Errorf("Expected status 422, got %d, response body %v", rr.Code, rr.Body.String())
 	}
 	if !strings.Contains(rr.Body.String(), "expected length >= 1") {
 		t.Errorf("Expected minLength validation error, got: %s", rr.Body.String())
@@ -64,10 +60,8 @@ func TestHtpasswdHtmx_InvalidAlgorithm(t *testing.T) {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	t.Logf("Response body: %s", rr.Body.String())
-
 	if rr.Code != http.StatusUnprocessableEntity {
-		t.Errorf("Expected status 422, got %d", rr.Code)
+		t.Errorf("Expected status 422, got %d, response body %v", rr.Code, rr.Body.String())
 	}
 	if !strings.Contains(rr.Body.String(), "expected value to be one of") {
 		t.Errorf("Expected enum validation error, got: %s", rr.Body.String())
@@ -85,10 +79,8 @@ func TestHtpasswdHtmx_MissingHtmxHeader(t *testing.T) {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	t.Logf("Response body: %s", rr.Body.String())
-
 	if rr.Code != http.StatusBadRequest {
-		t.Errorf("Expected status 400, got %d", rr.Code)
+		t.Errorf("Expected status 400, got %d, response body %v", rr.Code, rr.Body.String())
 	}
 	if !strings.Contains(rr.Body.String(), "This endpoint only supports HTMX requests") {
 		t.Errorf("Expected error message for missing HX-Request, got: %s", rr.Body.String())

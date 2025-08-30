@@ -8,7 +8,7 @@ import (
 )
 
 // MarshalYAML converts a Go data structure to a YAML byte slice with indentation
-func MarshalYAML(data interface{}) ([]byte, error) {
+func MarshalYAML(data any) ([]byte, error) {
 	var byteData bytes.Buffer
 	yamlEncoder := yaml.NewEncoder(&byteData)
 	yamlEncoder.SetIndent(2)
@@ -20,8 +20,8 @@ func MarshalYAML(data interface{}) ([]byte, error) {
 }
 
 // UnmarshalYAML converts a YAML byte slice to a Go data structure
-func UnmarshalYAML(byteData []byte) (map[string]interface{}, error) {
-	var yamlData map[string]interface{}
+func UnmarshalYAML(byteData []byte) (map[string]any, error) {
+	var yamlData map[string]any
 	err := yaml.Unmarshal([]byte(byteData), &yamlData)
 	if err != nil {
 		return nil, fmt.Errorf("error unmarshaling YAML: %v", err)

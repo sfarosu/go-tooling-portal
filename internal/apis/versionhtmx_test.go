@@ -24,10 +24,8 @@ func TestVersionHtmx_Valid(t *testing.T) {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	t.Logf("Response body: %s", rr.Body.String())
-
 	if rr.Code != http.StatusOK {
-		t.Errorf("Expected status 200, got %d", rr.Code)
+		t.Errorf("Expected status 200, got %d, response body %v", rr.Code, rr.Body.String())
 	}
 	if !strings.Contains(rr.Body.String(), `<span class="badge">v2.0.0</span>`) {
 		t.Errorf("Expected HTML badge with version, got: %s", rr.Body.String())
@@ -45,12 +43,10 @@ func TestVersionHtmx_Empty(t *testing.T) {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	t.Logf("Response body: %s", rr.Body.String())
-
 	if rr.Code != http.StatusInternalServerError {
-		t.Errorf("Expected status 500, got %d", rr.Code)
+		t.Errorf("Expected status 500, got %d, response body %v", rr.Code, rr.Body.String())
 	}
-	if !strings.Contains(rr.Body.String(), "Internal Server Error, unable to retrieve api version information") {
+	if !strings.Contains(rr.Body.String(), "internal server error, unable to retrieve api version information") {
 		t.Errorf("Expected error message for empty version, got: %s", rr.Body.String())
 	}
 }

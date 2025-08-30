@@ -10,7 +10,7 @@ Simple and fast webapp that provides users with some self-hosted tooling to avoi
 - **RandomPasswordGenerator**: generate a variable length, multi-case, multi-symbol password
 - **SSHKeyGenerator**: generate SSH key pairs
 - **JsonPrettifier**: prettify/indent a complex Json
-- **FormatConverter**: transform YAML to JSON and viceversa
+- **FormatConverter**: convert YAML to JSON and viceversa
 - **EpochTimeConverter**: transform unix timestamp to human time and viceversa
 - **Base64Converter**: encode/decode data in Base64 format
 - **URLDecoder**: decode special characters in URLs
@@ -19,7 +19,7 @@ To be added in future releases:
 
 - generate self-signed tls certificates
 - generate k8s kubeconfig from service-account secret token
-- transform yaml/json to golang struct
+- convert yaml/json to golang struct
 
 ___
 

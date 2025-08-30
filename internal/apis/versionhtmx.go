@@ -71,8 +71,8 @@ func RegisterVersionHtmx(api huma.API) {
 		},
 	}, func(ctx context.Context, input *VersionHTMXInput) (*VersionHTMXOutput, error) {
 		if version.Version == "" {
-			logger.Logger.Error("Internal Server Error, unable to retrieve api version information")
-			return nil, huma.Error500InternalServerError("Internal Server Error, unable to retrieve api version information")
+			logger.Logger.Error("internal server error, unable to retrieve api version information")
+			return nil, huma.Error500InternalServerError("internal server error, unable to retrieve api version information")
 		}
 
 		// Render the HTML template and return as a html block if this is an HTMX request

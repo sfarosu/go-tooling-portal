@@ -30,13 +30,13 @@ func RegisterVersion(api huma.API) {
 				Description: "Successfully retrieved the api version.",
 			},
 			"500": {
-				Description: "Internal Server Error, Unable to retrieve api version information.",
+				Description: "Internal Server Error, unable to retrieve api version information.",
 			},
 		},
 	}, func(ctx context.Context, input *struct{}) (*VersionOutput, error) {
 		if version.Version == "" {
-			logger.Logger.Error("Internal Server Error - Unable to retrieve api version information")
-			return nil, huma.Error500InternalServerError("Internal Server Error - Unable to retrieve api version information")
+			logger.Logger.Error("internal server error, unable to retrieve api version information")
+			return nil, huma.Error500InternalServerError("internal server error, unable to retrieve api version information")
 		}
 
 		resp := &VersionOutput{}

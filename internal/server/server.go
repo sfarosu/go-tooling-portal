@@ -70,12 +70,14 @@ func setupRouter() *http.ServeMux {
 	// Register API endpoints
 	humaConfig := huma.DefaultConfig("Go Tooling API", "1.0.0")
 	humaAPI := humago.New(router, humaConfig)
-	apis.RegisterVersion(humaAPI)
-	apis.RegisterVersionHtmx(humaAPI)
-	apis.RegisterHtpasswd(humaAPI)
-	apis.RegisterHtpasswdHtmx(humaAPI)
 	apis.RegisterBase64Converter(humaAPI)
 	apis.RegisterBase64ConverterHtmx(humaAPI)
+	apis.RegisterFormatConverter(humaAPI)
+	apis.RegisterFormatConverterHtmx(humaAPI)
+	apis.RegisterHtpasswd(humaAPI)
+	apis.RegisterHtpasswdHtmx(humaAPI)
+	apis.RegisterVersion(humaAPI)
+	apis.RegisterVersionHtmx(humaAPI)
 
 	// Serve static files and disable directory listing
 	router.Handle("/", http.StripPrefix("/", helper.DisableDirListing("web")(http.FileServer(http.Dir("web")))))
