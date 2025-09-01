@@ -43,7 +43,7 @@
                             <!-- Input -->
                             <div>
                                 <label for="input" class="form-label">Input</label>
-                                <textarea class="form-control custom-input" id="input" name="input" rows="5" required></textarea>
+                                <textarea class="form-control custom-input mx-auto" id="input" name="input" rows="7" required></textarea>
                             </div>
                             <!-- Submit button -->
                             <div class="col-12 mt-5 mb-3 text-center">
@@ -51,6 +51,37 @@
                             </div>
                         </form>
                         <div id="formatconverter-result" class="mt-4"></div>
+                        <!-- CLI command alternatives -->
+                        <hr class="my-5">
+                        <h5 class="text-center fw-bold mb-5">CLI command alternatives for Linux</h5>
+                        <div class="row g-4">
+                            <!-- JSON to YAML -->
+                            <div class="col-md-6">
+                                <label class="form-label text-center w-100">JSON to YAML</label>
+                                <div class="d-flex flex-nowrap align-items-stretch">
+                                    <pre class="flex-grow-1 mb-0 p-3 bg-dark rounded"
+                                        id="json-to-yaml">yq -y . file.json > file.yaml</pre>
+                                    <button class="btn btn-graphite" type="button"
+                                        onclick="copyToClipboard('json-to-yaml')" title="Copy CLI command"
+                                        aria-label="Copy CLI command">
+                                        <i class="bi bi-clipboard"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- YAML to JSON -->
+                            <div class="col-md-6">
+                                <label class="form-label text-center w-100">YAML to JSON</label>
+                                <div class="d-flex flex-nowrap align-items-stretch">
+                                    <pre class="flex-grow-1 mb-0 p-3 bg-dark rounded"
+                                        id="yaml-to-json">yq -j . file.yaml > file.json</pre>
+                                    <button class="btn btn-graphite" type="button"
+                                        onclick="copyToClipboard('yaml-to-json')" title="Copy CLI command"
+                                        aria-label="Copy CLI command">
+                                        <i class="bi bi-clipboard"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

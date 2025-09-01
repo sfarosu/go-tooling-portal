@@ -50,7 +50,7 @@ type FormatConverterHTMXOutput struct {
 // HTMX-compatible HTML fragment rendered dynamically by the API and injected into the page via HTMX
 var formatconverterResultTmpl = template.Must(template.New("formatconverter-result").Parse(`
 <div class="d-flex justify-content-center">
-  <div class="input-group" style="max-width: 680px; width: 100%;">
+  <div class="input-group" style="max-width: 1024px; width: 100%;">
     <textarea class="form-control custom-output" id="formatconverter-result-input"
       readonly aria-label="Converted result" rows="4">{{.FormatConversionResult}}</textarea>
     <button class="btn btn-graphite" type="button"

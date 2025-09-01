@@ -18,7 +18,7 @@ func PrettyJSON(insertedText string) (bytes.Buffer, error) {
 
 // MarshalJSON converts a Go data structure to a JSON byte slice with indentation
 func MarshalJSON(data any) ([]byte, error) {
-	byteData, err := json.MarshalIndent(data, "", " ")
+	byteData, err := json.MarshalIndent(data, "", "  ")
 	if err != nil {
 		return nil, fmt.Errorf("error marshaling JSON: %v", err)
 	}
