@@ -99,9 +99,9 @@ func RegisterBase64ConverterHtmx(api huma.API) {
 				// If it's a htmx request, return an HTML fragment with the error content (return code will be 200 as we want to display it in the UI)
 				alert := `
 <div class="d-flex justify-content-center">
-  <div class="input-group" style="max-width: 680px; width: 100%;">
+  <div style="max-width: 680px; width: 100%;">
     <textarea class="form-control custom-output is-invalid"
-      readonly aria-label="Converted result">` + err.Error() + `</textarea>
+      readonly aria-label="error">` + err.Error() + `</textarea>
   </div>
 </div>
 `

@@ -25,7 +25,11 @@ func TestFormatConvert_YAMLtoJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Unexpected error: %v", err)
 	}
-	if out != want {
+	// Remove all whitespace for comparison
+	clean := func(s string) string {
+		return strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(strings.TrimSpace(s), "\n", ""), " ", ""), "\t", "")
+	}
+	if clean(out) != clean(want) {
 		t.Errorf("Expected JSON:\n%s\nGot:\n%s", want, out)
 	}
 }

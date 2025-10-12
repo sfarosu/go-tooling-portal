@@ -77,11 +77,6 @@ function setupNavbarSearchInit() {
   });
 }
 
-// When the initial page DOM content is loaded, setup the HTMX listener for navbar loading
-document.addEventListener('DOMContentLoaded', () => {
-  setupNavbarSearchInit();
-});
-
 // Reusable password visibility toggle
 function togglePasswordVisibility(passwordInputId, iconId) {
     const passwordInput = document.getElementById(passwordInputId);
@@ -132,7 +127,24 @@ function initBootstrapTooltips() {
     new bootstrap.Tooltip(tooltipTriggerEl);
   });
 }
-// Call it when DOM is ready
+
+// Display/hide forms depending on a select value
+function toggleForms(selectElementId, optionValues, formGroupIds) {
+  var selectElement = document.getElementById(selectElementId);
+
+  // Hide all form groups initially
+  formGroupIds.forEach(function(formGroupId) {
+      document.getElementById(formGroupId).classList.add('d-none');
+  });
+
+  // Determine which form group to display based on the selected option value
+  var selectedIndex = optionValues.indexOf(selectElement.value);
+  if (selectedIndex !== -1) {
+      document.getElementById(formGroupIds[selectedIndex]).classList.remove('d-none');
+  }
+}
+
+// Call functions when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   initBootstrapTooltips();
   setupNavbarSearchInit();

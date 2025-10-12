@@ -267,3 +267,18 @@ hr {
   font-weight: 600;
   transition: background-color 0.5s;
 }
+
+/* =========================
+   Usage Tips
+   ========================= */
+.usage-tip {
+    color: #bdbdbd;
+    padding: 0.75em 1em;
+    margin-top: 1.2em;
+    font-size: 0.97em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.6em;
+}

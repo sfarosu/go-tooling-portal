@@ -54,8 +54,8 @@ type HtpasswdHTMXOutput struct {
 var htpasswdResultTmpl = template.Must(template.New("htpasswd-result").Parse(`
 <div class="d-flex justify-content-center">
   <div class="input-group" style="max-width: 680px; width: 100%;">
-    <input type="text" class="form-control custom-output" id="htpasswd-result-input"
-      value="{{.Htpasswd}}" readonly aria-label="Generated htpasswd">
+    <textarea class="form-control custom-output" id="htpasswd-result-input"
+      readonly aria-label="Converted result" rows="4">{{.Htpasswd}}</textarea>
     <button class="btn btn-graphite" type="button"
       onclick="copyToClipboard('htpasswd-result-input')"
       aria-label="Copy htpasswd to clipboard" tabindex="-1">
@@ -99,9 +99,9 @@ func RegisterHtpasswdHtmx(api huma.API) {
 				// If it's a htmx request, return an HTML fragment with the error content (return code will be 200 as we want to display it in the UI)
 				alert := `
 <div class="d-flex justify-content-center">
-  <div class="input-group" style="max-width: 680px; width: 100%;">
-    <input type="text" class="form-control custom-output is-invalid" id="htpasswd-result-input"
-      value="` + err.Error() + `" readonly aria-label="Error generating htpasswd">
+  <div style="max-width: 680px; width: 100%;">	
+	<textarea class="form-control custom-output is-invalid"
+      readonly aria-label="error">` + err.Error() + `</textarea>
   </div>
 </div>
 `
