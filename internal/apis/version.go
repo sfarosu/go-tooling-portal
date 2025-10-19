@@ -9,6 +9,7 @@ import (
 	"github.com/sfarosu/go-tooling-portal/internal/version"
 )
 
+// VersionOutput is the response structure for the /api/version endpoint.
 type VersionOutput struct {
 	Body struct {
 		Version string `json:"version"`

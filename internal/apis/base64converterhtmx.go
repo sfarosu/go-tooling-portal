@@ -19,6 +19,7 @@ type Base64ConverterHTMXInput struct {
 	// originated from an HTMX-enabled frontend and respond with HTML instead of JSON
 	HtmxHeader bool `header:"HX-Request"`
 
+	// Body contains the main input fields for the base64 conversion.
 	Body struct {
 		Input     string `json:"input" example:"hello" doc:"String to encode or decode" minLength:"1"`
 		Operation string `json:"operation" example:"encode" doc:"Operation to perform: encode or decode" enum:"encode,decode"`
@@ -54,7 +55,7 @@ var base64converterResultTmpl = template.Must(template.New("base64converter-resu
 <div class="d-flex justify-content-center">
   <div class="input-group" style="max-width: 680px; width: 100%;">
     <textarea class="form-control custom-output" id="base64converter-result-input"
-      readonly aria-label="Converted result" rows="4">{{.Base64ConversionResult}}</textarea>
+      readonly aria-label="Converted result" rows="2">{{.Base64Conversion}}</textarea>
     <button class="btn btn-graphite" type="button"
       onclick="copyToClipboard('base64converter-result-input')"
       aria-label="Copy result to clipboard" tabindex="-1">
@@ -69,7 +70,7 @@ func RegisterBase64ConverterHtmx(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "base64-converter-htmx",
 		Summary:       "base64 encode/decode - htmx",
-		Description:   "Returns a suitable for HTMX injection HTML object containg a base64-encoded or decoded result depending on the selected operation.",
+		Description:   "Returns a suitable for HTMX injection HTML object containg the base64 conversion.",
 		Method:        http.MethodPost,
 		Path:          "/api/base64converter/htmx",
 		DefaultStatus: http.StatusOK,
@@ -82,11 +83,12 @@ func RegisterBase64ConverterHtmx(api huma.API) {
 				},
 			},
 			"400": {
-				Description: "Bad Request, invalid input (including missing HX-Request header) or unsupported operation.",
+				Description: "Bad Request, invalid input (including missing HX-Request header).",
 			},
 		},
 	}, func(ctx context.Context, input *Base64ConverterHTMXInput) (*Base64ConverterHTMXOutput, error) {
-		base64ConversionResult, err := service.Base64Convert(input.Body.Input, input.Body.Operation, input.Body.Format)
+		// Perform base64 conversion
+		base64Conversion, err := service.Base64Convert(input.Body.Input, input.Body.Operation, input.Body.Format)
 		if err != nil {
 			logger.Logger.Error(
 				"failed to process base64 conversion",
@@ -97,17 +99,9 @@ func RegisterBase64ConverterHtmx(api huma.API) {
 			)
 			if input.HtmxHeader {
 				// If it's a htmx request, return an HTML fragment with the error content (return code will be 200 as we want to display it in the UI)
-				alert := `
-<div class="d-flex justify-content-center">
-  <div style="max-width: 680px; width: 100%;">
-    <textarea class="form-control custom-output is-invalid"
-      readonly aria-label="error">` + err.Error() + `</textarea>
-  </div>
-</div>
-`
 				return &Base64ConverterHTMXOutput{
 					ContentType: "text/html; charset=utf-8",
-					Body:        []byte(alert),
+					Body:        []byte(generateHTMXError(err)),
 				}, nil
 			}
 			return nil, huma.Error400BadRequest("base64 conversion failed: " + err.Error())
@@ -117,7 +111,7 @@ func RegisterBase64ConverterHtmx(api huma.API) {
 		if input.HtmxHeader {
 			var buf bytes.Buffer
 			base64converterResultTmpl.Execute(&buf, map[string]string{
-				"Base64ConversionResult": base64ConversionResult,
+				"Base64Conversion": base64Conversion,
 			})
 			resp := &Base64ConverterHTMXOutput{
 				ContentType: "text/html; charset=utf-8",

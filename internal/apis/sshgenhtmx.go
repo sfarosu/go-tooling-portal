@@ -126,12 +126,7 @@ func RegisterSSHGenHtmx(api huma.API) {
 		}
 
 		// Generate the SSH key pair
-		privKey, pubKey, err := service.GenerateSSHKeyPair(
-			input.Body.Algorithm,
-			input.Body.EcdsaBits,
-			input.Body.RsaBits,
-			input.Body.Email,
-		)
+		privKey, pubKey, err := service.GenerateSSHKeyPair(input.Body.Algorithm, input.Body.EcdsaBits, input.Body.RsaBits, input.Body.Email)
 		if err != nil {
 			logger.Logger.Error(
 				"failed to generate ssh key pair",
@@ -143,17 +138,9 @@ func RegisterSSHGenHtmx(api huma.API) {
 			)
 			if input.HtmxHeader {
 				// If it's a htmx request, return an HTML fragment with the error content (return code will be 200 as we want to display it in the UI)
-				alert := `
-<div class="d-flex justify-content-center">
-  <div style="max-width: 680px; width: 100%;">
-	<textarea class="form-control custom-output is-invalid"
-      readonly aria-label="error">` + err.Error() + `</textarea>
-  </div>
-</div>
-`
 				return &SSHGenHTMXOutput{
 					ContentType: "text/html; charset=utf-8",
-					Body:        []byte(alert),
+					Body:        []byte(generateHTMXError(err)),
 				}, nil
 			}
 			return nil, huma.Error400BadRequest("failed to generate ssh key pair: " + err.Error())

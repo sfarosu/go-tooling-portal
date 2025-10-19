@@ -13,6 +13,7 @@ func TestRandomString(t *testing.T) {
 		Lowercase bool
 		Numbers   bool
 		Specials  bool
+		wantErr   bool
 	}{
 		{
 			name:      "all categories",
@@ -48,13 +49,33 @@ func TestRandomString(t *testing.T) {
 			Uppercase: true,
 			Numbers:   true,
 		},
+		{
+			name:      "too short for selected categories",
+			size:      2,
+			Uppercase: true,
+			Lowercase: true,
+			Numbers:   true,
+			wantErr:   true,
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := RandomString(tt.size, tt.Uppercase, tt.Lowercase, tt.Numbers, tt.Specials)
+			got, err := RandomString(tt.size, tt.Uppercase, tt.Lowercase, tt.Numbers, tt.Specials)
+
+			if tt.wantErr {
+				if err == nil {
+					t.Errorf("RandomString() expected error, got nil")
+				}
+				return
+			}
+
+			if err != nil {
+				t.Fatalf("RandomString() unexpected error: %v", err)
+			}
+
 			if len(got) != tt.size {
-				t.Errorf("RandomString() length = [%v], want [%v]", len(got), tt.size)
+				t.Errorf("RandomString() length = %v, want %v", len(got), tt.size)
 			}
 		})
 	}

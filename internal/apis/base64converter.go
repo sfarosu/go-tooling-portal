@@ -9,7 +9,9 @@ import (
 	"github.com/sfarosu/go-tooling-portal/internal/service"
 )
 
+// Base64ConverterInput is the request structure for the /api/base64converter endpoint.
 type Base64ConverterInput struct {
+	// Body contains the main input fields for the base64 conversion.
 	Body struct {
 		Input     string `json:"input" example:"hello" doc:"String to encode or decode" minLength:"1"`
 		Operation string `json:"operation" example:"encode" doc:"Operation to perform: encode or decode" enum:"encode,decode"`
@@ -38,11 +40,12 @@ func RegisterBase64Converter(api huma.API) {
 				Description: "Successful response with the base64 encoded or decoded result.",
 			},
 			"400": {
-				Description: "Bad Request, the input data is missing, malformed, or the specified operation is invalid (must be 'encode' or 'decode').",
+				Description: "Bad request - invalid input.",
 			},
 		},
 	}, func(ctx context.Context, input *Base64ConverterInput) (*Base64ConverterOutput, error) {
-		result, err := service.Base64Convert(input.Body.Input, input.Body.Operation, input.Body.Format)
+		// Perform base64 conversion
+		base64Conversion, err := service.Base64Convert(input.Body.Input, input.Body.Operation, input.Body.Format)
 		if err != nil {
 			logger.Logger.Error(
 				"failed to process base64 conversion",
@@ -55,7 +58,7 @@ func RegisterBase64Converter(api huma.API) {
 		}
 
 		resp := &Base64ConverterOutput{}
-		resp.Body.Result = result
+		resp.Body.Result = base64Conversion
 		return resp, nil
 	})
 }

@@ -7,8 +7,7 @@ import (
 )
 
 // RandomString generates a random string of a specified size using the selected character types
-func RandomString(size int, Uppercase bool, Lowercase bool, Numbers bool, Specials bool) string {
-	//TODO analize if we can tranform this function into a method of a struct that contains the options
+func RandomString(size int, Uppercase bool, Lowercase bool, Numbers bool, Specials bool) (string, error) {
 	source := rand.NewSource(time.Now().UnixNano())
 	rng := rand.New(source)
 
@@ -55,6 +54,11 @@ func RandomString(size int, Uppercase bool, Lowercase bool, Numbers bool, Specia
 		partialResult = append(partialResult, specials[rand.Intn(len(specials))])
 	}
 
+	// validate that the requested size is at least equal to the number of selected categories
+	if size < optionsActive {
+		return "", fmt.Errorf("password length [%v] must be at least equal to number of selected character classes [%v]", size, optionsActive)
+	}
+
 	// finalResult is composed of 2 slices and because append always adds the second slice to the end of the first one, we use the last FOR to randomize everything
 	finalResult := make([]rune, size-optionsActive)
 	for i := range finalResult {
@@ -67,7 +71,7 @@ func RandomString(size int, Uppercase bool, Lowercase bool, Numbers bool, Specia
 		y := rng.Intn(x + 1)
 		finalResult[x], finalResult[y] = finalResult[y], finalResult[x]
 	}
-	return string(finalResult)
+	return string(finalResult), nil
 }
 
 // AddSecondDigit adds a leading zero to single-digit numbers

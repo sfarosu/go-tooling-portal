@@ -55,7 +55,7 @@ var htpasswdResultTmpl = template.Must(template.New("htpasswd-result").Parse(`
 <div class="d-flex justify-content-center">
   <div class="input-group" style="max-width: 680px; width: 100%;">
     <textarea class="form-control custom-output" id="htpasswd-result-input"
-      readonly aria-label="Converted result" rows="4">{{.Htpasswd}}</textarea>
+      readonly aria-label="Converted result" rows="1">{{.Htpasswd}}</textarea>
     <button class="btn btn-graphite" type="button"
       onclick="copyToClipboard('htpasswd-result-input')"
       aria-label="Copy htpasswd to clipboard" tabindex="-1">
@@ -70,7 +70,7 @@ func RegisterHtpasswdHtmx(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "generate-htpasswd-htmx",
 		Summary:       "generate htpasswd - htmx",
-		Description:   "Returns a suitable for HTMX injection HTML object containg an htpasswd entry for the given username and password using the specified algorithm.",
+		Description:   "Returns a suitable for HTMX injection HTML object containg the generated htpasswd entry.",
 		Method:        http.MethodPost,
 		Path:          "/api/htpasswd/htmx",
 		DefaultStatus: http.StatusOK,
@@ -83,10 +83,11 @@ func RegisterHtpasswdHtmx(api huma.API) {
 				},
 			},
 			"400": {
-				Description: "Bad Request, invalid input (including missing HX-Request header) or unsupported algorithm.",
+				Description: "Bad Request, invalid input (including missing HX-Request header).",
 			},
 		},
 	}, func(ctx context.Context, input *HtpasswdHTMXInput) (*HtpasswdHTMXOutput, error) {
+		// Generate htpasswd
 		generatedHtPassword, err := service.GenerateHtpasswd(input.Body.Username, input.Body.Password, input.Body.Algorithm)
 		if err != nil {
 			logger.Logger.Error(
@@ -97,17 +98,9 @@ func RegisterHtpasswdHtmx(api huma.API) {
 			)
 			if input.HtmxHeader {
 				// If it's a htmx request, return an HTML fragment with the error content (return code will be 200 as we want to display it in the UI)
-				alert := `
-<div class="d-flex justify-content-center">
-  <div style="max-width: 680px; width: 100%;">	
-	<textarea class="form-control custom-output is-invalid"
-      readonly aria-label="error">` + err.Error() + `</textarea>
-  </div>
-</div>
-`
 				return &HtpasswdHTMXOutput{
 					ContentType: "text/html; charset=utf-8",
-					Body:        []byte(alert),
+					Body:        []byte(generateHTMXError(err)),
 				}, nil
 			}
 			return nil, huma.Error400BadRequest("failed to generate htpasswd: " + err.Error())
@@ -117,10 +110,7 @@ func RegisterHtpasswdHtmx(api huma.API) {
 		if input.HtmxHeader {
 			var buf bytes.Buffer
 			htpasswdResultTmpl.Execute(&buf, map[string]string{
-				"Username":  input.Body.Username,
-				"Password":  input.Body.Password,
-				"Algorithm": input.Body.Algorithm,
-				"Htpasswd":  generatedHtPassword,
+				"Htpasswd": generatedHtPassword,
 			})
 			resp := &HtpasswdHTMXOutput{
 				ContentType: "text/html; charset=utf-8",

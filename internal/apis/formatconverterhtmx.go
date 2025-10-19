@@ -19,6 +19,7 @@ type FormatConverterHTMXInput struct {
 	// originated from an HTMX-enabled frontend and respond with HTML instead of JSON
 	HtmxHeader bool `header:"HX-Request"`
 
+	// Body contains the main input fields for format conversion.
 	Body struct {
 		Input string `json:"input" example:"{\"name\":\"Alice\",\"age\":30}" doc:"JSON or YAML string to convert to the other format" minLength:"1"`
 	}
@@ -52,7 +53,7 @@ var formatconverterResultTmpl = template.Must(template.New("formatconverter-resu
 <div class="d-flex justify-content-center">
   <div class="input-group" style="max-width: 1024px; width: 100%;">
     <textarea class="form-control custom-output" id="formatconverter-result-input"
-      readonly aria-label="Converted result" rows="4">{{.FormatConversionResult}}</textarea>
+      readonly aria-label="Converted result" rows="4">{{.FormatConversion}}</textarea>
     <button class="btn btn-graphite" type="button"
       onclick="copyToClipboard('formatconverter-result-input')"
       aria-label="Copy result to clipboard" tabindex="-1">
@@ -67,7 +68,7 @@ func RegisterFormatConverterHtmx(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "format-converter-htmx",
 		Summary:       "convert format between json and yaml - htmx",
-		Description:   "Convert data between JSON and YAML formats.",
+		Description:   "Returns a suitable for HTMX injection HTML object containg the conversion.",
 		Method:        http.MethodPost,
 		Path:          "/api/formatconverter/htmx",
 		DefaultStatus: http.StatusOK,
@@ -84,26 +85,19 @@ func RegisterFormatConverterHtmx(api huma.API) {
 			},
 		},
 	}, func(ctx context.Context, input *FormatConverterHTMXInput) (*FormatConverterHTMXOutput, error) {
-		formatConversionResult, err := service.FormatConvert(input.Body.Input)
+		// Process format conversion
+		formatConversion, err := service.FormatConvert(input.Body.Input)
 		if err != nil {
 			logger.Logger.Error(
-				"failed to process format conversion",
+				"failed to perform format conversion",
 				"input", input.Body.Input,
 				"error", err,
 			)
 			if input.HtmxHeader {
 				// If it's a htmx request, return an HTML fragment with the error content (return code will be 200 as we want to display it in the UI)
-				alert := `
-<div class="d-flex justify-content-center">
-  <div style="max-width: 680px; width: 100%;">
-    <textarea class="form-control custom-output is-invalid"
-      readonly aria-label="error">` + err.Error() + `</textarea>
-  </div>
-</div>
-`
 				return &FormatConverterHTMXOutput{
 					ContentType: "text/html; charset=utf-8",
-					Body:        []byte(alert),
+					Body:        []byte(generateHTMXError(err)),
 				}, nil
 			}
 			return nil, huma.Error400BadRequest("format conversion failed: " + err.Error())
@@ -113,7 +107,7 @@ func RegisterFormatConverterHtmx(api huma.API) {
 		if input.HtmxHeader {
 			var buf bytes.Buffer
 			formatconverterResultTmpl.Execute(&buf, map[string]string{
-				"FormatConversionResult": formatConversionResult,
+				"FormatConversion": formatConversion,
 			})
 			resp := &FormatConverterHTMXOutput{
 				ContentType: "text/html; charset=utf-8",

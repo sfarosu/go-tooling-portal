@@ -9,7 +9,9 @@ import (
 	"github.com/sfarosu/go-tooling-portal/internal/service"
 )
 
+// SSHGenInput is the request structure for the /api/sshgen endpoint.
 type SSHGenInput struct {
+	// Body contains the main input fields for the ssh key generation.
 	Body struct {
 		Algorithm string `json:"algorithm" example:"ed25519" doc:"SSH key algorithm (ed25519, ecdsa, rsa)" enum:"ed25519,ecdsa,rsa"`
 		EcdsaBits string `json:"ecdsaBits" example:"256" doc:"ECDSA key size (256, 384, 521)"`
@@ -18,6 +20,7 @@ type SSHGenInput struct {
 	}
 }
 
+// SSHGenOutput is the response structure for the /api/sshgen endpoint.
 type SSHGenOutput struct {
 	Body struct {
 		PrivateKey string `json:"privateKey"`
@@ -37,10 +40,10 @@ func RegisterSSHGen(api huma.API) {
 		Tags:          []string{"SSHGen"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Successful response with the ssh key pair.",
+				Description: "Successfully generated SSH key pair, responding with JSON content.",
 			},
 			"400": {
-				Description: "Bad Request, the input data is missing, malformed, or the specified algorithm is invalid.",
+				Description: "Bad request - invalid input.",
 			},
 		},
 	}, func(ctx context.Context, input *SSHGenInput) (*SSHGenOutput, error) {
@@ -61,13 +64,8 @@ func RegisterSSHGen(api huma.API) {
 			// ed25519 needs neither
 		}
 
-		// Generate the SSH key pair
-		privKey, pubKey, err := service.GenerateSSHKeyPair(
-			input.Body.Algorithm,
-			input.Body.EcdsaBits,
-			input.Body.RsaBits,
-			input.Body.Email,
-		)
+		// Generate SSH key pair
+		privKey, pubKey, err := service.GenerateSSHKeyPair(input.Body.Algorithm, input.Body.EcdsaBits, input.Body.RsaBits, input.Body.Email)
 		if err != nil {
 			logger.Logger.Error(
 				"failed to generate SSH key pair",
