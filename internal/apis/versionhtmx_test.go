@@ -43,8 +43,9 @@ func TestVersionHtmx_Empty(t *testing.T) {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	if rr.Code != http.StatusInternalServerError {
-		t.Errorf("Expected status 500, got %d, response body %v", rr.Code, rr.Body.String())
+	// For HTMX requests, errors are returned with 200 but message in body
+	if rr.Code != http.StatusOK {
+		t.Errorf("Expected status 200, got %d, response body %v", rr.Code, rr.Body.String())
 	}
 	if !strings.Contains(rr.Body.String(), "internal server error, unable to retrieve api version information") {
 		t.Errorf("Expected error message for empty version, got: %s", rr.Body.String())
