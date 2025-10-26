@@ -58,13 +58,13 @@ func TestPrettyJSON(t *testing.T) {
 func TestMarshalJSON(t *testing.T) {
 	tests := []struct {
 		name    string
-		input   interface{}
+		input   any
 		want    string // We'll check for substring presence due to map key order
 		wantErr bool
 	}{
 		{
 			name:    "simple map",
-			input:   map[string]interface{}{"foo": "bar", "baz": 123},
+			input:   map[string]any{"foo": "bar", "baz": 123},
 			want:    `"foo": "bar"`, // Just check for presence
 			wantErr: false,
 		},
@@ -93,13 +93,13 @@ func TestUnmarshalJSON(t *testing.T) {
 	tests := []struct {
 		name    string
 		input   []byte
-		want    map[string]interface{}
+		want    map[string]any
 		wantErr bool
 	}{
 		{
 			name:    "valid JSON",
 			input:   []byte(`{"foo":"bar","baz":123}`),
-			want:    map[string]interface{}{"foo": "bar", "baz": float64(123)},
+			want:    map[string]any{"foo": "bar", "baz": float64(123)},
 			wantErr: false,
 		},
 		{
@@ -126,5 +126,40 @@ func TestUnmarshalJSON(t *testing.T) {
 				t.Errorf("UnmarshalJSON() = [%v], want [%v]", got, tt.want)
 			}
 		})
+	}
+}
+
+func TestPrettyJSONWithSpaces(t *testing.T) {
+	input := `{"name":"Alice","age":30}`
+
+	// valid custom spaces
+	buf, err := PrettyJSONWithSpaces(input, 4)
+	if err != nil {
+		t.Fatalf("expected no error for 4 spaces, got %v", err)
+	}
+	var v interface{}
+	if err := json.Unmarshal(buf.Bytes(), &v); err != nil {
+		t.Fatalf("output is not valid JSON: %v", err)
+	}
+
+	// negative spaces should return an error
+	if _, err := PrettyJSONWithSpaces(input, -1); err == nil {
+		t.Fatalf("expected error for negative spaces")
+	}
+
+	// too-large spaces should return an error (maxSpaces = 16)
+	if _, err := PrettyJSONWithSpaces(input, 32); err == nil {
+		t.Fatalf("expected error for too-large spaces")
+	}
+}
+
+func TestMarshalJSONWithSpaces(t *testing.T) {
+	data := map[string]any{"foo": "bar", "baz": 123}
+	out, err := MarshalJSONWithSpaces(data, 3)
+	if err != nil {
+		t.Fatalf("expected no error for MarshalJSONWithSpaces, got %v", err)
+	}
+	if !strings.Contains(string(out), `"foo": "bar"`) {
+		t.Fatalf("MarshalJSONWithSpaces output missing expected substring, got: %s", string(out))
 	}
 }
