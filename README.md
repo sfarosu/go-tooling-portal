@@ -33,16 +33,6 @@ ___
 
 ___
 
-## Build/prerequisites details
-
-All the builds and tests on host machine were done using :
-
-- Pop!_OS 22.04
-- docker 25.0.3
-- go version go1.24.0 linux/amd64
-
-___
-
 ## How to run it locally without containers
 
 - Install golang on your local vm (go >= 1.21)
