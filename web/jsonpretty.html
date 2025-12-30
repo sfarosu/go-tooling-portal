@@ -40,22 +40,33 @@
                             hx-target="#jsonpretty-result"
                             hx-swap="innerHTML"
                             hx-ext="json-enc">
-                            <!-- Input -->
-                            <div class="col-12">
+                            <!-- Input and right-side selectors -->
+                            <div class="col-md-10">
                                 <label for="input" class="form-label">Input</label>
-                                <textarea class="form-control custom-input mx-auto" id="input" name="input" rows="8" required></textarea>
+                                <textarea class="form-control custom-input" id="input" name="input" rows="8" required></textarea>
                             </div>
-                            <!-- Indentation spaces -->
+                            <!-- Right-side selectors -->
                             <div class="col-md-2">
-                                <label for="spaces" class="form-label">Indentation spaces</label>
-                                <input type="number" class="form-control custom-input w-50" id="spaces" name="spaces" value="2" min="2" required>
+                                <div class="row g-3">
+                                    <div class="col-9 text-center">
+                                        <label for="operation" class="form-label">Operation</label>
+                                        <select id="operation" name="operation" class="form-select custom-input" onchange="toggleForms('operation', ['pretty','unpretty'], ['spaces-group','spaces-empty'])">
+                                            <option value="pretty" selected>Prettify</option>
+                                            <option value="unpretty">Unprettify</option>
+                                        </select>
+                                    </div>
+                                    <div id="spaces-group" class="col-9 mt-4 text-center">
+                                        <label for="spaces" class="form-label">Indentation spaces</label>
+                                        <input type="number" class="form-control custom-input" id="spaces" name="spaces" value="2" min="0" required>
+                                    </div>
+                                    <div id="spaces-empty" class="col-9 mt-4 text-center d-none"></div>
+                                </div>
                             </div>
                             <!-- Submit button -->
                             <div class="col-12 mt-5 mb-3 text-center">
-                                <button type="submit" class="btn btn-graphite px-3">Prettify</button>
+                                <button type="submit" class="btn btn-graphite px-3">Apply</button>
                             </div>
                         </form>
-
                         <div id="jsonpretty-result" class="mt-4"></div>
                     </div>
                 </div>

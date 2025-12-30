@@ -13,8 +13,9 @@ import (
 type JsonPrettyInput struct {
 	// Body contains the main input fields for the JSON prettifier.
 	Body struct {
-		Input  string `json:"Input" example:"{\"name\":\"Alice\",\"age\":30}" doc:"JSON input to prettify" minLength:"1"`
-		Spaces int    `json:"spaces" example:"2" doc:"Number of spaces for indentation" minLength:"1"`
+		Input     string `json:"Input" example:"{\"name\":\"Alice\",\"age\":30}" doc:"JSON input to prettify" minLength:"1"`
+		Operation string `json:"operation" example:"pretty" doc:"Operation: pretty or unpretty" enum:"pretty,unpretty"`
+		Spaces    int    `json:"spaces" example:"2" doc:"Number of spaces for indentation" minLength:"0"`
 	}
 }
 
@@ -44,13 +45,29 @@ func RegisterJsonPretty(api huma.API) {
 			},
 		},
 	}, func(ctx context.Context, input *JsonPrettyInput) (*JsonPrettyOutput, error) {
-		// Validate input
-		spaces := input.Body.Spaces
-		if spaces <= 0 {
-			return nil, huma.Error400BadRequest("spaces must be a valid positive integer")
+		op := input.Body.Operation
+		if op == "unpretty" {
+			// Unpretty (minify) JSON
+			result, err := service.UnprettyJSON(input.Body.Input)
+			if err != nil {
+				logger.Logger.Error(
+					"failed to unpretty json",
+					"input", input.Body.Input,
+					"error", err,
+				)
+				return nil, huma.Error400BadRequest("failed to unpretty JSON: " + err.Error())
+			}
+			resp := &JsonPrettyOutput{}
+			resp.Body.Result = result
+			return resp, nil
 		}
 
-		// Prettify JSON
+		// Default to pretty operation
+		spaces := input.Body.Spaces
+		if spaces <= 0 {
+			return nil, huma.Error400BadRequest("spaces must be a valid non-negative integer")
+		}
+
 		prettyfiedJSON, err := service.PrettyJSONWithSpaces(input.Body.Input, input.Body.Spaces)
 		if err != nil {
 			logger.Logger.Error(
@@ -60,7 +77,6 @@ func RegisterJsonPretty(api huma.API) {
 				"error", err)
 			return nil, huma.Error400BadRequest("failed to prettify JSON: " + err.Error())
 		}
-
 		resp := &JsonPrettyOutput{}
 		resp.Body.Result = prettyfiedJSON
 		return resp, nil

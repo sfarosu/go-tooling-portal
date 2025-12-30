@@ -1,0 +1,590 @@
+{
+  "name": "go-tooling-portal",
+  "version": "1",
+  "items": [
+    {
+      "type": "http",
+      "name": "Base64Converter",
+      "filename": "Base64Converter.bru",
+      "seq": 6,
+      "settings": {},
+      "tags": [],
+      "request": {
+        "url": "http://localhost:8080/api/base64converter",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Accept",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"input\": \"test123\",\n  \"operation\": \"encode\",\n  \"format\": \"standard\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "Base64ConverterHtmx",
+      "filename": "Base64ConverterHtmx.bru",
+      "seq": 7,
+      "settings": {},
+      "tags": [],
+      "request": {
+        "url": "http://localhost:8080/api/base64converter/htmx",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Accept",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "HX-Request",
+            "value": "true",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"input\": \"test123\",\n  \"operation\": \"encode\",\n  \"format\": \"standard\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "FormatConverter",
+      "filename": "FormatConverter.bru",
+      "seq": 8,
+      "settings": {},
+      "tags": [],
+      "request": {
+        "url": "http://localhost:8080/api/formatconverter",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Accept",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"input\": \"{\\\"name\\\":\\\"Alice\\\",\\\"age\\\":30}\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "FormatConverterHtmx",
+      "filename": "FormatConverterHtmx.bru",
+      "seq": 9,
+      "settings": {},
+      "tags": [],
+      "request": {
+        "url": "http://localhost:8080/api/formatconverter/htmx",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Accept",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "HX-Request",
+            "value": "true",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"input\": \"{\\\"name\\\":\\\"Alice\\\",\\\"age\\\":30}\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "Htpasswd",
+      "filename": "Htpasswd.bru",
+      "seq": 4,
+      "settings": {},
+      "tags": [],
+      "request": {
+        "url": "http://localhost:8080/api/htpasswd",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Accept",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"algorithm\": \"apr1\",\n  \"password\": \"S3cureP@ssw0rd\",\n  \"username\": \"alice\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "HtpasswdHtmx",
+      "filename": "HtpasswdHtmx.bru",
+      "seq": 5,
+      "settings": {},
+      "tags": [],
+      "request": {
+        "url": "http://localhost:8080/api/htpasswd/htmx",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Accept",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "HX-Request",
+            "value": "true",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"algorithm\": \"apr1\",\n  \"password\": \"S3cureP@ssw0rd\",\n  \"username\": \"alice\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "JSONPrettify",
+      "filename": "JSONPrettify.bru",
+      "seq": 14,
+      "settings": {},
+      "tags": [],
+      "request": {
+        "url": "http://localhost:8080/api/jsonpretty",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Accept",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"input\": \"{\\\"name\\\":\\\"Alice\\\",\\\"age\\\":30}\",\n  \"operation\": \"pretty\",\n  \"spaces\": 2\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "JSONPrettifyHtmx",
+      "filename": "JSONPrettifyHtmx.bru",
+      "seq": 15,
+      "settings": {},
+      "tags": [],
+      "request": {
+        "url": "http://localhost:8080/api/jsonpretty/htmx",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Accept",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "HX-Request",
+            "value": "true",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"input\": \"{\\\"name\\\":\\\"Alice\\\",\\\"age\\\":30}\",\n  \"operation\": \"pretty\",\n  \"spaces\": \"2\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "Passgen",
+      "filename": "Passgen.bru",
+      "seq": 12,
+      "settings": {},
+      "tags": [],
+      "request": {
+        "url": "http://localhost:8080/api/passgen",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Accept",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"length\": 12,\n  \"uppercase\": true,\n  \"lowercase\": true,\n  \"numbers\": true,\n  \"symbols\": true\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "PassgenHtmx",
+      "filename": "PassgenHtmx.bru",
+      "seq": 13,
+      "settings": {},
+      "tags": [],
+      "request": {
+        "url": "http://localhost:8080/api/passgen/htmx",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Accept",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "HX-Request",
+            "value": "true",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"length\": \"12\",\n  \"uppercase\": \"true\",\n  \"lowercase\": \"true\",\n  \"numbers\": \"true\",\n  \"symbols\": \"true\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "SSHGen",
+      "filename": "SSHGen.bru",
+      "seq": 10,
+      "settings": {},
+      "tags": [],
+      "request": {
+        "url": "http://localhost:8080/api/sshgen",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Accept",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"algorithm\": \"ecdsa\",\n  \"ecdsaBits\": \"256\",\n  \"rsaBits\": \"\",\n  \"email\": \"alice@example.com\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "SSHGenHtmx",
+      "filename": "SSHGenHtmx.bru",
+      "seq": 11,
+      "settings": {},
+      "tags": [],
+      "request": {
+        "url": "http://localhost:8080/api/sshgen/htmx",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Accept",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          },
+          {
+            "name": "HX-Request",
+            "value": "true",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"algorithm\": \"ecdsa\",\n  \"ecdsaBits\": \"256\",\n  \"rsaBits\": \"\",\n  \"email\": \"alice@example.com\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "Version",
+      "filename": "Version.bru",
+      "seq": 2,
+      "settings": {},
+      "tags": [],
+      "request": {
+        "url": "http://localhost:8080/api/version",
+        "method": "GET",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "VersionHtmx",
+      "filename": "VersionHtmx.bru",
+      "seq": 3,
+      "settings": {},
+      "tags": [],
+      "request": {
+        "url": "http://localhost:8080/api/version/htmx",
+        "method": "GET",
+        "headers": [
+          {
+            "name": "HX-Request",
+            "value": "true",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    }
+  ],
+  "environments": [],
+  "brunoConfig": {
+    "version": "1",
+    "name": "go-tooling-portal",
+    "type": "collection",
+    "ignore": [
+      "node_modules",
+      ".git"
+    ],
+    "size": 0.003994941711425781,
+    "filesCount": 14
+  }
+}

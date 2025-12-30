@@ -19,6 +19,7 @@ type Base64ConverterInput struct {
 	}
 }
 
+// Base64ConverterOutput is the response structure for the /api/base64converter endpoint.
 type Base64ConverterOutput struct {
 	Body struct {
 		Result string `json:"result"`

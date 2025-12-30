@@ -23,8 +23,9 @@ type JsonPrettyHTMXInput struct {
 	// Body contains the main input fields for the JSON prettifier.
 	// The fields are strings because HTML form submissions send string values.
 	Body struct {
-		Input  string `json:"input" example:"{\"name\":\"Alice\",\"age\":30}" doc:"JSON input to prettify" minLength:"1"`
-		Spaces string `json:"spaces" example:"2" doc:"Number of spaces for indentation" minLength:"1"`
+		Input     string `json:"input" example:"{\"name\":\"Alice\",\"age\":30}" doc:"JSON input to prettify" minLength:"1"`
+		Operation string `json:"operation" example:"pretty" doc:"Operation: pretty or unpretty"`
+		Spaces    string `json:"spaces" example:"2" doc:"Number of spaces for indentation" minLength:"0"`
 	}
 }
 
@@ -56,7 +57,7 @@ var jsonPrettyResultTmpl = template.Must(template.New("jsonpretty-result").Parse
 <div class="d-flex justify-content-center">
   <div class="input-group" style="max-width: 1024px; width: 100%;">
     <textarea class="form-control custom-output" id="jsonpretty-result-input"
-      readonly aria-label="Prettified result" rows="10">{{.PrettyfiedJSON}}</textarea>
+      readonly aria-label="Result JSON" rows="10">{{.ResultJSON}}</textarea>
     <button class="btn btn-graphite" type="button"
       onclick="copyToClipboard('jsonpretty-result-input')"
       aria-label="Copy result to clipboard" tabindex="-1">
@@ -88,19 +89,43 @@ func RegisterJsonPrettyHtmx(api huma.API) {
 			},
 		},
 	}, func(ctx context.Context, input *JsonPrettyHTMXInput) (*JsonPrettyHTMXOutput, error) {
-		// Validate input
+		// Handle operation: pretty (default) or unpretty (minify)
+		op := input.Body.Operation
+		if op == "unpretty" {
+			// Unpretty (minify) JSON
+			result, err := service.UnprettyJSON(input.Body.Input)
+			if err != nil {
+				logger.Logger.Error("failed to unpretty json", "input", input.Body.Input, "error", err)
+				if input.HtmxHeader {
+					// If it's a htmx request, return an HTML fragment with the error content (return code will be 200 as we want to display it in the UI)
+					return &JsonPrettyHTMXOutput{
+						ContentType: "text/html; charset=utf-8",
+						Body:        []byte(generateHTMXError(err)),
+					}, nil
+				}
+				return nil, huma.Error400BadRequest("failed to unpretty JSON: " + err.Error())
+			}
+			if input.HtmxHeader {
+				var buf bytes.Buffer
+				jsonPrettyResultTmpl.Execute(&buf, map[string]string{"ResultJSON": result})
+				return &JsonPrettyHTMXOutput{ContentType: "text/html; charset=utf-8", Body: buf.Bytes()}, nil
+			}
+			return nil, huma.Error400BadRequest("This endpoint only supports HTMX requests; use /api/jsonpretty for JSON responses")
+		}
+
+		// Default to pretty and validate spaces
 		spaces, err := strconv.Atoi(input.Body.Spaces)
-		if err != nil || spaces <= 0 {
+		if err != nil || spaces < 0 {
 			switch input.HtmxHeader {
 			case true:
-				generateHTMXError(fmt.Errorf("spaces must be a valid positive integer"))
+				generateHTMXError(fmt.Errorf("spaces must be a valid non-negative integer"))
 			case false:
-				return nil, huma.Error400BadRequest("spaces must be a valid positive integer")
+				return nil, huma.Error400BadRequest("spaces must be a valid non-negative integer")
 			}
 		}
 
 		// Prettify JSON
-		prettyfiedJSON, err := service.PrettyJSONWithSpaces(input.Body.Input, spaces)
+		result, err := service.PrettyJSONWithSpaces(input.Body.Input, spaces)
 		if err != nil {
 			logger.Logger.Error(
 				"failed to prettify json",
@@ -121,7 +146,7 @@ func RegisterJsonPrettyHtmx(api huma.API) {
 		if input.HtmxHeader {
 			var buf bytes.Buffer
 			jsonPrettyResultTmpl.Execute(&buf, map[string]string{
-				"PrettyfiedJSON": prettyfiedJSON,
+				"ResultJSON": result,
 			})
 			resp := &JsonPrettyHTMXOutput{
 				ContentType: "text/html; charset=utf-8",
