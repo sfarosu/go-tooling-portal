@@ -82,6 +82,8 @@ func setupRouter() *http.ServeMux {
 	apis.RegisterJsonPrettyHtmx(humaAPI)
 	apis.RegisterSSHGen(humaAPI)
 	apis.RegisterSSHGenHtmx(humaAPI)
+	apis.RegisterTimeConverter(humaAPI)
+	apis.RegisterTimeConverterHtmx(humaAPI)
 	apis.RegisterVersion(humaAPI)
 	apis.RegisterVersionHtmx(humaAPI)
 
