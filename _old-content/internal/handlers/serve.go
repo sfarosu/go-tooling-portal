@@ -22,7 +22,7 @@ import (
 
 func Serve() {
 	// Flags
-	addr := flag.String("addr", ":8080", "Network address and port to start on")
+	addr := flag.String("addr", ":8100", "Network address and port to start on")
 	flag.Parse()
 
 	// GOMAXPROCS - respect k8s cpu quota

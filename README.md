@@ -35,7 +35,7 @@ ___
 
 ## How to run it locally without containers
 
-- Install golang on your local vm (go >= 1.21)
+- Install golang on your local vm (go >= 1.26)
   - on linux, export:
     - `echo "export GOPATH=$HOME/go" >> ~/.bashrc`
     - `echo "export GO111MODULE=on" >> ~/.bashrc`
@@ -43,8 +43,8 @@ ___
 - Get the app: `cd ~/go/src/ && git clone https://github.com/sfarosu/go-tooling-portal.git`
 - Build the app: `cd ~/go/src/github.com/sfarosu/go-tooling-portal && go build .`
 - Run the app: `./go-tooling-portal`
-- Access it in your browser at: [http://localhost:8080](http://localhost:8080)
-  - metrics available at: [http://localhost:8080/metrics](http://localhost:8080/metrics)
+- Access it in your browser at: [http://localhost:8100](http://localhost:8100)
+  - metrics available at: [http://localhost:8100/metrics](http://localhost:8100/metrics)
 
 ___
 
@@ -55,19 +55,19 @@ ___
 - Make sure you have docker and git installed on your machine
 - Git clone the repo: `cd ~ && git clone https://github.com/sfarosu/go-tooling-portal.git && cd ~/go-tooling-portal && git checkout master`
 - Build the image: `cd ~/go-tooling-portal && docker build -t docker.io/sfarosu/go-tooling-portal:latest -f Dockerfile .`
-- Run the container daemonized : `docker run --rm -d -p 8080:8080 docker.io/sfarosu/go-tooling-portal`
-- Access it in your browser at: [http://localhost:8080](http://localhost:8080)
+- Run the container daemonized : `docker run --rm -d -p 8100:8100 docker.io/sfarosu/go-tooling-portal`
+- Access it in your browser at: [http://localhost:8100](http://localhost:8100)
 
 ### Docker run - use the prebuilt image from docker hub
 
-- `docker run --rm -d -p 8080:8080 docker.io/sfarosu/go-tooling-portal:latest`
-- Access it in your browser at: [http://localhost:8080](http://localhost:8080)
+- `docker run --rm -d -p 8100:8100 docker.io/sfarosu/go-tooling-portal:latest`
+- Access it in your browser at: [http://localhost:8100](http://localhost:8100)
 
 ### Docker compose
 
 - Run it with: `docker-compose -f deployments/docker-compose/docker-compose.yaml up`
 - Stop it with: `docker-compose -f deployments/docker-compose/docker-compose.yaml down`
-- Access it in your browser at: [http://localhost:8080](http://localhost:8080)
+- Access it in your browser at: [http://localhost:8100](http://localhost:8100)
 
 ### Kubernetes
 

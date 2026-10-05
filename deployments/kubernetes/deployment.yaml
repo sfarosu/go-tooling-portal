@@ -19,7 +19,7 @@ spec:
         image: docker.io/sfarosu/go-tooling-portal:latest
         imagePullPolicy: Always
         ports:
-        - containerPort: 8080
+        - containerPort: 8100
         resources:
           requests:
             memory: "128Mi"

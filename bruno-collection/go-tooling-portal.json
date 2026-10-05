@@ -10,7 +10,7 @@
       "settings": {},
       "tags": [],
       "request": {
-        "url": "http://localhost:8080/api/base64converter",
+        "url": "http://localhost:8100/api/base64converter",
         "method": "POST",
         "headers": [
           {
@@ -50,7 +50,7 @@
       "settings": {},
       "tags": [],
       "request": {
-        "url": "http://localhost:8080/api/base64converter/htmx",
+        "url": "http://localhost:8100/api/base64converter/htmx",
         "method": "POST",
         "headers": [
           {
@@ -95,7 +95,7 @@
       "settings": {},
       "tags": [],
       "request": {
-        "url": "http://localhost:8080/api/formatconverter",
+        "url": "http://localhost:8100/api/formatconverter",
         "method": "POST",
         "headers": [
           {
@@ -135,7 +135,7 @@
       "settings": {},
       "tags": [],
       "request": {
-        "url": "http://localhost:8080/api/formatconverter/htmx",
+        "url": "http://localhost:8100/api/formatconverter/htmx",
         "method": "POST",
         "headers": [
           {
@@ -180,7 +180,7 @@
       "settings": {},
       "tags": [],
       "request": {
-        "url": "http://localhost:8080/api/htpasswd",
+        "url": "http://localhost:8100/api/htpasswd",
         "method": "POST",
         "headers": [
           {
@@ -220,7 +220,7 @@
       "settings": {},
       "tags": [],
       "request": {
-        "url": "http://localhost:8080/api/htpasswd/htmx",
+        "url": "http://localhost:8100/api/htpasswd/htmx",
         "method": "POST",
         "headers": [
           {
@@ -265,7 +265,7 @@
       "settings": {},
       "tags": [],
       "request": {
-        "url": "http://localhost:8080/api/jsonpretty",
+        "url": "http://localhost:8100/api/jsonpretty",
         "method": "POST",
         "headers": [
           {
@@ -305,7 +305,7 @@
       "settings": {},
       "tags": [],
       "request": {
-        "url": "http://localhost:8080/api/jsonpretty/htmx",
+        "url": "http://localhost:8100/api/jsonpretty/htmx",
         "method": "POST",
         "headers": [
           {
@@ -350,7 +350,7 @@
       "settings": {},
       "tags": [],
       "request": {
-        "url": "http://localhost:8080/api/passgen",
+        "url": "http://localhost:8100/api/passgen",
         "method": "POST",
         "headers": [
           {
@@ -390,7 +390,7 @@
       "settings": {},
       "tags": [],
       "request": {
-        "url": "http://localhost:8080/api/passgen/htmx",
+        "url": "http://localhost:8100/api/passgen/htmx",
         "method": "POST",
         "headers": [
           {
@@ -435,7 +435,7 @@
       "settings": {},
       "tags": [],
       "request": {
-        "url": "http://localhost:8080/api/sshgen",
+        "url": "http://localhost:8100/api/sshgen",
         "method": "POST",
         "headers": [
           {
@@ -475,7 +475,7 @@
       "settings": {},
       "tags": [],
       "request": {
-        "url": "http://localhost:8080/api/sshgen/htmx",
+        "url": "http://localhost:8100/api/sshgen/htmx",
         "method": "POST",
         "headers": [
           {
@@ -520,7 +520,7 @@
       "settings": {},
       "tags": [],
       "request": {
-        "url": "http://localhost:8080/api/version",
+        "url": "http://localhost:8100/api/version",
         "method": "GET",
         "headers": [],
         "params": [],
@@ -548,7 +548,7 @@
       "settings": {},
       "tags": [],
       "request": {
-        "url": "http://localhost:8080/api/version/htmx",
+        "url": "http://localhost:8100/api/version/htmx",
         "method": "GET",
         "headers": [
           {

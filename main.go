@@ -15,7 +15,7 @@ func init() {
 }
 
 func main() {
-	addr := flag.String("addr", ":8080", "Network address and port to start on")
+	addr := flag.String("addr", ":8100", "Network address and port to start on")
 	logLevel := flag.String("verbosity", "info", "Verbosity: debug, info, warn, error")
 	flag.Parse()
 
