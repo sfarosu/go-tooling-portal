@@ -6,10 +6,10 @@ metadata:
   name: go-tooling-portal
 spec:
   ports:
-  - name: 8080-tcp
-    port: 8080
+  - name: 8100-tcp
+    port: 8100
     protocol: TCP
-    targetPort: 8080
+    targetPort: 8100
   selector:
     app: go-tooling-portal
   sessionAffinity: None

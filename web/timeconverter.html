@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Time Converter - Go Tooling Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Convert between epoch time and human-readable format">
+    <!-- Bootstrap CSS, Icons and Javascript -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
+    <!-- Custom styling -->
+    <link rel="stylesheet" href="assets/styles.css">
+    <!-- Custom scripts -->
+    <script src="assets/scripts.js"></script>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+
+<body>
+    <!-- Load the shared navbar from navbar.html using htmx (avoids code duplication across pages) -->
+    <div hx-get="navbar.html" hx-trigger="load"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="my-5">
+                <h3 class="text-center fw-bold mb-5" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    title="Convert epoch time entries to human readable format and vice versa">
+                    Time Converter
+                </h3>
+
+                <!-- Browser Timezone Display -->
+                <div class="alert alert-info text-center mb-4">
+                    Browser Timezone: <span id="timezone-label" class="fw-bold">Loading...</span>
+                </div>
+
+                <!-- Two Column Layout: Epoch to Human & Human to Epoch -->
+                <div class="row g-4 mb-4">
+                    <!-- Epoch to Human Conversion -->
+                    <div class="col-12 col-lg-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Epoch to Human</h5>
+                                <form id="epoch-to-human-form"
+                                    hx-post="/api/timeconverter/htmx"
+                                    hx-target="#epoch-result"
+                                    hx-swap="innerHTML"
+                                    hx-ext="json-enc"
+                                    onsubmit="addTimezoneToForm(event, 'epoch-to-human-form')">
+
+                                    <input type="hidden" name="epochToHumanMode" value="true">
+                                    <input type="hidden" id="epoch-timezone" name="timezone" value="UTC">
+
+                                    <div class="mb-3">
+                                        <label for="epochtime" class="form-label">Current UTC epoch time</label>
+                                        <small class="form-text text-muted d-block mb-2">
+                                            Digits required: seconds (9 or 10), milliseconds (12 or 13), microseconds (15 or 16)
+                                        </small>
+                                        <div class="input-group">
+                                            <input type="text" 
+                                                class="form-control text-center" 
+                                                id="epochtime" 
+                                                name="epochTime" 
+                                                placeholder="Enter epoch time"
+                                                pattern="[0-9]{9}|[0-9]{10}|[0-9]{12}|[0-9]{13}|[0-9]{15}|[0-9]{16}" 
+                                                title="Insert 9/10, 12/13 or 15/16 digits (seconds, milliseconds or microseconds)"
+                                                required>
+                                            <select class="form-select" id="epochTimeFormat" style="max-width: 150px;">
+                                                <option value="seconds" selected>Seconds</option>
+                                                <option value="millis">Milliseconds</option>
+                                                <option value="micros">Microseconds</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-primary">Convert to Human Format</button>
+                                    </div>
+                                </form>
+                                <div id="epoch-result" class="mt-4"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Human to Epoch Conversion -->
+                    <div class="col-12 col-lg-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Human to Epoch</h5>
+                                <form id="human-to-epoch-form"
+                                    hx-post="/api/timeconverter/htmx"
+                                    hx-target="#human-result"
+                                    hx-swap="innerHTML"
+                                    hx-ext="json-enc"
+                                    onsubmit="addTimezoneToForm(event, 'human-to-epoch-form')">
+
+                                    <input type="hidden" name="humanToEpochMode" value="true">
+                                    <input type="hidden" id="human-timezone" name="timezone" value="UTC">
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Current UTC human time</label>
+                                        <div class="row g-2">
+                                            <div class="col-4 col-sm-2">
+                                                <input type="number" 
+                                                    class="form-control text-center" 
+                                                    id="year" 
+                                                    name="year" 
+                                                    placeholder="Year"
+                                                    min="1970" 
+                                                    max="2099"
+                                                    required>
+                                                <small class="form-text text-muted text-center d-block">Year</small>
+                                            </div>
+                                            <div class="col-4 col-sm-2">
+                                                <input type="number" 
+                                                    class="form-control text-center" 
+                                                    id="month" 
+                                                    name="month" 
+                                                    placeholder="Month"
+                                                    min="1" 
+                                                    max="12"
+                                                    required>
+                                                <small class="form-text text-muted text-center d-block">Month</small>
+                                            </div>
+                                            <div class="col-4 col-sm-2">
+                                                <input type="number" 
+                                                    class="form-control text-center" 
+                                                    id="day" 
+                                                    name="day" 
+                                                    placeholder="Day"
+                                                    min="1" 
+                                                    max="31"
+                                                    required>
+                                                <small class="form-text text-muted text-center d-block">Day</small>
+                                            </div>
+                                            <div class="col-4 col-sm-2">
+                                                <input type="number" 
+                                                    class="form-control text-center" 
+                                                    id="hour" 
+                                                    name="hour" 
+                                                    placeholder="Hour"
+                                                    min="0" 
+                                                    max="23"
+                                                    required>
+                                                <small class="form-text text-muted text-center d-block">Hour</small>
+                                            </div>
+                                            <div class="col-4 col-sm-2">
+                                                <input type="number" 
+                                                    class="form-control text-center" 
+                                                    id="minute" 
+                                                    name="minute" 
+                                                    placeholder="Minute"
+                                                    min="0" 
+                                                    max="59"
+                                                    required>
+                                                <small class="form-text text-muted text-center d-block">Minute</small>
+                                            </div>
+                                            <div class="col-4 col-sm-2">
+                                                <input type="number" 
+                                                    class="form-control text-center" 
+                                                    id="second" 
+                                                    name="second" 
+                                                    placeholder="Second"
+                                                    min="0" 
+                                                    max="59"
+                                                    required>
+                                                <small class="form-text text-muted text-center d-block">Second</small>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-primary">Convert to Epoch Format</button>
+                                    </div>
+                                </form>
+                                <div id="human-result" class="mt-4"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Load the shared footer from footer.html using htmx (avoids code duplication across pages) -->
+    <div hx-get="footer.html" hx-trigger="load"></div>
+
+</body>
+
+</html>

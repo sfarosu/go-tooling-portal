@@ -1,0 +1,124 @@
+package apis
+
+import (
+	"bytes"
+	"context"
+	"net/http"
+	"strconv"
+	"text/template"
+
+	"github.com/danielgtaylor/huma/v2"
+	"github.com/sfarosu/go-tooling-portal/internal/logger"
+	"github.com/sfarosu/go-tooling-portal/internal/service"
+)
+
+// HtpasswdInput is the request structure for the /api/htpasswd/htmx endpoint.
+type HtpasswdHTMXInput struct {
+	// HtmxHeader stores the value of the HX-Request header, which is sent by HTMX
+	// when making AJAX requests. This allows the handler to detect if the request
+	// originated from an HTMX-enabled frontend and respond with HTML instead of JSON
+	HtmxHeader bool `header:"HX-Request"`
+
+	// Body contains the main input fields for the htpasswd generation.
+	Body struct {
+		Username  string `json:"username" example:"alice" doc:"Username for the htpasswd entry" minLength:"1"`
+		Password  string `json:"password" example:"S3cureP@ssw0rd" doc:"Password for the htpasswd entry" minLength:"1"`
+		Algorithm string `json:"algorithm" example:"apr1" doc:"Hashing algorithm to use (apr1, 1, 5, or 6)" enum:"apr1,1,5,6"`
+	}
+}
+
+// Resolve implements the huma.RequestResolver interface.
+// It is called by Huma before the handler to allow custom extraction or transformation
+// of request data. Here, we extract the HX-Request header (sent by HTMX)
+// and store it in the HtmxHeader field for later use in the handler
+// See: https://huma.rocks/features/request-resolvers/
+func (m *HtpasswdHTMXInput) Resolve(ctx huma.Context) []error {
+	val := ctx.Header("HX-Request")
+	parsed, err := strconv.ParseBool(val)
+	if err != nil {
+		// If parsing fails, assume it's not an HTMX request
+		m.HtmxHeader = false
+		return nil
+	}
+	m.HtmxHeader = parsed
+	return nil
+}
+
+// HtpasswdHTMXOutput is the response structure for the /api/htpasswd/htmx endpoint.
+type HtpasswdHTMXOutput struct {
+	ContentType string `header:"Content-Type"`
+	Body        []byte `json:"-"` // Body is not serialized to JSON, but used to return HTML content
+}
+
+// HTMX-compatible HTML fragment rendered dynamically by the API and injected into the page via HTMX
+var htpasswdResultTmpl = template.Must(template.New("htpasswd-result").Parse(`
+<div class="d-flex justify-content-center">
+  <div class="input-group" style="max-width: 680px; width: 100%;">
+    <textarea class="form-control custom-output" id="htpasswd-result-input"
+      readonly aria-label="Converted result" rows="1">{{.Htpasswd}}</textarea>
+    <button class="btn btn-graphite" type="button"
+      onclick="copyToClipboard('htpasswd-result-input')"
+      aria-label="Copy htpasswd to clipboard" tabindex="-1">
+      <i class="bi bi-clipboard"></i>
+    </button>
+  </div>
+</div>
+`))
+
+// RegisterHtpasswdHtmx registers the /api/htpasswd/htmx endpoint with the given Huma API
+func RegisterHtpasswdHtmx(api huma.API) {
+	huma.Register(api, huma.Operation{
+		OperationID:   "generate-htpasswd-htmx",
+		Summary:       "generate htpasswd - htmx",
+		Description:   "Returns a suitable for HTMX injection HTML object containg the generated htpasswd entry.",
+		Method:        http.MethodPost,
+		Path:          "/api/htpasswd/htmx",
+		DefaultStatus: http.StatusOK,
+		Tags:          []string{"Htpassword"},
+		Responses: map[string]*huma.Response{
+			"200": {
+				Description: "Successfully generated an htpasswd entry, responding with HTML content for HTMX requests.",
+				Content: map[string]*huma.MediaType{
+					"text/html": {},
+				},
+			},
+			"400": {
+				Description: "Bad Request, invalid input (including missing HX-Request header).",
+			},
+		},
+	}, func(ctx context.Context, input *HtpasswdHTMXInput) (*HtpasswdHTMXOutput, error) {
+		// Generate htpasswd
+		generatedHtPassword, err := service.GenerateHtpasswd(input.Body.Username, input.Body.Password, input.Body.Algorithm)
+		if err != nil {
+			logger.Logger.Error(
+				"failed to generate htpasswd",
+				"username", input.Body.Username,
+				"algorithm", input.Body.Algorithm,
+				"error", err,
+			)
+			if input.HtmxHeader {
+				// If it's a htmx request, return an HTML fragment with the error content (return code will be 200 as we want to display it in the UI)
+				return &HtpasswdHTMXOutput{
+					ContentType: "text/html; charset=utf-8",
+					Body:        []byte(generateHTMXError(err)),
+				}, nil
+			}
+			return nil, huma.Error400BadRequest("failed to generate htpasswd: " + err.Error())
+		}
+
+		// Render the HTML template and return as a html block if this is an HTMX request
+		if input.HtmxHeader {
+			var buf bytes.Buffer
+			htpasswdResultTmpl.Execute(&buf, map[string]string{
+				"Htpasswd": generatedHtPassword,
+			})
+			resp := &HtpasswdHTMXOutput{
+				ContentType: "text/html; charset=utf-8",
+				Body:        buf.Bytes(),
+			}
+			return resp, nil
+		}
+
+		return nil, huma.Error400BadRequest("This endpoint only supports HTMX requests with HX-Request header set to true; use /api/htpasswd for JSON responses")
+	})
+}

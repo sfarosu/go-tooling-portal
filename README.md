@@ -10,7 +10,7 @@ Simple and fast webapp that provides users with some self-hosted tooling to avoi
 - **RandomPasswordGenerator**: generate a variable length, multi-case, multi-symbol password
 - **SSHKeyGenerator**: generate SSH key pairs
 - **JsonPrettifier**: prettify/indent a complex Json
-- **FormatConverter**: transform YAML to JSON and viceversa
+- **FormatConverter**: convert YAML to JSON and viceversa
 - **EpochTimeConverter**: transform unix timestamp to human time and viceversa
 - **Base64Converter**: encode/decode data in Base64 format
 - **URLDecoder**: decode special characters in URLs
@@ -19,7 +19,7 @@ To be added in future releases:
 
 - generate self-signed tls certificates
 - generate k8s kubeconfig from service-account secret token
-- transform yaml/json to golang struct
+- convert yaml/json to golang struct
 
 ___
 
@@ -33,19 +33,9 @@ ___
 
 ___
 
-## Build/prerequisites details
-
-All the builds and tests on host machine were done using :
-
-- Pop!_OS 22.04
-- docker 25.0.3
-- go version go1.24.0 linux/amd64
-
-___
-
 ## How to run it locally without containers
 
-- Install golang on your local vm (go >= 1.21)
+- Install golang on your local vm (go >= 1.26)
   - on linux, export:
     - `echo "export GOPATH=$HOME/go" >> ~/.bashrc`
     - `echo "export GO111MODULE=on" >> ~/.bashrc`
@@ -53,8 +43,8 @@ ___
 - Get the app: `cd ~/go/src/ && git clone https://github.com/sfarosu/go-tooling-portal.git`
 - Build the app: `cd ~/go/src/github.com/sfarosu/go-tooling-portal && go build .`
 - Run the app: `./go-tooling-portal`
-- Access it in your browser at: [http://localhost:8080](http://localhost:8080)
-  - metrics available at: [http://localhost:8080/metrics](http://localhost:8080/metrics)
+- Access it in your browser at: [http://localhost:8100](http://localhost:8100)
+  - metrics available at: [http://localhost:8100/metrics](http://localhost:8100/metrics)
 
 ___
 
@@ -65,19 +55,19 @@ ___
 - Make sure you have docker and git installed on your machine
 - Git clone the repo: `cd ~ && git clone https://github.com/sfarosu/go-tooling-portal.git && cd ~/go-tooling-portal && git checkout master`
 - Build the image: `cd ~/go-tooling-portal && docker build -t docker.io/sfarosu/go-tooling-portal:latest -f Dockerfile .`
-- Run the container daemonized : `docker run --rm -d -p 8080:8080 docker.io/sfarosu/go-tooling-portal`
-- Access it in your browser at: [http://localhost:8080](http://localhost:8080)
+- Run the container daemonized : `docker run --rm -d -p 8100:8100 docker.io/sfarosu/go-tooling-portal`
+- Access it in your browser at: [http://localhost:8100](http://localhost:8100)
 
 ### Docker run - use the prebuilt image from docker hub
 
-- `docker run --rm -d -p 8080:8080 docker.io/sfarosu/go-tooling-portal:latest`
-- Access it in your browser at: [http://localhost:8080](http://localhost:8080)
+- `docker run --rm -d -p 8100:8100 docker.io/sfarosu/go-tooling-portal:latest`
+- Access it in your browser at: [http://localhost:8100](http://localhost:8100)
 
 ### Docker compose
 
 - Run it with: `docker-compose -f deployments/docker-compose/docker-compose.yaml up`
 - Stop it with: `docker-compose -f deployments/docker-compose/docker-compose.yaml down`
-- Access it in your browser at: [http://localhost:8080](http://localhost:8080)
+- Access it in your browser at: [http://localhost:8100](http://localhost:8100)
 
 ### Kubernetes
 
