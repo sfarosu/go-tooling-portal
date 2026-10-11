@@ -1,590 +1,845 @@
 {
-  "name": "go-tooling-portal",
-  "version": "1",
-  "items": [
+  "info": {
+    "name": "go-tooling-portal",
+    "description": null,
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
     {
-      "type": "http",
-      "name": "Base64Converter",
-      "filename": "Base64Converter.bru",
-      "seq": 6,
-      "settings": {},
-      "tags": [],
-      "request": {
-        "url": "http://localhost:8100/api/base64converter",
-        "method": "POST",
-        "headers": [
-          {
-            "name": "Accept",
-            "value": "application/json",
-            "enabled": true
-          },
-          {
-            "name": "Content-Type",
-            "value": "application/json",
-            "enabled": true
-          }
-        ],
-        "params": [],
-        "body": {
-          "mode": "json",
-          "json": "{\n  \"input\": \"test123\",\n  \"operation\": \"encode\",\n  \"format\": \"standard\"\n}",
-          "formUrlEncoded": [],
-          "multipartForm": [],
-          "file": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "docs": "",
-        "auth": {
-          "mode": "inherit"
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "Base64ConverterHtmx",
-      "filename": "Base64ConverterHtmx.bru",
-      "seq": 7,
-      "settings": {},
-      "tags": [],
-      "request": {
-        "url": "http://localhost:8100/api/base64converter/htmx",
-        "method": "POST",
-        "headers": [
-          {
-            "name": "Accept",
-            "value": "application/json",
-            "enabled": true
-          },
-          {
-            "name": "Content-Type",
-            "value": "application/json",
-            "enabled": true
-          },
-          {
-            "name": "HX-Request",
-            "value": "true",
-            "enabled": true
-          }
-        ],
-        "params": [],
-        "body": {
-          "mode": "json",
-          "json": "{\n  \"input\": \"test123\",\n  \"operation\": \"encode\",\n  \"format\": \"standard\"\n}",
-          "formUrlEncoded": [],
-          "multipartForm": [],
-          "file": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "docs": "",
-        "auth": {
-          "mode": "inherit"
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "FormatConverter",
-      "filename": "FormatConverter.bru",
-      "seq": 8,
-      "settings": {},
-      "tags": [],
-      "request": {
-        "url": "http://localhost:8100/api/formatconverter",
-        "method": "POST",
-        "headers": [
-          {
-            "name": "Accept",
-            "value": "application/json",
-            "enabled": true
-          },
-          {
-            "name": "Content-Type",
-            "value": "application/json",
-            "enabled": true
-          }
-        ],
-        "params": [],
-        "body": {
-          "mode": "json",
-          "json": "{\n  \"input\": \"{\\\"name\\\":\\\"Alice\\\",\\\"age\\\":30}\"\n}",
-          "formUrlEncoded": [],
-          "multipartForm": [],
-          "file": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "docs": "",
-        "auth": {
-          "mode": "inherit"
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "FormatConverterHtmx",
-      "filename": "FormatConverterHtmx.bru",
-      "seq": 9,
-      "settings": {},
-      "tags": [],
-      "request": {
-        "url": "http://localhost:8100/api/formatconverter/htmx",
-        "method": "POST",
-        "headers": [
-          {
-            "name": "Accept",
-            "value": "application/json",
-            "enabled": true
-          },
-          {
-            "name": "Content-Type",
-            "value": "application/json",
-            "enabled": true
-          },
-          {
-            "name": "HX-Request",
-            "value": "true",
-            "enabled": true
-          }
-        ],
-        "params": [],
-        "body": {
-          "mode": "json",
-          "json": "{\n  \"input\": \"{\\\"name\\\":\\\"Alice\\\",\\\"age\\\":30}\"\n}",
-          "formUrlEncoded": [],
-          "multipartForm": [],
-          "file": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "docs": "",
-        "auth": {
-          "mode": "inherit"
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "Htpasswd",
-      "filename": "Htpasswd.bru",
-      "seq": 4,
-      "settings": {},
-      "tags": [],
-      "request": {
-        "url": "http://localhost:8100/api/htpasswd",
-        "method": "POST",
-        "headers": [
-          {
-            "name": "Accept",
-            "value": "application/json",
-            "enabled": true
-          },
-          {
-            "name": "Content-Type",
-            "value": "application/json",
-            "enabled": true
-          }
-        ],
-        "params": [],
-        "body": {
-          "mode": "json",
-          "json": "{\n  \"algorithm\": \"apr1\",\n  \"password\": \"S3cureP@ssw0rd\",\n  \"username\": \"alice\"\n}",
-          "formUrlEncoded": [],
-          "multipartForm": [],
-          "file": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "docs": "",
-        "auth": {
-          "mode": "inherit"
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "HtpasswdHtmx",
-      "filename": "HtpasswdHtmx.bru",
-      "seq": 5,
-      "settings": {},
-      "tags": [],
-      "request": {
-        "url": "http://localhost:8100/api/htpasswd/htmx",
-        "method": "POST",
-        "headers": [
-          {
-            "name": "Accept",
-            "value": "application/json",
-            "enabled": true
-          },
-          {
-            "name": "Content-Type",
-            "value": "application/json",
-            "enabled": true
-          },
-          {
-            "name": "HX-Request",
-            "value": "true",
-            "enabled": true
-          }
-        ],
-        "params": [],
-        "body": {
-          "mode": "json",
-          "json": "{\n  \"algorithm\": \"apr1\",\n  \"password\": \"S3cureP@ssw0rd\",\n  \"username\": \"alice\"\n}",
-          "formUrlEncoded": [],
-          "multipartForm": [],
-          "file": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "docs": "",
-        "auth": {
-          "mode": "inherit"
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "JSONPrettify",
-      "filename": "JSONPrettify.bru",
-      "seq": 14,
-      "settings": {},
-      "tags": [],
-      "request": {
-        "url": "http://localhost:8100/api/jsonpretty",
-        "method": "POST",
-        "headers": [
-          {
-            "name": "Accept",
-            "value": "application/json",
-            "enabled": true
-          },
-          {
-            "name": "Content-Type",
-            "value": "application/json",
-            "enabled": true
-          }
-        ],
-        "params": [],
-        "body": {
-          "mode": "json",
-          "json": "{\n  \"input\": \"{\\\"name\\\":\\\"Alice\\\",\\\"age\\\":30}\",\n  \"operation\": \"pretty\",\n  \"spaces\": 2\n}",
-          "formUrlEncoded": [],
-          "multipartForm": [],
-          "file": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "docs": "",
-        "auth": {
-          "mode": "inherit"
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "JSONPrettifyHtmx",
-      "filename": "JSONPrettifyHtmx.bru",
-      "seq": 15,
-      "settings": {},
-      "tags": [],
-      "request": {
-        "url": "http://localhost:8100/api/jsonpretty/htmx",
-        "method": "POST",
-        "headers": [
-          {
-            "name": "Accept",
-            "value": "application/json",
-            "enabled": true
-          },
-          {
-            "name": "Content-Type",
-            "value": "application/json",
-            "enabled": true
-          },
-          {
-            "name": "HX-Request",
-            "value": "true",
-            "enabled": true
-          }
-        ],
-        "params": [],
-        "body": {
-          "mode": "json",
-          "json": "{\n  \"input\": \"{\\\"name\\\":\\\"Alice\\\",\\\"age\\\":30}\",\n  \"operation\": \"pretty\",\n  \"spaces\": \"2\"\n}",
-          "formUrlEncoded": [],
-          "multipartForm": [],
-          "file": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "docs": "",
-        "auth": {
-          "mode": "inherit"
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "Passgen",
-      "filename": "Passgen.bru",
-      "seq": 12,
-      "settings": {},
-      "tags": [],
-      "request": {
-        "url": "http://localhost:8100/api/passgen",
-        "method": "POST",
-        "headers": [
-          {
-            "name": "Accept",
-            "value": "application/json",
-            "enabled": true
-          },
-          {
-            "name": "Content-Type",
-            "value": "application/json",
-            "enabled": true
-          }
-        ],
-        "params": [],
-        "body": {
-          "mode": "json",
-          "json": "{\n  \"length\": 12,\n  \"uppercase\": true,\n  \"lowercase\": true,\n  \"numbers\": true,\n  \"symbols\": true\n}",
-          "formUrlEncoded": [],
-          "multipartForm": [],
-          "file": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "docs": "",
-        "auth": {
-          "mode": "inherit"
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "PassgenHtmx",
-      "filename": "PassgenHtmx.bru",
-      "seq": 13,
-      "settings": {},
-      "tags": [],
-      "request": {
-        "url": "http://localhost:8100/api/passgen/htmx",
-        "method": "POST",
-        "headers": [
-          {
-            "name": "Accept",
-            "value": "application/json",
-            "enabled": true
-          },
-          {
-            "name": "Content-Type",
-            "value": "application/json",
-            "enabled": true
-          },
-          {
-            "name": "HX-Request",
-            "value": "true",
-            "enabled": true
-          }
-        ],
-        "params": [],
-        "body": {
-          "mode": "json",
-          "json": "{\n  \"length\": \"12\",\n  \"uppercase\": \"true\",\n  \"lowercase\": \"true\",\n  \"numbers\": \"true\",\n  \"symbols\": \"true\"\n}",
-          "formUrlEncoded": [],
-          "multipartForm": [],
-          "file": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "docs": "",
-        "auth": {
-          "mode": "inherit"
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "SSHGen",
-      "filename": "SSHGen.bru",
-      "seq": 10,
-      "settings": {},
-      "tags": [],
-      "request": {
-        "url": "http://localhost:8100/api/sshgen",
-        "method": "POST",
-        "headers": [
-          {
-            "name": "Accept",
-            "value": "application/json",
-            "enabled": true
-          },
-          {
-            "name": "Content-Type",
-            "value": "application/json",
-            "enabled": true
-          }
-        ],
-        "params": [],
-        "body": {
-          "mode": "json",
-          "json": "{\n  \"algorithm\": \"ecdsa\",\n  \"ecdsaBits\": \"256\",\n  \"rsaBits\": \"\",\n  \"email\": \"alice@example.com\"\n}",
-          "formUrlEncoded": [],
-          "multipartForm": [],
-          "file": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "docs": "",
-        "auth": {
-          "mode": "inherit"
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "SSHGenHtmx",
-      "filename": "SSHGenHtmx.bru",
-      "seq": 11,
-      "settings": {},
-      "tags": [],
-      "request": {
-        "url": "http://localhost:8100/api/sshgen/htmx",
-        "method": "POST",
-        "headers": [
-          {
-            "name": "Accept",
-            "value": "application/json",
-            "enabled": true
-          },
-          {
-            "name": "Content-Type",
-            "value": "application/json",
-            "enabled": true
-          },
-          {
-            "name": "HX-Request",
-            "value": "true",
-            "enabled": true
-          }
-        ],
-        "params": [],
-        "body": {
-          "mode": "json",
-          "json": "{\n  \"algorithm\": \"ecdsa\",\n  \"ecdsaBits\": \"256\",\n  \"rsaBits\": \"\",\n  \"email\": \"alice@example.com\"\n}",
-          "formUrlEncoded": [],
-          "multipartForm": [],
-          "file": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "docs": "",
-        "auth": {
-          "mode": "inherit"
-        }
-      }
-    },
-    {
-      "type": "http",
       "name": "Version",
-      "filename": "Version.bru",
-      "seq": 2,
-      "settings": {},
-      "tags": [],
       "request": {
-        "url": "http://localhost:8100/api/version",
         "method": "GET",
-        "headers": [],
-        "params": [],
-        "body": {
-          "mode": "none",
-          "formUrlEncoded": [],
-          "multipartForm": [],
-          "file": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "docs": "",
-        "auth": {
-          "mode": "inherit"
+        "header": [],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8100/api/version",
+          "protocol": "http",
+          "host": [
+            "localhost:8100"
+          ],
+          "path": [
+            "api",
+            "version"
+          ],
+          "query": [],
+          "variable": []
         }
       }
     },
     {
-      "type": "http",
       "name": "VersionHtmx",
-      "filename": "VersionHtmx.bru",
-      "seq": 3,
-      "settings": {},
-      "tags": [],
       "request": {
-        "url": "http://localhost:8100/api/version/htmx",
         "method": "GET",
-        "headers": [
+        "header": [
           {
-            "name": "HX-Request",
+            "key": "HX-Request",
             "value": "true",
-            "enabled": true
+            "description": "",
+            "disabled": false,
+            "type": "default"
           }
         ],
-        "params": [],
-        "body": {
-          "mode": "none",
-          "formUrlEncoded": [],
-          "multipartForm": [],
-          "file": []
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8100/api/version/htmx",
+          "protocol": "http",
+          "host": [
+            "localhost:8100"
+          ],
+          "path": [
+            "api",
+            "version",
+            "htmx"
+          ],
+          "query": [],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "Htpasswd",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8100/api/htpasswd",
+          "protocol": "http",
+          "host": [
+            "localhost:8100"
+          ],
+          "path": [
+            "api",
+            "htpasswd"
+          ],
+          "query": [],
+          "variable": []
         },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "docs": "",
-        "auth": {
-          "mode": "inherit"
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"algorithm\": \"apr1\",\n  \"password\": \"S3cureP@ssw0rd\",\n  \"username\": \"alice\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "HtpasswdHtmx",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "HX-Request",
+            "value": "true",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8100/api/htpasswd/htmx",
+          "protocol": "http",
+          "host": [
+            "localhost:8100"
+          ],
+          "path": [
+            "api",
+            "htpasswd",
+            "htmx"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"algorithm\": \"apr1\",\n  \"password\": \"S3cureP@ssw0rd\",\n  \"username\": \"alice\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Base64Converter",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8100/api/base64converter",
+          "protocol": "http",
+          "host": [
+            "localhost:8100"
+          ],
+          "path": [
+            "api",
+            "base64converter"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"input\": \"test123\",\n  \"operation\": \"encode\",\n  \"format\": \"standard\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Base64ConverterHtmx",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "HX-Request",
+            "value": "true",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8100/api/base64converter/htmx",
+          "protocol": "http",
+          "host": [
+            "localhost:8100"
+          ],
+          "path": [
+            "api",
+            "base64converter",
+            "htmx"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"input\": \"test123\",\n  \"operation\": \"encode\",\n  \"format\": \"standard\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "FormatConverter",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8100/api/formatconverter",
+          "protocol": "http",
+          "host": [
+            "localhost:8100"
+          ],
+          "path": [
+            "api",
+            "formatconverter"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"input\": \"{\\\"name\\\":\\\"Alice\\\",\\\"age\\\":30}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "FormatConverterHtmx",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "HX-Request",
+            "value": "true",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8100/api/formatconverter/htmx",
+          "protocol": "http",
+          "host": [
+            "localhost:8100"
+          ],
+          "path": [
+            "api",
+            "formatconverter",
+            "htmx"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"input\": \"{\\\"name\\\":\\\"Alice\\\",\\\"age\\\":30}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "SSHGen",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8100/api/sshgen",
+          "protocol": "http",
+          "host": [
+            "localhost:8100"
+          ],
+          "path": [
+            "api",
+            "sshgen"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"algorithm\": \"ecdsa\",\n  \"ecdsaBits\": \"256\",\n  \"rsaBits\": \"\",\n  \"email\": \"alice@example.com\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "SSHGenHtmx",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "HX-Request",
+            "value": "true",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8100/api/sshgen/htmx",
+          "protocol": "http",
+          "host": [
+            "localhost:8100"
+          ],
+          "path": [
+            "api",
+            "sshgen",
+            "htmx"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"algorithm\": \"ecdsa\",\n  \"ecdsaBits\": \"256\",\n  \"rsaBits\": \"\",\n  \"email\": \"alice@example.com\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Passgen",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8100/api/passgen",
+          "protocol": "http",
+          "host": [
+            "localhost:8100"
+          ],
+          "path": [
+            "api",
+            "passgen"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"length\": 12,\n  \"uppercase\": true,\n  \"lowercase\": true,\n  \"numbers\": true,\n  \"symbols\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "PassgenHtmx",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "HX-Request",
+            "value": "true",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8100/api/passgen/htmx",
+          "protocol": "http",
+          "host": [
+            "localhost:8100"
+          ],
+          "path": [
+            "api",
+            "passgen",
+            "htmx"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"length\": \"12\",\n  \"uppercase\": \"true\",\n  \"lowercase\": \"true\",\n  \"numbers\": \"true\",\n  \"symbols\": \"true\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "JSONPrettify",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8100/api/jsonpretty",
+          "protocol": "http",
+          "host": [
+            "localhost:8100"
+          ],
+          "path": [
+            "api",
+            "jsonpretty"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"input\": \"{\\\"name\\\":\\\"Alice\\\",\\\"age\\\":30}\",\n  \"operation\": \"pretty\",\n  \"spaces\": 2\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "JSONPrettifyHtmx",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "HX-Request",
+            "value": "true",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8100/api/jsonpretty/htmx",
+          "protocol": "http",
+          "host": [
+            "localhost:8100"
+          ],
+          "path": [
+            "api",
+            "jsonpretty",
+            "htmx"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"input\": \"{\\\"name\\\":\\\"Alice\\\",\\\"age\\\":30}\",\n  \"operation\": \"pretty\",\n  \"spaces\": \"2\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "TimeConverter",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8100/api/timeconverter",
+          "protocol": "http",
+          "host": [
+            "localhost:8100"
+          ],
+          "path": [
+            "api",
+            "timeconverter"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"epochToHumanMode\": true,\n  \"humanToEpochMode\": false,\n  \"epochTime\": 179,\n  \"precision\": \"seconds\",\n  \"year\": 0,\n  \"month\": 0,\n  \"day\": 0,\n  \"hour\": 0,\n  \"minute\": 0,\n  \"second\": 0,\n  \"millisecond\": 0,\n  \"microsecond\": 0,\n  \"timezone\": \"Europe/Bucharest\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "TimeConverterHtmx",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "HX-Request",
+            "value": "true",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8100/api/timeconverter/htmx",
+          "protocol": "http",
+          "host": [
+            "localhost:8100"
+          ],
+          "path": [
+            "api",
+            "timeconverter",
+            "htmx"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"epochToHumanMode\": false,\n  \"humanToEpochMode\": true,\n  \"epochTime\": 179,\n  \"precision\": \"seconds\",\n  \"year\": 2026,\n  \"month\": 10,\n  \"day\": 10,\n  \"hour\": 13,\n  \"minute\": 13,\n  \"second\": 13,\n  \"millisecond\": 0,\n  \"microsecond\": 0,\n  \"timezone\": \"Europe/Bucharest\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "URLDecoder",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8100/api/urldecoder",
+          "protocol": "http",
+          "host": [
+            "localhost:8100"
+          ],
+          "path": [
+            "api",
+            "urldecoder"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"url\": \"https://example.com/foo+bar%21?service=ab%2Bc&product=de%24f\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "URLDecoderHtmx",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "HX-Request",
+            "value": "true",
+            "description": "",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:8100/api/urldecoder/htmx",
+          "protocol": "http",
+          "host": [
+            "localhost:8100"
+          ],
+          "path": [
+            "api",
+            "urldecoder",
+            "htmx"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"url\": \"https://example.com/foo+bar%21?service=ab%2Bc&product=de%24f\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         }
       }
     }
   ],
-  "environments": [],
-  "brunoConfig": {
-    "version": "1",
-    "name": "go-tooling-portal",
-    "type": "collection",
-    "ignore": [
-      "node_modules",
-      ".git"
-    ],
-    "size": 0.003994941711425781,
-    "filesCount": 14
-  }
+  "variable": []
 }
