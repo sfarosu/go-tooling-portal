@@ -35,45 +35,47 @@
                 </h3>
                 <div class="row g-4 mb-4">
                     <div class="col-12">
-                        <form class="row g-3" id="sshgen-form"
-                            hx-post="/api/sshgen/htmx"
-                            hx-target="#sshgen-result"
-                            hx-swap="innerHTML"
-                            hx-ext="json-enc">
-                            <div class="col-md-4">
-                                <label for="algorithm" class="form-label text-center w-100">Algorithm</label>
-                                <select class="form-select custom-input" id="algorithm" name="algorithm" required onchange="toggleForms('algorithm', ['ecdsa', 'rsa'], ['ecdsa-bitsize', 'rsa-bitsize'])">>
-                                    <option value="ed25519" selected>ed25519 (best)</option>
-                                    <option value="ecdsa">ecdsa (balanced)</option>
-                                    <option value="rsa">rsa (most compatible)</option>
-                                </select>
-                            </div>
-                            <!-- Bitsize selectors, shown/hidden based on algorithm choice -->
-                            <div class="col-md-4 d-none" id="ecdsa-bitsize">
-                                <label for="ecdsa-bitsize" class="form-label text-center w-100">ECDSA key bitsize</label>
-                                <select class="form-select custom-input" id="ecdsaBits" name="ecdsaBits">
-                                    <option value="521">521</option>
-                                    <option value="384">384</option>
-                                    <option value="256">256</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4 d-none" id="rsa-bitsize">
-                                <label for="rsa-bitsize" class="form-label text-center w-100">RSA key bitsize</label>
-                                <select class="form-select custom-input" id="rsaBits" name="rsaBits">
-                                    <option value="4096">4096</option>
-                                    <option value="3072">3072</option>
-                                    <option value="1024">1024</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="email" class="form-label text-center w-100">Email/Comment</label>
-                                <input type="email" class="form-control custom-input" id="email" name="email" placeholder="alice@example.com" required>
-                            </div>
-                            <div class="col-12 mt-5 mb-3 text-center">
-                                <button type="submit" class="btn btn-graphite px-3">Generate</button>
-                            </div>
-                        </form>
-                        <div id="sshgen-result" class="mt-4"></div>
+                        <div class="section-box">
+                            <form class="row g-3 justify-content-center" id="sshgen-form"
+                                hx-post="/api/sshgen/htmx"
+                                hx-target="#sshgen-result"
+                                hx-swap="innerHTML"
+                                hx-ext="json-enc">
+                                <div class="col-md-4">
+                                    <label for="algorithm" class="form-label text-center w-100">Algorithm</label>
+                                    <select class="form-select custom-input" id="algorithm" name="algorithm" required onchange="toggleForms('algorithm', ['ecdsa', 'rsa'], ['ecdsa-bitsize', 'rsa-bitsize'])">>
+                                        <option value="ed25519" selected>ed25519 (best)</option>
+                                        <option value="ecdsa">ecdsa (balanced)</option>
+                                        <option value="rsa">rsa (most compatible)</option>
+                                    </select>
+                                </div>
+                                <!-- Bitsize selectors, shown/hidden based on algorithm choice -->
+                                <div class="col-md-4 d-none" id="ecdsa-bitsize">
+                                    <label for="ecdsa-bitsize" class="form-label text-center w-100">ECDSA key bitsize</label>
+                                    <select class="form-select custom-input" id="ecdsaBits" name="ecdsaBits">
+                                        <option value="521">521</option>
+                                        <option value="384">384</option>
+                                        <option value="256">256</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 d-none" id="rsa-bitsize">
+                                    <label for="rsa-bitsize" class="form-label text-center w-100">RSA key bitsize</label>
+                                    <select class="form-select custom-input" id="rsaBits" name="rsaBits">
+                                        <option value="4096">4096</option>
+                                        <option value="3072">3072</option>
+                                        <option value="1024">1024</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="email" class="form-label text-center w-100">Email/Comment</label>
+                                    <input type="email" class="form-control custom-input" id="email" name="email" placeholder="alice@example.com" required>
+                                </div>
+                                <div class="col-12 mt-5 mb-3 text-center">
+                                    <button type="submit" class="btn btn-graphite px-3">Generate</button>
+                                </div>
+                            </form>
+                            <div id="sshgen-result" class="mt-4"></div>
+                        </div>
                         <!-- CLI command alternatives -->
                         <hr class="my-5">
                         <h5 class="text-center fw-bold mb-5">CLI command alternatives for Linux</h5>

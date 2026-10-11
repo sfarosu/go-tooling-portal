@@ -35,7 +35,7 @@ ___
 
 ## How to run it locally without containers
 
-- Install golang on your local vm (go >= 1.26)
+- Install golang on your local vm (go >= 1.27)
   - on linux, export:
     - `echo "export GOPATH=$HOME/go" >> ~/.bashrc`
     - `echo "export GO111MODULE=on" >> ~/.bashrc`
