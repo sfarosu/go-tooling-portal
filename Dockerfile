@@ -1,5 +1,5 @@
 # Builder image
-FROM --platform=linux/amd64 golang:1.25 AS builder
+FROM --platform=linux/amd64 golang:1.27 AS builder
 
 WORKDIR /go/src/go-tooling-portal
 

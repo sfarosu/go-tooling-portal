@@ -43,7 +43,7 @@
                                 hx-ext="json-enc">
                                 <div class="col-md-4">
                                     <label for="algorithm" class="form-label text-center w-100">Algorithm</label>
-                                    <select class="form-select custom-input" id="algorithm" name="algorithm" required onchange="toggleForms('algorithm', ['ecdsa', 'rsa'], ['ecdsa-bitsize', 'rsa-bitsize'])">>
+                                    <select class="form-select custom-input" id="algorithm" name="algorithm" required onchange="toggleForms('algorithm', ['ecdsa', 'rsa'], ['ecdsa-bitsize', 'rsa-bitsize'])">
                                         <option value="ed25519" selected>ed25519 (best)</option>
                                         <option value="ecdsa">ecdsa (balanced)</option>
                                         <option value="rsa">rsa (most compatible)</option>
@@ -51,7 +51,7 @@
                                 </div>
                                 <!-- Bitsize selectors, shown/hidden based on algorithm choice -->
                                 <div class="col-md-4 d-none" id="ecdsa-bitsize">
-                                    <label for="ecdsa-bitsize" class="form-label text-center w-100">ECDSA key bitsize</label>
+                                    <label for="ecdsaBits" class="form-label text-center w-100">ECDSA key bitsize</label>
                                     <select class="form-select custom-input" id="ecdsaBits" name="ecdsaBits">
                                         <option value="521">521</option>
                                         <option value="384">384</option>
@@ -59,7 +59,7 @@
                                     </select>
                                 </div>
                                 <div class="col-md-4 d-none" id="rsa-bitsize">
-                                    <label for="rsa-bitsize" class="form-label text-center w-100">RSA key bitsize</label>
+                                    <label for="rsaBits" class="form-label text-center w-100">RSA key bitsize</label>
                                     <select class="form-select custom-input" id="rsaBits" name="rsaBits">
                                         <option value="4096">4096</option>
                                         <option value="3072">3072</option>
@@ -68,7 +68,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label for="email" class="form-label text-center w-100">Email/Comment</label>
-                                    <input type="email" class="form-control custom-input" id="email" name="email" placeholder="alice@example.com" required>
+                                    <input type="email" class="form-control custom-input placeholder-dim" id="email" name="email" placeholder="alice@example.com" required>
                                 </div>
                                 <div class="col-12 mt-5 mb-3 text-center">
                                     <button type="submit" class="btn btn-graphite px-3">Generate</button>
