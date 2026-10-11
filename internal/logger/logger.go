@@ -25,7 +25,15 @@ func Init(level string) {
 	}
 
 	Logger = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
-		Level:     slogLevel,
-		AddSource: false,
+		Level:       slogLevel,
+		AddSource:   false,
+		ReplaceAttr: shortenTimestamp,
 	}))
+}
+
+func shortenTimestamp(_ []string, attr slog.Attr) slog.Attr {
+	if attr.Key == slog.TimeKey {
+		return slog.String(slog.TimeKey, attr.Value.Time().Format("2006-01-02T15:04:05"))
+	}
+	return attr
 }

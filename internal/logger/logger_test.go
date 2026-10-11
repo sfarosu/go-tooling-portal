@@ -4,6 +4,7 @@ import (
 	"context"
 	"log/slog"
 	"testing"
+	"time"
 )
 
 func TestInit(t *testing.T) {
@@ -35,5 +36,16 @@ func TestInit(t *testing.T) {
 				t.Errorf("Logger should be enabled for level %v", tt.expectedSlog)
 			}
 		})
+	}
+}
+
+func TestShortenTimestamp(t *testing.T) {
+	loc := time.FixedZone("UTC+3", 3*60*60)
+	attr := slog.Time(slog.TimeKey, time.Date(2026, 10, 10, 16, 42, 11, 395_000_000, loc))
+
+	got := shortenTimestamp(nil, attr).Value.String()
+	want := "2026-10-10T16:42:11"
+	if got != want {
+		t.Errorf("shortenTimestamp() = %q, want %q", got, want)
 	}
 }

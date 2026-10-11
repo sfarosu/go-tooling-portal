@@ -49,6 +49,49 @@ func TestTimeConvert_EpochToHuman_Seconds(t *testing.T) {
 	}
 }
 
+func TestTimeConvert_EpochToHuman_ExplicitPrecisionSupportsEarlyEpoch(t *testing.T) {
+	req := &TimeConvertRequest{
+		EpochToHumanMode: true,
+		EpochTime:        1,
+		Precision:        "seconds",
+		Timezone:         "UTC",
+	}
+
+	result, err := TimeConvert(req)
+	if err != nil {
+		t.Fatalf("Unexpected error: %v", err)
+	}
+	if result.ConvertedEpochToHumanUTC.Unix() != 1 {
+		t.Errorf("Expected Unix second 1, got %d", result.ConvertedEpochToHumanUTC.Unix())
+	}
+}
+
+func TestTimeConvert_EpochToHuman_ExplicitPrecisionDisambiguatesUnits(t *testing.T) {
+	for _, test := range []struct {
+		precision string
+		want      time.Time
+	}{
+		{precision: "seconds", want: time.Unix(1704067200, 0).UTC()},
+		{precision: "millis", want: time.UnixMilli(1704067200).UTC()},
+		{precision: "micros", want: time.UnixMicro(1704067200).UTC()},
+	} {
+		t.Run(test.precision, func(t *testing.T) {
+			result, err := TimeConvert(&TimeConvertRequest{
+				EpochToHumanMode: true,
+				EpochTime:        1704067200,
+				Precision:        test.precision,
+				Timezone:         "UTC",
+			})
+			if err != nil {
+				t.Fatalf("Unexpected error: %v", err)
+			}
+			if !result.ConvertedEpochToHumanUTC.Equal(test.want) {
+				t.Errorf("Expected %v, got %v", test.want, result.ConvertedEpochToHumanUTC)
+			}
+		})
+	}
+}
+
 func TestTimeConvert_EpochToHuman_Milliseconds(t *testing.T) {
 	// Same timestamp in milliseconds
 	req := &TimeConvertRequest{
@@ -204,6 +247,89 @@ func TestTimeConvert_HumanToEpoch_WithTimezone(t *testing.T) {
 	expectedEpochSeconds := int64(1704067200) - 3600
 	if result.ConvertedHumanToEpochTimeSeconds != expectedEpochSeconds {
 		t.Errorf("Expected epoch seconds %d, got %d", expectedEpochSeconds, result.ConvertedHumanToEpochTimeSeconds)
+	}
+}
+
+func TestTimeConvert_HumanToEpoch_SubsecondPrecision(t *testing.T) {
+	req := &TimeConvertRequest{
+		HumanToEpochMode: true,
+		Year:             2024,
+		Month:            1,
+		Day:              1,
+		Millisecond:      123,
+		Microsecond:      456,
+		Timezone:         "UTC",
+	}
+
+	result, err := TimeConvert(req)
+	if err != nil {
+		t.Fatalf("Unexpected error: %v", err)
+	}
+
+	if result.ConvertedHumanToEpochTimeSeconds != 1704067200 {
+		t.Errorf("Expected epoch seconds 1704067200, got %d", result.ConvertedHumanToEpochTimeSeconds)
+	}
+	if result.ConvertedHumanToEpochTimeMilli != 1704067200123 {
+		t.Errorf("Expected epoch milliseconds 1704067200123, got %d", result.ConvertedHumanToEpochTimeMilli)
+	}
+	if result.ConvertedHumanToEpochTimeMicro != 1704067200123456 {
+		t.Errorf("Expected epoch microseconds 1704067200123456, got %d", result.ConvertedHumanToEpochTimeMicro)
+	}
+}
+
+func TestTimeConvert_HumanToEpoch_InvalidSubsecondPrecision(t *testing.T) {
+	for _, test := range []struct {
+		name        string
+		millisecond int
+		microsecond int
+	}{
+		{name: "millisecond below range", millisecond: -1},
+		{name: "millisecond above range", millisecond: 1000},
+		{name: "microsecond below range", microsecond: -1},
+		{name: "microsecond above range", microsecond: 1000},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			_, err := TimeConvert(&TimeConvertRequest{
+				HumanToEpochMode: true,
+				Year:             2024,
+				Month:            1,
+				Day:              1,
+				Millisecond:      test.millisecond,
+				Microsecond:      test.microsecond,
+				Timezone:         "UTC",
+			})
+			if err == nil {
+				t.Fatal("Expected invalid subsecond value to return an error")
+			}
+		})
+	}
+}
+
+func TestTimeConvert_HumanToEpoch_InvalidCalendarDate(t *testing.T) {
+	_, err := TimeConvert(&TimeConvertRequest{
+		HumanToEpochMode: true,
+		Year:             2024,
+		Month:            2,
+		Day:              31,
+		Timezone:         "UTC",
+	})
+	if err == nil {
+		t.Fatal("Expected invalid calendar date to return an error")
+	}
+}
+
+func TestTimeConvert_HumanToEpoch_NonexistentLocalTime(t *testing.T) {
+	_, err := TimeConvert(&TimeConvertRequest{
+		HumanToEpochMode: true,
+		Year:             2024,
+		Month:            3,
+		Day:              31,
+		Hour:             3,
+		Minute:           30,
+		Timezone:         "Europe/Bucharest",
+	})
+	if err == nil {
+		t.Fatal("Expected nonexistent local time to return an error")
 	}
 }
 

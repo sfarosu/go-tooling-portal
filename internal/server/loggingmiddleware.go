@@ -31,13 +31,13 @@ func loggingMiddleware(next http.Handler) http.Handler {
 		reqID := getRequestID(r.Context())
 
 		logger.Logger.Info(
-			"incoming request",
-			"request_id", reqID,
+			"incoming-request",
+			"request-id", reqID,
 			"method", r.Method,
 			"path", r.URL.Path,
 			"protocol", r.Proto,
-			"remote_addr", r.RemoteAddr,
-			"user_agent", r.UserAgent(),
+			"remote-addr", r.RemoteAddr,
+			"user-agent", r.UserAgent(),
 		)
 
 		next.ServeHTTP(rec, r)
@@ -47,30 +47,30 @@ func loggingMiddleware(next http.Handler) http.Handler {
 		switch {
 		case rec.status >= 500:
 			logger.Logger.Error(
-				"request completed",
-				"request_id", reqID,
+				"request-completed",
+				"request-id", reqID,
 				"method", r.Method,
 				"path", r.URL.Path,
 				"status", rec.status,
-				"duration_ms", duration,
+				"duration-ms", duration,
 			)
 		case rec.status >= 400:
 			logger.Logger.Warn(
-				"request completed",
-				"request_id", reqID,
+				"request-completed",
+				"request-id", reqID,
 				"method", r.Method,
 				"path", r.URL.Path,
 				"status", rec.status,
-				"duration_ms", duration,
+				"duration-ms", duration,
 			)
 		default:
 			logger.Logger.Info(
-				"request completed",
-				"request_id", reqID,
+				"request-completed",
+				"request-id", reqID,
 				"method", r.Method,
 				"path", r.URL.Path,
 				"status", rec.status,
-				"duration_ms", duration,
+				"duration-ms", duration,
 			)
 		}
 	})

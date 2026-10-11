@@ -22,6 +22,8 @@ type TimeConvertRequest struct {
 	Hour             int
 	Minute           int
 	Second           int
+	Millisecond      int
+	Microsecond      int
 
 	// Timezone for both conversions
 	Timezone string
@@ -66,27 +68,68 @@ func TimeConvert(req *TimeConvertRequest) (*TimeConvertResult, error) {
 	// Process Epoch to Human conversion if requested
 	if req.EpochToHumanMode {
 		epochToHuman = true
-		numDigits := helper.GetNumberDigitsAmmount(req.EpochTime)
-		switch numDigits {
-		case 9, 10:
+		precision := req.Precision
+		if precision == "" {
+			switch helper.GetNumberDigitsAmmount(req.EpochTime) {
+			case 9, 10:
+				precision = "seconds"
+			case 12, 13:
+				precision = "millis"
+			case 15, 16:
+				precision = "micros"
+			default:
+				return nil, fmt.Errorf("invalid epoch time precision: %d digits", helper.GetNumberDigitsAmmount(req.EpochTime))
+			}
+		}
+		switch precision {
+		case "seconds":
 			// Seconds precision
 			convertedEpochToHumanUTC = time.Unix(req.EpochTime, 0).UTC()
 			convertedEpochToHumanLOCAL = time.Unix(req.EpochTime, 0).In(loc)
-		case 12, 13:
+		case "millis":
 			// Milliseconds precision
 			convertedEpochToHumanUTC = time.UnixMilli(req.EpochTime).UTC()
 			convertedEpochToHumanLOCAL = time.UnixMilli(req.EpochTime).In(loc)
-		case 15, 16:
+		case "micros":
 			// Microseconds precision
 			convertedEpochToHumanUTC = time.UnixMicro(req.EpochTime).UTC()
 			convertedEpochToHumanLOCAL = time.UnixMicro(req.EpochTime).In(loc)
 		default:
-			return nil, fmt.Errorf("invalid epoch time precision: %d digits", numDigits)
+			return nil, fmt.Errorf("invalid epoch time precision: %q", precision)
 		}
 	} else if req.HumanToEpochMode {
 		humanToEpoch = true
+		if req.Millisecond < 0 || req.Millisecond > 999 {
+			return nil, fmt.Errorf("millisecond must be between 0 and 999")
+		}
+		if req.Microsecond < 0 || req.Microsecond > 999 {
+			return nil, fmt.Errorf("microsecond must be between 0 and 999")
+		}
+		if req.Month < 1 || req.Month > 12 {
+			return nil, fmt.Errorf("month must be between 1 and 12")
+		}
+		if req.Day < 1 || req.Day > 31 {
+			return nil, fmt.Errorf("day must be between 1 and 31")
+		}
+		if req.Hour < 0 || req.Hour > 23 {
+			return nil, fmt.Errorf("hour must be between 0 and 23")
+		}
+		if req.Minute < 0 || req.Minute > 59 {
+			return nil, fmt.Errorf("minute must be between 0 and 59")
+		}
+		if req.Second < 0 || req.Second > 59 {
+			return nil, fmt.Errorf("second must be between 0 and 59")
+		}
 		// Create time from provided components in the specified timezone
-		insertedHumanTimeParser = time.Date(req.Year, time.Month(req.Month), req.Day, req.Hour, req.Minute, req.Second, 0, loc)
+		nanosecond := req.Millisecond*int(time.Millisecond) + req.Microsecond*int(time.Microsecond)
+		insertedHumanTimeParser = time.Date(req.Year, time.Month(req.Month), req.Day, req.Hour, req.Minute, req.Second, nanosecond, loc)
+		year, month, day := insertedHumanTimeParser.Date()
+		if year != req.Year || int(month) != req.Month || day != req.Day {
+			return nil, fmt.Errorf("invalid date: %04d-%02d-%02d", req.Year, req.Month, req.Day)
+		}
+		if insertedHumanTimeParser.Hour() != req.Hour || insertedHumanTimeParser.Minute() != req.Minute || insertedHumanTimeParser.Second() != req.Second {
+			return nil, fmt.Errorf("invalid local time: %02d:%02d:%02d does not exist in %s", req.Hour, req.Minute, req.Second, req.Timezone)
+		}
 	} else {
 		return nil, fmt.Errorf("neither epochToHuman nor humanToEpoch mode specified")
 	}

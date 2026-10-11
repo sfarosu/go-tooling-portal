@@ -113,18 +113,18 @@ func startupLogging(addr string) error {
 	}
 
 	logger.Logger.Info(
-		"server started",
+		"server-started",
 		"address", addr,
 		"gomaxprocs", runtime.GOMAXPROCS(0),
 		"verbosity", logger.CurrentLevel,
 	)
 	logger.Logger.Info(
-		"binary info",
-		"binary_path", cwd,
+		"binary-info",
+		"binary-path", cwd,
 		"version", version.Version,
-		"build_date", version.BuildDate,
-		"git_short_hash", version.GitShortHash,
-		"go_version", runtime.Version(),
+		"build-date", version.BuildDate,
+		"git-short-hash", version.GitShortHash,
+		"go-version", runtime.Version(),
 	)
 
 	return nil

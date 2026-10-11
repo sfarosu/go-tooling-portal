@@ -97,6 +97,18 @@ body {
     border: 1.5px solid #44404d; /* subtle border */
 }
 
+.timezone-selector {
+    color: #f1f1f1;
+}
+
+.timezone-context {
+    color: #bdbdbd;
+}
+
+.time-converter-help {
+    color: #bdbdbd;
+}
+
 /* =========================
    Cards
    ========================= */

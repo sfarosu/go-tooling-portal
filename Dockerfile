@@ -30,7 +30,7 @@ RUN chown -R 10001:root /app && \
     chmod -R a+x-w /app/scripts && \
     chmod a+x-w /app/go-tooling-portal
 
-EXPOSE 8080
+EXPOSE 8100
 
 ENTRYPOINT [ "./scripts/uid_entrypoint.sh" ]
 

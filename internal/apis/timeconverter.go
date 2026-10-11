@@ -15,13 +15,16 @@ type TimeConverterInput struct {
 	Body struct {
 		EpochToHumanMode bool   `json:"epochToHumanMode" doc:"Convert from epoch to human time" enum:"true,false"`
 		HumanToEpochMode bool   `json:"humanToEpochMode" doc:"Convert from human to epoch time" enum:"true,false"`
-		EpochTime        int64  `json:"epochTime" doc:"Epoch timestamp (seconds, milliseconds, or microseconds)" minLength:"9"`
+		EpochTime        int64  `json:"epochTime" doc:"Epoch timestamp in the specified precision"`
+		Precision        string `json:"precision,omitempty" doc:"Epoch timestamp unit" enum:"seconds,millis,micros"`
 		Year             int    `json:"year" doc:"Year for human time conversion" minLength:"4"`
 		Month            int    `json:"month" doc:"Month for human time conversion (01-12)" minLength:"2"`
 		Day              int    `json:"day" doc:"Day for human time conversion (01-31)" minLength:"2"`
 		Hour             int    `json:"hour" doc:"Hour for human time conversion (0-23)" minLength:"2"`
 		Minute           int    `json:"minute" doc:"Minute for human time conversion (0-59)" minLength:"2"`
 		Second           int    `json:"second" doc:"Second for human time conversion (0-59)" minLength:"2"`
+		Millisecond      int    `json:"millisecond,omitempty" doc:"Millisecond portion of the second (0-999)" minimum:"0" maximum:"999"`
+		Microsecond      int    `json:"microsecond,omitempty" doc:"Additional microseconds within the millisecond (0-999)" minimum:"0" maximum:"999"`
 		Timezone         string `json:"timezone" example:"UTC" doc:"IANA timezone identifier (e.g., UTC, America/New_York, Europe/Paris)" minLength:"2"`
 	}
 }
@@ -69,6 +72,7 @@ func RegisterTimeConverter(api huma.API) {
 		req := &service.TimeConvertRequest{
 			EpochToHumanMode: input.Body.EpochToHumanMode,
 			EpochTime:        input.Body.EpochTime,
+			Precision:        input.Body.Precision,
 			HumanToEpochMode: input.Body.HumanToEpochMode,
 			Year:             input.Body.Year,
 			Month:            input.Body.Month,
@@ -76,6 +80,8 @@ func RegisterTimeConverter(api huma.API) {
 			Hour:             input.Body.Hour,
 			Minute:           input.Body.Minute,
 			Second:           input.Body.Second,
+			Millisecond:      input.Body.Millisecond,
+			Microsecond:      input.Body.Microsecond,
 			Timezone:         input.Body.Timezone,
 		}
 

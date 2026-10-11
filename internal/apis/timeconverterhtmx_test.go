@@ -30,6 +30,46 @@ func TestTimeConverterHtmx_EpochToHuman_Seconds(t *testing.T) {
 	}
 }
 
+func TestTimeConverterHtmx_EpochToHuman_ExplicitPrecision(t *testing.T) {
+	router := setupTestAPI(RegisterTimeConverterHtmx)
+
+	body := `{"epochToHumanMode":true,"humanToEpochMode":false,"epochTime":1,"precision":"seconds","year":0,"month":0,"day":0,"hour":0,"minute":0,"second":0,"timezone":"UTC"}`
+	req, _ := http.NewRequest("POST", "/api/timeconverter/htmx", bytes.NewBufferString(body))
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("HX-Request", "true")
+
+	rr := httptest.NewRecorder()
+	router.ServeHTTP(rr, req)
+	if rr.Code != http.StatusOK {
+		t.Fatalf("Expected status 200, got %d, response body %v", rr.Code, rr.Body.String())
+	}
+	if !strings.Contains(rr.Body.String(), "1970-01-01 00:00:01") {
+		t.Errorf("Expected explicit seconds precision for early epoch, got: %s", rr.Body.String())
+	}
+}
+
+func TestTimeConverterHtmx_EpochToHuman_SelectedTimezone(t *testing.T) {
+	router := setupTestAPI(RegisterTimeConverterHtmx)
+
+	body := `{"epochToHumanMode":true,"humanToEpochMode":false,"epochTime":1704067200,"year":0,"month":0,"day":0,"hour":0,"minute":0,"second":0,"timezone":"Europe/Paris"}`
+	req, _ := http.NewRequest("POST", "/api/timeconverter/htmx", bytes.NewBufferString(body))
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("HX-Request", "true")
+
+	rr := httptest.NewRecorder()
+	router.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Fatalf("Expected status 200, got %d, response body %v", rr.Code, rr.Body.String())
+	}
+	if !strings.Contains(rr.Body.String(), "Selected Time (Europe/Paris)") {
+		t.Errorf("Expected selected timezone label in HTML response, got: %s", rr.Body.String())
+	}
+	if !strings.Contains(rr.Body.String(), `value="2024-01-01 01:00:00 +0100 CET"`) {
+		t.Errorf("Expected epoch time formatted in Europe/Paris, got: %s", rr.Body.String())
+	}
+}
+
 func TestTimeConverterHtmx_EpochToHuman_Milliseconds(t *testing.T) {
 	router := setupTestAPI(RegisterTimeConverterHtmx)
 
@@ -74,6 +114,34 @@ func TestTimeConverterHtmx_HumanToEpoch_Valid(t *testing.T) {
 	}
 	if !strings.Contains(rr.Header().Get("Content-Type"), "text/html") {
 		t.Errorf("Expected Content-Type text/html, got: %s", rr.Header().Get("Content-Type"))
+	}
+}
+
+func TestTimeConverterHtmx_HumanToEpoch_SubsecondPrecisionAndCopyButtons(t *testing.T) {
+	router := setupTestAPI(RegisterTimeConverterHtmx)
+
+	body := `{"epochToHumanMode":false,"humanToEpochMode":true,"epochTime":0,"year":2024,"month":1,"day":1,"hour":0,"minute":0,"second":0,"millisecond":123,"microsecond":456,"timezone":"UTC"}`
+	req, _ := http.NewRequest("POST", "/api/timeconverter/htmx", bytes.NewBufferString(body))
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("HX-Request", "true")
+
+	rr := httptest.NewRecorder()
+	router.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Fatalf("Expected status 200, got %d, response body %v", rr.Code, rr.Body.String())
+	}
+	for _, expected := range []string{
+		`value="1704067200"`,
+		`value="1704067200123"`,
+		`value="1704067200123456"`,
+		`copyToClipboard('human-to-epoch-seconds-result')`,
+		`copyToClipboard('human-to-epoch-milliseconds-result')`,
+		`copyToClipboard('human-to-epoch-microseconds-result')`,
+	} {
+		if !strings.Contains(rr.Body.String(), expected) {
+			t.Errorf("Expected %q in HTML response, got: %s", expected, rr.Body.String())
+		}
 	}
 }
 
