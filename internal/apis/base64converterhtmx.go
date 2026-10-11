@@ -1,11 +1,10 @@
 package apis
 
 import (
-	"bytes"
 	"context"
+	"html/template"
 	"net/http"
 	"strconv"
-	"text/template"
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/sfarosu/go-tooling-portal/internal/logger"
@@ -109,13 +108,16 @@ func RegisterBase64ConverterHtmx(api huma.API) {
 
 		// Render the HTML template and return as a html block if this is an HTMX request
 		if input.HtmxHeader {
-			var buf bytes.Buffer
-			base64converterResultTmpl.Execute(&buf, map[string]string{
+			body, err := renderHTMXTemplate(base64converterResultTmpl, map[string]string{
 				"Base64Conversion": base64Conversion,
 			})
+			if err != nil {
+				logger.Logger.Error("failed to render base64 conversion result", "error", err)
+				return nil, huma.Error500InternalServerError("failed to render base64 conversion result")
+			}
 			resp := &Base64ConverterHTMXOutput{
 				ContentType: "text/html; charset=utf-8",
-				Body:        buf.Bytes(),
+				Body:        body,
 			}
 			return resp, nil
 		}

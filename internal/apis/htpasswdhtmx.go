@@ -1,11 +1,10 @@
 package apis
 
 import (
-	"bytes"
 	"context"
+	"html/template"
 	"net/http"
 	"strconv"
-	"text/template"
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/sfarosu/go-tooling-portal/internal/logger"
@@ -108,13 +107,16 @@ func RegisterHtpasswdHtmx(api huma.API) {
 
 		// Render the HTML template and return as a html block if this is an HTMX request
 		if input.HtmxHeader {
-			var buf bytes.Buffer
-			htpasswdResultTmpl.Execute(&buf, map[string]string{
+			body, err := renderHTMXTemplate(htpasswdResultTmpl, map[string]string{
 				"Htpasswd": generatedHtPassword,
 			})
+			if err != nil {
+				logger.Logger.Error("failed to render htpasswd result", "error", err)
+				return nil, huma.Error500InternalServerError("failed to render htpasswd result")
+			}
 			resp := &HtpasswdHTMXOutput{
 				ContentType: "text/html; charset=utf-8",
-				Body:        buf.Bytes(),
+				Body:        body,
 			}
 			return resp, nil
 		}

@@ -1,12 +1,11 @@
 package apis
 
 import (
-	"bytes"
 	"context"
-	"fmt"
+	"errors"
+	"html/template"
 	"net/http"
 	"strconv"
-	"text/template"
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/sfarosu/go-tooling-portal/internal/logger"
@@ -94,12 +93,14 @@ func RegisterPassgenHtmx(api huma.API) {
 		// Validate input
 		length, err := strconv.Atoi(input.Body.Length)
 		if err != nil || length <= 0 {
-			switch input.HtmxHeader {
-			case true:
-				generateHTMXError(fmt.Errorf("length must be a valid positive integer"))
-			case false:
-				return nil, huma.Error400BadRequest("length must be a valid positive integer")
+			message := errors.New("length must be a valid positive integer")
+			if input.HtmxHeader {
+				return &PassgenHTMXOutput{
+					ContentType: "text/html; charset=utf-8",
+					Body:        []byte(generateHTMXError(message)),
+				}, nil
 			}
+			return nil, huma.Error400BadRequest(message.Error())
 		}
 
 		// Checkboxes: "true" = checked, "false" = unchecked
@@ -110,12 +111,14 @@ func RegisterPassgenHtmx(api huma.API) {
 		symbols := input.Body.Symbols == "true"
 
 		if !uppercase && !lowercase && !numbers && !symbols {
-			switch input.HtmxHeader {
-			case true:
-				generateHTMXError(fmt.Errorf("at least one character class must be selected"))
-			case false:
-				return nil, huma.Error400BadRequest("at least one character class must be selected")
+			message := errors.New("at least one character class must be selected")
+			if input.HtmxHeader {
+				return &PassgenHTMXOutput{
+					ContentType: "text/html; charset=utf-8",
+					Body:        []byte(generateHTMXError(message)),
+				}, nil
 			}
+			return nil, huma.Error400BadRequest(message.Error())
 		}
 
 		// Generate password
@@ -141,13 +144,16 @@ func RegisterPassgenHtmx(api huma.API) {
 
 		// Render the HTML template and return as a html block if this is an HTMX request
 		if input.HtmxHeader {
-			var buf bytes.Buffer
-			passgenResultTmpl.Execute(&buf, map[string]string{
+			body, err := renderHTMXTemplate(passgenResultTmpl, map[string]string{
 				"Password": generatedPassword,
 			})
+			if err != nil {
+				logger.Logger.Error("failed to render generated password", "error", err)
+				return nil, huma.Error500InternalServerError("failed to render generated password")
+			}
 			resp := &PassgenHTMXOutput{
 				ContentType: "text/html; charset=utf-8",
-				Body:        buf.Bytes(),
+				Body:        body,
 			}
 			return resp, nil
 		}

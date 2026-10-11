@@ -13,9 +13,9 @@ import (
 type JsonPrettyInput struct {
 	// Body contains the main input fields for the JSON prettifier.
 	Body struct {
-		Input     string `json:"Input" example:"{\"name\":\"Alice\",\"age\":30}" doc:"JSON input to prettify" minLength:"1"`
+		Input     string `json:"input" example:"{\"name\":\"Alice\",\"age\":30}" doc:"JSON input to prettify" minLength:"1"`
 		Operation string `json:"operation" example:"pretty" doc:"Operation: pretty or unpretty" enum:"pretty,unpretty"`
-		Spaces    int    `json:"spaces" example:"2" doc:"Number of spaces for indentation" minLength:"0"`
+		Spaces    int    `json:"spaces" example:"2" doc:"Number of spaces for indentation (0-16)" minimum:"0"`
 	}
 }
 
@@ -64,7 +64,7 @@ func RegisterJsonPretty(api huma.API) {
 
 		// Default to pretty operation
 		spaces := input.Body.Spaces
-		if spaces <= 0 {
+		if spaces < 0 {
 			return nil, huma.Error400BadRequest("spaces must be a valid non-negative integer")
 		}
 

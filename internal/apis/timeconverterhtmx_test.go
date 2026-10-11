@@ -2,6 +2,7 @@ package apis
 
 import (
 	"bytes"
+	"html"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -65,7 +66,7 @@ func TestTimeConverterHtmx_EpochToHuman_SelectedTimezone(t *testing.T) {
 	if !strings.Contains(rr.Body.String(), "Selected Time (Europe/Paris)") {
 		t.Errorf("Expected selected timezone label in HTML response, got: %s", rr.Body.String())
 	}
-	if !strings.Contains(rr.Body.String(), `value="2024-01-01 01:00:00 +0100 CET"`) {
+	if !strings.Contains(html.UnescapeString(rr.Body.String()), `value="2024-01-01 01:00:00 +0100 CET"`) {
 		t.Errorf("Expected epoch time formatted in Europe/Paris, got: %s", rr.Body.String())
 	}
 }

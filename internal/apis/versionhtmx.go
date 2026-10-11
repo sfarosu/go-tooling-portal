@@ -1,11 +1,10 @@
 package apis
 
 import (
-	"bytes"
 	"context"
+	"html/template"
 	"net/http"
 	"strconv"
-	"text/template"
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/sfarosu/go-tooling-portal/internal/logger"
@@ -86,13 +85,18 @@ func RegisterVersionHtmx(api huma.API) {
 
 		// Render the HTML template and return as a html block if this is an HTMX request
 		if input.HtmxHeader {
-			var buf bytes.Buffer
-			versionResultTmpl.Execute(&buf, map[string]string{
+			body, err := renderHTMXTemplate(versionResultTmpl, map[string]string{
 				"Version": version.Version,
 			})
+			if err != nil {
+				if logger.Logger != nil {
+					logger.Logger.Error("failed to render version result", "error", err)
+				}
+				return nil, huma.Error500InternalServerError("failed to render version result")
+			}
 			resp := &VersionHTMXOutput{
 				ContentType: "text/html; charset=utf-8",
-				Body:        buf.Bytes(),
+				Body:        body,
 			}
 			return resp, nil
 		}

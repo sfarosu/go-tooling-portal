@@ -3,6 +3,7 @@ package apis
 import (
 	"bytes"
 	"encoding/base64"
+	"html"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -51,6 +52,30 @@ func TestBase64ConverterHtmx_Decode(t *testing.T) {
 	}
 	if !strings.Contains(rr.Header().Get("Content-Type"), "text/html") {
 		t.Errorf("Expected Content-Type text/html, got: %s", rr.Header().Get("Content-Type"))
+	}
+}
+
+func TestBase64ConverterHtmx_EscapesHTMLInResult(t *testing.T) {
+	router := setupTestAPI(RegisterBase64ConverterHtmx)
+	input := base64.StdEncoding.EncodeToString([]byte("<script>alert(1)</script>"))
+	body := `{"input":"` + input + `","operation":"decode","format":"standard"}`
+	req := httptest.NewRequest(http.MethodPost, "/api/base64converter/htmx", bytes.NewBufferString(body))
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("HX-Request", "true")
+	rr := httptest.NewRecorder()
+	router.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d body: %s", rr.Code, rr.Body.String())
+	}
+	if strings.Contains(rr.Body.String(), "<script>") {
+		t.Fatalf("result contains unescaped markup: %s", rr.Body.String())
+	}
+	if !strings.Contains(rr.Body.String(), "&lt;script&gt;") {
+		t.Errorf("expected HTML-escaped output: %s", rr.Body.String())
+	}
+	if !strings.Contains(html.UnescapeString(rr.Body.String()), "<script>alert(1)</script>") {
+		t.Errorf("expected escaped result to display its original text: %s", rr.Body.String())
 	}
 }
 

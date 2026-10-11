@@ -3,6 +3,7 @@ package apis
 import (
 	"bytes"
 	"encoding/json"
+	"html"
 	"log/slog"
 	"net/http"
 	"net/http/httptest"
@@ -71,7 +72,7 @@ func TestFormatConverterHtmx_YAMLtoJSON(t *testing.T) {
 	if len(matches) < 2 {
 		t.Fatalf("Could not find <textarea> content in HTML")
 	}
-	jsonStr := matches[1]
+	jsonStr := html.UnescapeString(matches[1])
 
 	var out map[string]any
 	if err := json.Unmarshal([]byte(jsonStr), &out); err != nil {

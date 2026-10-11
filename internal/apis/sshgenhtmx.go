@@ -1,11 +1,11 @@
 package apis
 
 import (
-	"bytes"
 	"context"
+	"errors"
+	"html/template"
 	"net/http"
 	"strconv"
-	"text/template"
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/sfarosu/go-tooling-portal/internal/logger"
@@ -116,10 +116,22 @@ func RegisterSSHGenHtmx(api huma.API) {
 		switch algo {
 		case "ecdsa":
 			if ecdsaBits == "" {
+				if input.HtmxHeader {
+					return &SSHGenHTMXOutput{
+						ContentType: "text/html; charset=utf-8",
+						Body:        []byte(generateHTMXError(errors.New("ecdsaBits is required for ECDSA algorithm"))),
+					}, nil
+				}
 				return nil, huma.Error400BadRequest("ecdsaBits is required for ECDSA algorithm")
 			}
 		case "rsa":
 			if rsaBits == "" {
+				if input.HtmxHeader {
+					return &SSHGenHTMXOutput{
+						ContentType: "text/html; charset=utf-8",
+						Body:        []byte(generateHTMXError(errors.New("rsaBits is required for RSA algorithm"))),
+					}, nil
+				}
 				return nil, huma.Error400BadRequest("rsaBits is required for RSA algorithm")
 			}
 			// ed25519 needs neither
@@ -148,14 +160,17 @@ func RegisterSSHGenHtmx(api huma.API) {
 
 		// Render the HTML template and return as a html block if this is an HTMX request
 		if input.HtmxHeader {
-			var buf bytes.Buffer
-			sshgenResultTmpl.Execute(&buf, map[string]string{
+			body, err := renderHTMXTemplate(sshgenResultTmpl, map[string]string{
 				"PrivateKey": privKey,
 				"PublicKey":  pubKey,
 			})
+			if err != nil {
+				logger.Logger.Error("failed to render SSH key result", "error", err)
+				return nil, huma.Error500InternalServerError("failed to render SSH key result")
+			}
 			return &SSHGenHTMXOutput{
 				ContentType: "text/html; charset=utf-8",
-				Body:        buf.Bytes(),
+				Body:        body,
 			}, nil
 		}
 

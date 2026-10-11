@@ -1,11 +1,10 @@
 package apis
 
 import (
-	"bytes"
 	"context"
+	"html/template"
 	"net/http"
 	"strconv"
-	"text/template"
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/sfarosu/go-tooling-portal/internal/logger"
@@ -183,8 +182,7 @@ func RegisterTimeConverterHtmx(api huma.API) {
 
 		// Render the HTML template and return as a html block if this is an HTMX request
 		if input.HtmxHeader {
-			var buf bytes.Buffer
-			timeconverterResultTmpl.Execute(&buf, map[string]interface{}{
+			body, err := renderHTMXTemplate(timeconverterResultTmpl, map[string]interface{}{
 				"Timezone":                         result.Timezone,
 				"EpochToHuman":                     result.EpochToHuman,
 				"HumanToEpoch":                     result.HumanToEpoch,
@@ -194,9 +192,15 @@ func RegisterTimeConverterHtmx(api huma.API) {
 				"ConvertedHumanToEpochTimeMilli":   result.ConvertedHumanToEpochTimeMilli,
 				"ConvertedHumanToEpochTimeMicro":   result.ConvertedHumanToEpochTimeMicro,
 			})
+			if err != nil {
+				if logger.Logger != nil {
+					logger.Logger.Error("failed to render time conversion result", "error", err)
+				}
+				return nil, huma.Error500InternalServerError("failed to render time conversion result")
+			}
 			resp := &TimeConverterHTMXOutput{
 				ContentType: "text/html; charset=utf-8",
-				Body:        buf.Bytes(),
+				Body:        body,
 			}
 			return resp, nil
 		}

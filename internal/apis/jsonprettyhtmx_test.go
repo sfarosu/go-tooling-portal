@@ -2,6 +2,7 @@ package apis
 
 import (
 	"bytes"
+	"html"
 	"net/http"
 	"net/http/httptest"
 	"regexp"
@@ -73,6 +74,46 @@ func TestJsonPrettyHtmx_InvalidInput(t *testing.T) {
 	}
 }
 
+func TestJsonPrettyHtmx_InvalidSpacesReturnsErrorFragment(t *testing.T) {
+	router := setupTestAPI(RegisterJsonPrettyHtmx)
+	body := `{"input":"{\"name\":\"Alice\"}","operation":"pretty","spaces":"not-a-number"}`
+	req := httptest.NewRequest(http.MethodPost, "/api/jsonpretty/htmx", bytes.NewBufferString(body))
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("HX-Request", "true")
+
+	rr := httptest.NewRecorder()
+	router.ServeHTTP(rr, req)
+	if rr.Code != http.StatusOK {
+		t.Fatalf("expected 200 with HTMX error fragment, got %d body: %s", rr.Code, rr.Body.String())
+	}
+	if !strings.Contains(rr.Body.String(), "spaces must be a valid non-negative integer") {
+		t.Fatalf("expected spaces validation error, got: %s", rr.Body.String())
+	}
+}
+
+func TestJsonPrettyHtmx_ZeroIndentation(t *testing.T) {
+	router := setupTestAPI(RegisterJsonPrettyHtmx)
+	body := `{"input":"{\"name\":\"Alice\"}","operation":"pretty","spaces":"0"}`
+	req := httptest.NewRequest(http.MethodPost, "/api/jsonpretty/htmx", bytes.NewBufferString(body))
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("HX-Request", "true")
+
+	rr := httptest.NewRecorder()
+	router.ServeHTTP(rr, req)
+	if rr.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d body: %s", rr.Code, rr.Body.String())
+	}
+
+	match := regexp.MustCompile(`(?s)<textarea[^>]*>(.*?)</textarea>`).FindStringSubmatch(rr.Body.String())
+	if len(match) != 2 {
+		t.Fatalf("expected result textarea, got: %s", rr.Body.String())
+	}
+	result := html.UnescapeString(match[1])
+	if !strings.Contains(result, "\n\"name\"") {
+		t.Errorf("expected JSON formatted with zero indentation, got %q", result)
+	}
+}
+
 func TestJsonPrettyHtmx_MissingHtmxHeader(t *testing.T) {
 	router := setupTestAPI(RegisterJsonPrettyHtmx)
 
@@ -121,7 +162,7 @@ func TestJsonPrettyHtmx_Unpretty(t *testing.T) {
 	if len(matches) < 2 {
 		t.Fatalf("Could not find <textarea> content in HTML")
 	}
-	jsonStr := matches[1]
+	jsonStr := html.UnescapeString(matches[1])
 
 	if !strings.Contains(jsonStr, `"name":"Alice"`) || !strings.Contains(jsonStr, `"age":30`) {
 		t.Fatalf("expected compact JSON components in result textarea, got: %s", jsonStr)
