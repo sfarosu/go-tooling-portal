@@ -14,7 +14,7 @@ func TestURLDecode(t *testing.T) {
 	}{
 		{
 			name:  "decode URL components and query values",
-			input: "https://example.com/foo+bar%21?service=ab%2Bc&product=de%24f",
+			input: "https://example.com/foo+bar%21?service=ab%2Bc&product=de%24f&service=second",
 			want: []string{
 				"Scheme: https",
 				"Host: example.com",
@@ -23,12 +23,14 @@ func TestURLDecode(t *testing.T) {
 				"Value: de$f",
 				"Key: service",
 				"Value: ab+c",
+				"Key: service",
+				"Value: second",
 			},
 		},
 		{
-			name:  "trim surrounding whitespace and use first repeated query value",
+			name:  "trim surrounding whitespace and preserve repeated query values",
 			input: " https://example.com/path?key=first&key=second ",
-			want:  []string{"Value: first"},
+			want:  []string{"Value: first", "Value: second"},
 		},
 		{
 			name:    "reject empty URL",

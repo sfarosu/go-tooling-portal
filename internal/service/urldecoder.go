@@ -48,13 +48,12 @@ func URLDecode(input string) (string, error) {
 	sort.Strings(keys)
 	for _, key := range keys {
 		values := query[key]
-		if len(values) == 0 {
-			continue
+		for _, value := range values {
+			decoded.QueryArgs = append(decoded.QueryArgs, struct {
+				Key   string `yaml:"Key"`
+				Value string `yaml:"Value"`
+			}{Key: key, Value: value})
 		}
-		decoded.QueryArgs = append(decoded.QueryArgs, struct {
-			Key   string `yaml:"Key"`
-			Value string `yaml:"Value"`
-		}{Key: key, Value: values[0]})
 	}
 
 	result, err := helper.MarshalYAML(decoded)
