@@ -12,7 +12,7 @@ import (
 func TestURLDecoder_Decode(t *testing.T) {
 	router := setupTestAPI(RegisterURLDecoder)
 
-	body := `{"url":"https://example.com/foo%21?query=a%2Bb"}`
+	body := `{"url":"https://example.com/foo+bar%21?service=ab%2Bc&product=de%24f&service=second"}`
 	req, _ := http.NewRequest("POST", "/api/urldecoder", bytes.NewBufferString(body))
 	req.Header.Set("Content-Type", "application/json")
 
@@ -28,7 +28,16 @@ func TestURLDecoder_Decode(t *testing.T) {
 	if err := json.Unmarshal(rr.Body.Bytes(), &output); err != nil {
 		t.Fatalf("Failed to decode response: %v", err)
 	}
-	for _, expected := range []string{"Scheme: https", "Host: example.com", "Path: /foo!", "Value: a+b"} {
+	for _, expected := range []string{
+		"Scheme: https",
+		"Host: example.com",
+		"Path: /foo+bar!",
+		"Key: product",
+		"Value: de$f",
+		"Key: service",
+		"Value: ab+c",
+		"Value: second",
+	} {
 		if !strings.Contains(output.Result, expected) {
 			t.Errorf("Expected decoded result to contain %q, got:\n%s", expected, output.Result)
 		}

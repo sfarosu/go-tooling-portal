@@ -16,7 +16,7 @@ import (
 type URLDecoderHTMXInput struct {
 	HtmxHeader bool `header:"HX-Request"`
 	Body       struct {
-		URL string `json:"url" example:"https://example.com/foo%21?query=a%2Bb" doc:"URL to parse and decode" minLength:"1"`
+		URL string `json:"url" example:"https://example.com/foo+bar%21?service=ab%2Bc&product=de%24f&service=second" doc:"URL to parse and decode" minLength:"1"`
 	}
 }
 

@@ -11,7 +11,7 @@ import (
 func TestURLDecoderHtmx_Decode(t *testing.T) {
 	router := setupTestAPI(RegisterURLDecoderHtmx)
 
-	body := `{"url":"https://example.com/foo%21?query=a%2Bb"}`
+	body := `{"url":"https://example.com/foo+bar%21?service=ab%2Bc&product=de%24f&service=second"}`
 	req, _ := http.NewRequest("POST", "/api/urldecoder/htmx", bytes.NewBufferString(body))
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("HX-Request", "true")
@@ -21,8 +21,10 @@ func TestURLDecoderHtmx_Decode(t *testing.T) {
 	if rr.Code != http.StatusOK {
 		t.Fatalf("Expected status 200, got %d, response body %v", rr.Code, rr.Body.String())
 	}
-	if !strings.Contains(rr.Body.String(), "Scheme: https") || !strings.Contains(rr.Body.String(), "Value: a&#43;b") {
-		t.Errorf("Expected decoded URL components in HTML response, got: %s", rr.Body.String())
+	for _, expected := range []string{"Scheme: https", "Path: /foo&#43;bar!", "Value: de$f", "Value: ab&#43;c", "Value: second"} {
+		if !strings.Contains(rr.Body.String(), expected) {
+			t.Errorf("Expected decoded URL response to contain %q, got: %s", expected, rr.Body.String())
+		}
 	}
 	if !strings.Contains(rr.Header().Get("Content-Type"), "text/html") {
 		t.Errorf("Expected Content-Type text/html, got: %s", rr.Header().Get("Content-Type"))
