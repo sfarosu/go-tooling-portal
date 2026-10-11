@@ -41,10 +41,10 @@ func TestHtpasswdHtmx_MissingFields(t *testing.T) {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	if rr.Code != http.StatusUnprocessableEntity {
-		t.Errorf("Expected status 422, got %d, response body %v", rr.Code, rr.Body.String())
+	if rr.Code != http.StatusOK {
+		t.Errorf("Expected status 200 with HTMX validation fragment, got %d, response body %v", rr.Code, rr.Body.String())
 	}
-	if !strings.Contains(rr.Body.String(), "expected length >= 1") {
+	if !strings.Contains(rr.Body.String(), "ERROR:") || !strings.Contains(rr.Body.String(), "expected length &gt;= 1") {
 		t.Errorf("Expected minLength validation error, got: %s", rr.Body.String())
 	}
 }
@@ -60,10 +60,10 @@ func TestHtpasswdHtmx_InvalidAlgorithm(t *testing.T) {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	if rr.Code != http.StatusUnprocessableEntity {
-		t.Errorf("Expected status 422, got %d, response body %v", rr.Code, rr.Body.String())
+	if rr.Code != http.StatusOK {
+		t.Errorf("Expected status 200 with HTMX validation fragment, got %d, response body %v", rr.Code, rr.Body.String())
 	}
-	if !strings.Contains(rr.Body.String(), "expected value to be one of") {
+	if !strings.Contains(rr.Body.String(), "ERROR:") || !strings.Contains(rr.Body.String(), "expected value to be one of") {
 		t.Errorf("Expected enum validation error, got: %s", rr.Body.String())
 	}
 }

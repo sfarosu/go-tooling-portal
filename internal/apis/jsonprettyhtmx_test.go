@@ -43,12 +43,42 @@ func TestJsonPrettyHtmx_MissingFields(t *testing.T) {
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
 
-	if rr.Code != http.StatusUnprocessableEntity {
-		t.Fatalf("expected 422 got %d body: %s", rr.Code, rr.Body.String())
+	if rr.Code != http.StatusOK {
+		t.Fatalf("expected 200 with HTMX validation fragment, got %d body: %s", rr.Code, rr.Body.String())
 	}
 
-	if !strings.Contains(rr.Body.String(), "expected length >= 1") {
+	if !strings.Contains(rr.Body.String(), "expected length &gt;= 1") || !strings.Contains(rr.Body.String(), "ERROR:") {
 		t.Fatalf("expected minLength validation error, got: %s", rr.Body.String())
+	}
+}
+
+func TestJsonPrettyHtmx_MissingRequiredProperty(t *testing.T) {
+	router := setupTestAPI(RegisterJsonPrettyHtmx)
+	body := `{}`
+
+	req := httptest.NewRequest(http.MethodPost, "/api/jsonpretty/htmx", strings.NewReader(body))
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("HX-Request", "true")
+	rr := httptest.NewRecorder()
+	router.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Fatalf("expected 200 with HTMX validation fragment, got %d body: %s", rr.Code, rr.Body.String())
+	}
+	if !strings.Contains(rr.Body.String(), "ERROR:") || !strings.Contains(rr.Body.String(), "required property") {
+		t.Fatalf("expected required-property validation error, got: %s", rr.Body.String())
+	}
+
+	req = httptest.NewRequest(http.MethodPost, "/api/jsonpretty/htmx", strings.NewReader(body))
+	req.Header.Set("Content-Type", "application/json")
+	rr = httptest.NewRecorder()
+	router.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusUnprocessableEntity {
+		t.Fatalf("expected normal 422 validation response without HX-Request, got %d body: %s", rr.Code, rr.Body.String())
+	}
+	if !strings.Contains(rr.Header().Get("Content-Type"), "application/problem+json") {
+		t.Fatalf("expected normal Huma problem JSON response, got content type %q", rr.Header().Get("Content-Type"))
 	}
 }
 

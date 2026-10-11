@@ -64,7 +64,7 @@ func Start(addr string) {
 }
 
 // setupRouter configures the HTTP router, registers the API endpoints, and static file serving
-func setupRouter() *http.ServeMux {
+func setupRouter() http.Handler {
 	router := http.NewServeMux()
 
 	// Register API endpoints
@@ -93,7 +93,7 @@ func setupRouter() *http.ServeMux {
 	router.Handle("/", http.StripPrefix("/", helper.DisableDirListing("web")(http.FileServer(http.Dir("web")))))
 	router.Handle("/assets/", http.StripPrefix("/assets", helper.DisableDirListing("web/assets")(http.FileServer(http.Dir("web/assets")))))
 
-	return router
+	return apis.WrapHTMXValidationErrors(router)
 }
 
 // setupServer creates and configures the HTTP server.

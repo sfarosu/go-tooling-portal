@@ -8,9 +8,9 @@ import (
 )
 
 // setupTestAPI is a helper function for unit testing to set up a test API with the given registration function.
-func setupTestAPI(register func(huma.API)) *http.ServeMux {
+func setupTestAPI(register func(huma.API)) http.Handler {
 	router := http.NewServeMux()
 	api := humago.New(router, huma.DefaultConfig("Test API", "1.0.0"))
 	register(api)
-	return router
+	return WrapHTMXValidationErrors(router)
 }
