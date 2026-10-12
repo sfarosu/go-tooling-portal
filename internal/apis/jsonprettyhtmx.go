@@ -17,7 +17,7 @@ type JsonPrettyHTMXInput struct {
 	// HtmxHeader stores the value of the HX-Request header, which is sent by HTMX
 	// when making AJAX requests. This allows the handler to detect if the request
 	// originated from an HTMX-enabled frontend and respond with HTML instead of JSON
-	HtmxHeader bool `header:"HX-Request"`
+	HtmxHeader bool `header:"HX-Request" doc:"Set to true when calling this HTMX endpoint."`
 
 	// Body contains the main input fields for the JSON prettifier.
 	// The fields are strings because HTML form submissions send string values.
@@ -70,21 +70,21 @@ var jsonPrettyResultTmpl = template.Must(template.New("jsonpretty-result").Parse
 func RegisterJsonPrettyHtmx(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "json-pretty-htmx",
-		Summary:       "prettify json - htmx",
-		Description:   "Return a suitable for HTMX injection HTML object containg the prettified JSON.",
+		Summary:       "Format or minify JSON (HTMX)",
+		Description:   "Formats JSON with the requested indentation or minifies it. Requires the HX-Request: true header and returns an HTML fragment for HTMX.",
 		Method:        http.MethodPost,
 		Path:          "/api/jsonpretty/htmx",
 		DefaultStatus: http.StatusOK,
-		Tags:          []string{"JsonPretty"},
+		Tags:          []string{"JSON Prettifier"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Successfully prettified JSON, responding with HTML content for HTMX requests.",
+				Description: "HTML fragment containing the formatted JSON or a user-visible error.",
 				Content: map[string]*huma.MediaType{
 					"text/html": {},
 				},
 			},
 			"400": {
-				Description: "Bad request, invalid input (including missing HX-Request header).",
+				Description: "Invalid input or the required HX-Request: true header is missing.",
 			},
 		},
 	}, func(ctx context.Context, input *JsonPrettyHTMXInput) (*JsonPrettyHTMXOutput, error) {

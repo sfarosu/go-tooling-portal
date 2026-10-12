@@ -16,7 +16,7 @@ type Base64ConverterHTMXInput struct {
 	// HtmxHeader stores the value of the HX-Request header, which is sent by HTMX
 	// when making AJAX requests. This allows the handler to detect if the request
 	// originated from an HTMX-enabled frontend and respond with HTML instead of JSON
-	HtmxHeader bool `header:"HX-Request"`
+	HtmxHeader bool `header:"HX-Request" doc:"Set to true when calling this HTMX endpoint."`
 
 	// Body contains the main input fields for the base64 conversion.
 	Body struct {
@@ -68,21 +68,21 @@ var base64converterResultTmpl = template.Must(template.New("base64converter-resu
 func RegisterBase64ConverterHtmx(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "base64-converter-htmx",
-		Summary:       "base64 encode/decode - htmx",
-		Description:   "Returns a suitable for HTMX injection HTML object containg the base64 conversion.",
+		Summary:       "Encode or decode Base64 (HTMX)",
+		Description:   "Encodes or decodes a string using standard or URL-safe Base64. Requires the HX-Request: true header and returns an HTML fragment for HTMX.",
 		Method:        http.MethodPost,
 		Path:          "/api/base64converter/htmx",
 		DefaultStatus: http.StatusOK,
-		Tags:          []string{"Base64Converter"},
+		Tags:          []string{"Base64 Converter"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Successfully converted the input, responding with HTML content for HTMX requests.",
+				Description: "HTML fragment containing the converted result or a user-visible error.",
 				Content: map[string]*huma.MediaType{
 					"text/html": {},
 				},
 			},
 			"400": {
-				Description: "Bad Request, invalid input (including missing HX-Request header).",
+				Description: "Invalid input or the required HX-Request: true header is missing.",
 			},
 		},
 	}, func(ctx context.Context, input *Base64ConverterHTMXInput) (*Base64ConverterHTMXOutput, error) {

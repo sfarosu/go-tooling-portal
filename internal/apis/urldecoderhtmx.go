@@ -14,7 +14,7 @@ import (
 
 // URLDecoderHTMXInput is the request structure for the /api/urldecoder/htmx endpoint.
 type URLDecoderHTMXInput struct {
-	HtmxHeader bool `header:"HX-Request"`
+	HtmxHeader bool `header:"HX-Request" doc:"Set to true when calling this HTMX endpoint."`
 	Body       struct {
 		URL string `json:"url" example:"https://example.com/foo+bar%21?service=ab%2Bc&product=de%24f&service=second" doc:"URL to parse and decode" minLength:"1"`
 	}
@@ -55,18 +55,18 @@ var urlDecoderResultTmpl = template.Must(template.New("urldecoder-result").Parse
 func RegisterURLDecoderHtmx(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "url-decoder-htmx",
-		Summary:       "decode URL - htmx",
-		Description:   "Returns decoded URL components as an HTML fragment for HTMX requests.",
+		Summary:       "Parse and decode a URL (HTMX)",
+		Description:   "Parses a URL and displays its components and decoded query parameters. Requires the HX-Request: true header and returns an HTML fragment for HTMX.",
 		Method:        http.MethodPost,
 		Path:          "/api/urldecoder/htmx",
 		DefaultStatus: http.StatusOK,
-		Tags:          []string{"URLDecoder"},
+		Tags:          []string{"URL Decoder"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Successfully parsed and decoded the URL.",
+				Description: "HTML fragment containing the decoded URL components or a user-visible error.",
 				Content:     map[string]*huma.MediaType{"text/html": {}},
 			},
-			"400": {Description: "Bad request - invalid URL."},
+			"400": {Description: "Invalid URL or the required HX-Request: true header is missing."},
 		},
 	}, func(ctx context.Context, input *URLDecoderHTMXInput) (*URLDecoderHTMXOutput, error) {
 		result, err := service.URLDecode(input.Body.URL)

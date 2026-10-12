@@ -30,15 +30,15 @@ type HtpasswdOutput struct {
 func RegisterHtpasswd(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "generate-htpasswd",
-		Summary:       "generate htpasswd - json",
-		Description:   "Returns a JSON object containg the generated htpasswd entry.",
+		Summary:       "Generate an htpasswd entry (JSON)",
+		Description:   "Generates an Apache htpasswd entry for the supplied username, password, and supported hash algorithm.",
 		Method:        http.MethodPost,
 		Path:          "/api/htpasswd",
 		DefaultStatus: http.StatusOK,
-		Tags:          []string{"Htpassword"},
+		Tags:          []string{"Htpasswd Generator"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Successfully generated an htpasswd entry, responding with JSON content.",
+				Description: "JSON response containing the generated htpasswd entry.",
 			},
 			"400": {
 				Description: "Bad request - invalid input.",

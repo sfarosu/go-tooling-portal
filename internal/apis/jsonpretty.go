@@ -30,15 +30,15 @@ type JsonPrettyOutput struct {
 func RegisterJsonPretty(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "json-pretty",
-		Summary:       "prettify json",
-		Description:   "Returns a JSON object containing the prettified JSON.",
+		Summary:       "Format or minify JSON (JSON)",
+		Description:   "Formats JSON with the requested indentation or minifies it, returning the result as JSON.",
 		Method:        http.MethodPost,
 		Path:          "/api/jsonpretty",
 		DefaultStatus: http.StatusOK,
-		Tags:          []string{"JsonPretty"},
+		Tags:          []string{"JSON Prettifier"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Successfully prettified JSON, responding with JSON content",
+				Description: "JSON response containing the formatted or minified result.",
 			},
 			"400": {
 				Description: "Bad request, invalid input.",

@@ -30,15 +30,15 @@ type Base64ConverterOutput struct {
 func RegisterBase64Converter(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "base64-converter",
-		Summary:       "base64 encode/decode - json",
-		Description:   "Returns a JSON object containg a base64-encoded or decoded result depending on the selected operation.",
+		Summary:       "Encode or decode Base64 (JSON)",
+		Description:   "Encodes or decodes a string using standard or URL-safe Base64 and returns the result as JSON.",
 		Method:        http.MethodPost,
 		Path:          "/api/base64converter",
 		DefaultStatus: http.StatusOK,
-		Tags:          []string{"Base64Converter"},
+		Tags:          []string{"Base64 Converter"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Successful response with the base64 encoded or decoded result.",
+				Description: "JSON response containing the encoded or decoded result.",
 			},
 			"400": {
 				Description: "Bad request - invalid input.",

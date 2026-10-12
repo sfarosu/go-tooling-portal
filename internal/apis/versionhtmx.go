@@ -16,7 +16,7 @@ type VersionHTMXInput struct {
 	// HtmxHeader stores the value of the HX-Request header, which is sent by HTMX
 	// when making AJAX requests. This allows the handler to detect if the request
 	// originated from an HTMX-enabled frontend and respond with HTML instead of JSON
-	HtmxHeader bool `header:"HX-Request"`
+	HtmxHeader bool `header:"HX-Request" doc:"Set to true when calling this HTMX endpoint."`
 }
 
 // Resolve implements the huma.RequestResolver interface.
@@ -51,21 +51,21 @@ var versionResultTmpl = template.Must(template.New("version-result").Parse(`
 func RegisterVersionHtmx(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "get-version-htmx",
-		Summary:       "get version - htmx",
-		Description:   "Returns a suitable for HTMX injection HTML object containg the api version.",
+		Summary:       "Get the application version (HTMX)",
+		Description:   "Returns the running Go Tooling Portal application version in an HTML fragment. Requires the HX-Request: true header.",
 		Method:        http.MethodGet,
 		Path:          "/api/version/htmx",
 		DefaultStatus: http.StatusOK,
-		Tags:          []string{"ApiVersion"},
+		Tags:          []string{"API Version"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Successfully retrieved the API version, responding with HTML content for HTMX requests.",
+				Description: "HTML fragment containing the application version.",
 				Content: map[string]*huma.MediaType{
 					"text/html": {},
 				},
 			},
 			"500": {
-				Description: "Internal Server Error, unable to retrieve api version information.",
+				Description: "The application version could not be retrieved.",
 			},
 		},
 	}, func(ctx context.Context, input *VersionHTMXInput) (*VersionHTMXOutput, error) {

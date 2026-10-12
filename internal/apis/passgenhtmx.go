@@ -17,7 +17,7 @@ type PassgenHTMXInput struct {
 	// HtmxHeader stores the value of the HX-Request header, which is sent by HTMX
 	// when making AJAX requests. This allows the handler to detect if the request
 	// originated from an HTMX-enabled frontend and respond with HTML instead of JSON
-	HtmxHeader bool `header:"HX-Request"`
+	HtmxHeader bool `header:"HX-Request" doc:"Set to true when calling this HTMX endpoint."`
 
 	// Body contains the main input fields for the password generation.
 	// The fields are strings because HTML form submissions send string values.
@@ -72,21 +72,21 @@ var passgenResultTmpl = template.Must(template.New("passgen-result").Parse(`
 func RegisterPassgenHtmx(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "generate-password-htmx",
-		Summary:       "generate password - htmx",
-		Description:   "Returns a suitable for HTMX injection HTML object containg the generated password entry.",
+		Summary:       "Generate a random password (HTMX)",
+		Description:   "Generates a random password using the selected character sets. Requires the HX-Request: true header and returns an HTML fragment for HTMX.",
 		Method:        http.MethodPost,
 		Path:          "/api/passgen/htmx",
 		DefaultStatus: http.StatusOK,
-		Tags:          []string{"Passgen"},
+		Tags:          []string{"Password Generator"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Successfully generated a password, responding with HTML content for HTMX requests.",
+				Description: "HTML fragment containing the generated password or a user-visible error.",
 				Content: map[string]*huma.MediaType{
 					"text/html": {},
 				},
 			},
 			"400": {
-				Description: "Bad Request, invalid input (including missing HX-Request header).",
+				Description: "Invalid input or the required HX-Request: true header is missing.",
 			},
 		},
 	}, func(ctx context.Context, input *PassgenHTMXInput) (*PassgenHTMXOutput, error) {

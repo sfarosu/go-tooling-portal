@@ -20,18 +20,18 @@ type VersionOutput struct {
 func RegisterVersion(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "get-version",
-		Summary:       "get version - json",
-		Description:   "Returns a JSON object containg the api version.",
+		Summary:       "Get the application version (JSON)",
+		Description:   "Returns the running Go Tooling Portal application version as JSON.",
 		Method:        http.MethodGet,
 		Path:          "/api/version",
 		DefaultStatus: http.StatusOK,
-		Tags:          []string{"ApiVersion"},
+		Tags:          []string{"API Version"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Successfully retrieved the api version.",
+				Description: "JSON response containing the application version.",
 			},
 			"500": {
-				Description: "Internal Server Error, unable to retrieve api version information.",
+				Description: "The application version could not be retrieved.",
 			},
 		},
 	}, func(ctx context.Context, input *struct{}) (*VersionOutput, error) {

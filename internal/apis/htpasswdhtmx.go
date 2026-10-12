@@ -16,7 +16,7 @@ type HtpasswdHTMXInput struct {
 	// HtmxHeader stores the value of the HX-Request header, which is sent by HTMX
 	// when making AJAX requests. This allows the handler to detect if the request
 	// originated from an HTMX-enabled frontend and respond with HTML instead of JSON
-	HtmxHeader bool `header:"HX-Request"`
+	HtmxHeader bool `header:"HX-Request" doc:"Set to true when calling this HTMX endpoint."`
 
 	// Body contains the main input fields for the htpasswd generation.
 	Body struct {
@@ -68,21 +68,21 @@ var htpasswdResultTmpl = template.Must(template.New("htpasswd-result").Parse(`
 func RegisterHtpasswdHtmx(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "generate-htpasswd-htmx",
-		Summary:       "generate htpasswd - htmx",
-		Description:   "Returns a suitable for HTMX injection HTML object containg the generated htpasswd entry.",
+		Summary:       "Generate an htpasswd entry (HTMX)",
+		Description:   "Generates an Apache htpasswd entry. Requires the HX-Request: true header and returns an HTML fragment for HTMX.",
 		Method:        http.MethodPost,
 		Path:          "/api/htpasswd/htmx",
 		DefaultStatus: http.StatusOK,
-		Tags:          []string{"Htpassword"},
+		Tags:          []string{"Htpasswd Generator"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Successfully generated an htpasswd entry, responding with HTML content for HTMX requests.",
+				Description: "HTML fragment containing the generated entry or a user-visible error.",
 				Content: map[string]*huma.MediaType{
 					"text/html": {},
 				},
 			},
 			"400": {
-				Description: "Bad Request, invalid input (including missing HX-Request header).",
+				Description: "Invalid input or the required HX-Request: true header is missing.",
 			},
 		},
 	}, func(ctx context.Context, input *HtpasswdHTMXInput) (*HtpasswdHTMXOutput, error) {

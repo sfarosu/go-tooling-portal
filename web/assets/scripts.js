@@ -68,11 +68,29 @@ function initSearch() {
  */
 function setupNavbarSearchInit() {
   document.body.addEventListener('htmx:afterSwap', (event) => {
+    const target = event.detail.target;
+    if (target.querySelector('.dropdown-menu')) {
+      initActiveToolLink(target);
+    }
+
     // Only trigger when the navbar-container was swapped
-    if (event.detail.target.id === 'navbar-container') {
+    if (target.id === 'navbar-container') {
       if (typeof initSearch === 'function') {
         initSearch();
       }
+    }
+  });
+}
+
+function initActiveToolLink(navbar = document) {
+  const currentPath = window.location.pathname;
+  navbar.querySelectorAll('.dropdown-menu a.dropdown-item[href]').forEach(link => {
+    const isCurrentPage = new URL(link.href, window.location.href).pathname === currentPath;
+    link.classList.toggle('active', isCurrentPage);
+    if (isCurrentPage) {
+      link.setAttribute('aria-current', 'page');
+    } else {
+      link.removeAttribute('aria-current');
     }
   });
 }

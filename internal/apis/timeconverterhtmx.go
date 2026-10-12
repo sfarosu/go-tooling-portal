@@ -16,7 +16,7 @@ type TimeConverterHTMXInput struct {
 	// HtmxHeader stores the value of the HX-Request header, which is sent by HTMX
 	// when making AJAX requests. This allows the handler to detect if the request
 	// originated from an HTMX-enabled frontend and respond with HTML instead of JSON
-	HtmxHeader bool `header:"HX-Request"`
+	HtmxHeader bool `header:"HX-Request" doc:"Set to true when calling this HTMX endpoint."`
 
 	// Body contains the main input fields for the time conversion.
 	Body struct {
@@ -123,21 +123,21 @@ var timeconverterResultTmpl = template.Must(template.New("timeconverter-result")
 func RegisterTimeConverterHtmx(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "time-converter-htmx",
-		Summary:       "time conversion - htmx",
-		Description:   "Returns a suitable for HTMX injection HTML object containing the time conversion results.",
+		Summary:       "Convert epoch and human-readable time (HTMX)",
+		Description:   "Converts between epoch timestamps and date/time values in the selected IANA timezone. Requires the HX-Request: true header and returns an HTML fragment for HTMX.",
 		Method:        http.MethodPost,
 		Path:          "/api/timeconverter/htmx",
 		DefaultStatus: http.StatusOK,
-		Tags:          []string{"TimeConverter"},
+		Tags:          []string{"Time Converter"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Successfully converted the time, responding with HTML content for HTMX requests.",
+				Description: "HTML fragment containing the converted time or a user-visible error.",
 				Content: map[string]*huma.MediaType{
 					"text/html": {},
 				},
 			},
 			"400": {
-				Description: "Bad Request, invalid input (including missing HX-Request header).",
+				Description: "Invalid input or the required HX-Request: true header is missing.",
 			},
 		},
 	}, func(ctx context.Context, input *TimeConverterHTMXInput) (*TimeConverterHTMXOutput, error) {

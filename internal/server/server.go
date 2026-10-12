@@ -59,7 +59,7 @@ func Start(addr string) {
 	}()
 
 	<-stop
-	logger.Logger.Info("shutting down server")
+	logger.Logger.Info("shutting-down-server")
 	waitForShutdown(srv)
 }
 
@@ -68,7 +68,19 @@ func setupRouter() http.Handler {
 	router := http.NewServeMux()
 
 	// Register API endpoints
-	humaConfig := huma.DefaultConfig("Go Tooling API", "1.0.0")
+	humaConfig := huma.DefaultConfig("Go Tooling API", version.Version)
+	humaConfig.Info.Description = "API for the Go Tooling Portal's generators, converters, formatters, and time utilities. JSON endpoints are intended for API clients; HTMX endpoints return HTML fragments and require the HX-Request: true header."
+	humaConfig.Tags = []*huma.Tag{
+		{Name: "Base64 Converter", Description: "Encode and decode standard or URL-safe Base64."},
+		{Name: "Format Converter", Description: "Convert data between JSON and YAML."},
+		{Name: "Htpasswd Generator", Description: "Generate Apache htpasswd entries."},
+		{Name: "Password Generator", Description: "Generate random passwords with selected character sets."},
+		{Name: "JSON Prettifier", Description: "Format or minify JSON."},
+		{Name: "SSH Key Generator", Description: "Generate SSH key pairs."},
+		{Name: "Time Converter", Description: "Convert between epoch timestamps and local date/time values."},
+		{Name: "URL Decoder", Description: "Parse URLs and decode their components and query parameters."},
+		{Name: "API Version", Description: "Retrieve the running application version."},
+	}
 	humaAPI := humago.New(router, humaConfig)
 	apis.RegisterBase64Converter(humaAPI)
 	apis.RegisterBase64ConverterHtmx(humaAPI)
@@ -141,5 +153,5 @@ func waitForShutdown(srv *http.Server) {
 		logger.Logger.Error("server forced to shutdown due to context timeout", "error", err)
 		os.Exit(1)
 	}
-	logger.Logger.Info("server exited gracefully")
+	logger.Logger.Info("server-exited-gracefully")
 }

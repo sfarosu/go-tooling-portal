@@ -17,7 +17,7 @@ type SSHGenHTMXInput struct {
 	// HtmxHeader stores the value of the HX-Request header, which is sent by HTMX
 	// when making AJAX requests. This allows the handler to detect if the request
 	// originated from an HTMX-enabled frontend and respond with HTML instead of JSON
-	HtmxHeader bool `header:"HX-Request"`
+	HtmxHeader bool `header:"HX-Request" doc:"Set to true when calling this HTMX endpoint."`
 
 	// Body contains the main input fields for the ssh key generation.
 	Body struct {
@@ -90,21 +90,21 @@ var sshgenResultTmpl = template.Must(template.New("sshgen-result").Parse(`
 func RegisterSSHGenHtmx(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "generate-ssh-key-htmx",
-		Summary:       "generate ssh key - htmx",
-		Description:   "Returns an HTML fragment suitable for HTMX injection containing an SSH key pair for the selected algorithm.",
+		Summary:       "Generate an SSH key pair (HTMX)",
+		Description:   "Generates an SSH key pair using the selected Ed25519, ECDSA, or RSA algorithm. Requires the HX-Request: true header and returns an HTML fragment for HTMX.",
 		Method:        http.MethodPost,
 		Path:          "/api/sshgen/htmx",
 		DefaultStatus: http.StatusOK,
-		Tags:          []string{"SSHGen"},
+		Tags:          []string{"SSH Key Generator"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Successfully generated an SSH key pair, responding with HTML content for HTMX requests.",
+				Description: "HTML fragment containing the generated key pair or a user-visible error.",
 				Content: map[string]*huma.MediaType{
 					"text/html": {},
 				},
 			},
 			"400": {
-				Description: "Bad Request, invalid input (including missing HX-Request header) or unsupported algorithm.",
+				Description: "Invalid input, unsupported algorithm, or the required HX-Request: true header is missing.",
 			},
 		},
 	}, func(ctx context.Context, input *SSHGenHTMXInput) (*SSHGenHTMXOutput, error) {

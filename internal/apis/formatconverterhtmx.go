@@ -16,7 +16,7 @@ type FormatConverterHTMXInput struct {
 	// HtmxHeader stores the value of the HX-Request header, which is sent by HTMX
 	// when making AJAX requests. This allows the handler to detect if the request
 	// originated from an HTMX-enabled frontend and respond with HTML instead of JSON
-	HtmxHeader bool `header:"HX-Request"`
+	HtmxHeader bool `header:"HX-Request" doc:"Set to true when calling this HTMX endpoint."`
 
 	// Body contains the main input fields for format conversion.
 	Body struct {
@@ -66,21 +66,21 @@ var formatconverterResultTmpl = template.Must(template.New("formatconverter-resu
 func RegisterFormatConverterHtmx(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "format-converter-htmx",
-		Summary:       "convert format between json and yaml - htmx",
-		Description:   "Returns a suitable for HTMX injection HTML object containg the conversion.",
+		Summary:       "Convert JSON and YAML (HTMX)",
+		Description:   "Converts JSON input to YAML or YAML input to JSON. Requires the HX-Request: true header and returns an HTML fragment for HTMX.",
 		Method:        http.MethodPost,
 		Path:          "/api/formatconverter/htmx",
 		DefaultStatus: http.StatusOK,
-		Tags:          []string{"FormatConverter"},
+		Tags:          []string{"Format Converter"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Successfull convertion, responding with HTML content for HTMX requests.",
+				Description: "HTML fragment containing the conversion result or a user-visible error.",
 				Content: map[string]*huma.MediaType{
 					"text/html": {},
 				},
 			},
 			"400": {
-				Description: "Bad Request, invalid input (including missing HX-Request header).",
+				Description: "Invalid input or the required HX-Request: true header is missing.",
 			},
 		},
 	}, func(ctx context.Context, input *FormatConverterHTMXInput) (*FormatConverterHTMXOutput, error) {

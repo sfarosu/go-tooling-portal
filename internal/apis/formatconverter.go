@@ -28,15 +28,15 @@ type FormatConverterOutput struct {
 func RegisterFormatConverter(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "format-converter",
-		Summary:       "convert format between json and yaml",
-		Description:   "Returns a JSON object containg the conversion.",
+		Summary:       "Convert JSON and YAML (JSON)",
+		Description:   "Converts JSON input to YAML or YAML input to JSON and returns the converted result as JSON.",
 		Method:        http.MethodPost,
 		Path:          "/api/formatconverter",
 		DefaultStatus: http.StatusOK,
-		Tags:          []string{"FormatConverter"},
+		Tags:          []string{"Format Converter"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Successful conversion, responding with JSON content.",
+				Description: "JSON response containing the converted result.",
 			},
 			"400": {
 				Description: "Bad request - invalid input.",

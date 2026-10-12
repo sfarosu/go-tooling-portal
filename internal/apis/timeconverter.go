@@ -53,15 +53,15 @@ type TimeConverterOutput struct {
 func RegisterTimeConverter(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "time-converter",
-		Summary:       "time conversion - json",
-		Description:   "Returns a JSON object containing time conversion results for epoch to human or human to epoch conversion.",
+		Summary:       "Convert epoch and human-readable time (JSON)",
+		Description:   "Converts an epoch timestamp to a date and time, or a date and time to an epoch timestamp, using the selected IANA timezone.",
 		Method:        http.MethodPost,
 		Path:          "/api/timeconverter",
 		DefaultStatus: http.StatusOK,
-		Tags:          []string{"TimeConverter"},
+		Tags:          []string{"Time Converter"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Successful response with the time conversion results.",
+				Description: "JSON response containing the converted time values.",
 			},
 			"400": {
 				Description: "Bad request - invalid input.",

@@ -59,6 +59,12 @@ body {
 .dropdown-menu a.dropdown-item:hover {
     background-color: #5a5a5a;
 }
+.dropdown-menu a.dropdown-item.active,
+.dropdown-menu a.dropdown-item.active:hover {
+    background-color: #5a5a5a;
+    color: #fff;
+    font-weight: 600;
+}
 
 /* =========================
    Search Bar

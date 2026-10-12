@@ -32,15 +32,15 @@ type SSHGenOutput struct {
 func RegisterSSHGen(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "generate-ssh-key",
-		Summary:       "generate ssh key - json",
-		Description:   "Returns a JSON object containg a ssh key-pair depending on the selected algorithm.",
+		Summary:       "Generate an SSH key pair (JSON)",
+		Description:   "Generates an SSH key pair using the selected Ed25519, ECDSA, or RSA algorithm and returns the keys as JSON.",
 		Method:        http.MethodPost,
 		Path:          "/api/sshgen",
 		DefaultStatus: http.StatusOK,
-		Tags:          []string{"SSHGen"},
+		Tags:          []string{"SSH Key Generator"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Successfully generated SSH key pair, responding with JSON content.",
+				Description: "JSON response containing the generated SSH key pair.",
 			},
 			"400": {
 				Description: "Bad request - invalid input.",

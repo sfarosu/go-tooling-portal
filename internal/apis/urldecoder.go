@@ -27,14 +27,14 @@ type URLDecoderOutput struct {
 func RegisterURLDecoder(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "url-decoder",
-		Summary:       "decode URL - json",
-		Description:   "Parses a URL and returns its decoded components as YAML.",
+		Summary:       "Parse and decode a URL (JSON)",
+		Description:   "Parses a URL and returns its components and decoded query parameters in a YAML string inside a JSON response.",
 		Method:        http.MethodPost,
 		Path:          "/api/urldecoder",
 		DefaultStatus: http.StatusOK,
-		Tags:          []string{"URLDecoder"},
+		Tags:          []string{"URL Decoder"},
 		Responses: map[string]*huma.Response{
-			"200": {Description: "Successfully parsed and decoded the URL."},
+			"200": {Description: "JSON response containing decoded URL components as YAML."},
 			"400": {Description: "Bad request - invalid URL."},
 		},
 	}, func(ctx context.Context, input *URLDecoderInput) (*URLDecoderOutput, error) {

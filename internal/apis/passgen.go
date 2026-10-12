@@ -32,15 +32,15 @@ type PassgenOutput struct {
 func RegisterPassgen(api huma.API) {
 	huma.Register(api, huma.Operation{
 		OperationID:   "generate-password",
-		Summary:       "generate random password - json",
-		Description:   "Returns a JSON object containg the generated password entry.",
+		Summary:       "Generate a random password (JSON)",
+		Description:   "Generates a random password using the selected character sets and returns it as JSON.",
 		Method:        http.MethodPost,
 		Path:          "/api/passgen",
 		DefaultStatus: http.StatusOK,
-		Tags:          []string{"Passgen"},
+		Tags:          []string{"Password Generator"},
 		Responses: map[string]*huma.Response{
 			"200": {
-				Description: "Successfully generated a password entry, responding with JSON content",
+				Description: "JSON response containing the generated password.",
 			},
 			"400": {
 				Description: "Bad request - invalid input.",
