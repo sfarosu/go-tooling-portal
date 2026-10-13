@@ -6,7 +6,7 @@ metadata:
   name: go-tooling-portal
 spec:
   ports:
-  - name: 8100-tcp
+  - name: api
     port: 8100
     protocol: TCP
     targetPort: 8100

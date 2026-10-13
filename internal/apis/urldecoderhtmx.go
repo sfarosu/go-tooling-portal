@@ -41,8 +41,8 @@ var urlDecoderResultTmpl = template.Must(template.New("urldecoder-result").Parse
 <div class="row g-3">
   <div class="col-12">
     <label class="form-label fw-bold" for="urldecoder-result-input">Decoded URL components</label>
-    <div class="input-group">
-      <textarea class="form-control custom-output" id="urldecoder-result-input" readonly rows="10">{{.Result}}</textarea>
+    <div class="input-group w-100">
+      <textarea class="form-control custom-output" id="urldecoder-result-input" readonly rows="20">{{.Result}}</textarea>
       <button class="btn btn-graphite" type="button" onclick="copyToClipboard('urldecoder-result-input')" title="Copy decoded URL" aria-label="Copy decoded URL">
         <i class="bi bi-clipboard"></i>
       </button>

@@ -29,6 +29,9 @@ func TestJsonPrettyHtmx_Valid(t *testing.T) {
 	if !strings.Contains(rr.Header().Get("Content-Type"), "text/html") {
 		t.Fatalf("expected Content-Type text/html, got: %s", rr.Header().Get("Content-Type"))
 	}
+	if !strings.Contains(rr.Body.String(), `id="jsonpretty-result-input"`) || !strings.Contains(rr.Body.String(), `rows="16"`) {
+		t.Fatalf("expected result textarea to have 16 rows, got: %s", rr.Body.String())
+	}
 }
 
 func TestJsonPrettyHtmx_MissingFields(t *testing.T) {

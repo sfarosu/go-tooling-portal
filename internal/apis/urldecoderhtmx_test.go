@@ -26,6 +26,12 @@ func TestURLDecoderHtmx_Decode(t *testing.T) {
 			t.Errorf("Expected decoded URL response to contain %q, got: %s", expected, rr.Body.String())
 		}
 	}
+	if !strings.Contains(rr.Body.String(), `class="input-group w-100"`) {
+		t.Errorf("Expected decoded URL result area to fill its available width, got: %s", rr.Body.String())
+	}
+	if !strings.Contains(rr.Body.String(), `id="urldecoder-result-input" readonly rows="20"`) {
+		t.Errorf("Expected decoded URL result area to have 20 rows, got: %s", rr.Body.String())
+	}
 	if !strings.Contains(rr.Header().Get("Content-Type"), "text/html") {
 		t.Errorf("Expected Content-Type text/html, got: %s", rr.Header().Get("Content-Type"))
 	}

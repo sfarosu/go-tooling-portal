@@ -2,49 +2,18 @@
 
 ## What is it?
 
-![Dashboard](web/assets/custom/img/preview.gif "Dashboard")
+![Animated tour of the Go Tooling Portal](docs/images/showcase.gif "Go Tooling Portal")
 
-Simple and fast webapp that provides users with some self-hosted tooling to avoid insecure internet generators/processors:
+A simple, fast, self-hosted web app with handy developer tools so you can avoid pasting potentially sensitive data into third-party websites.
 
-- **HTPasswordGenerator**: generate htpasswords OR shadow unix standard passwords (MD5/MD-5 Apache variant OR SHA512)
-- **RandomPasswordGenerator**: generate a variable length, multi-case, multi-symbol password
-- **SSHKeyGenerator**: generate SSH key pairs
-- **JsonPrettifier**: prettify/indent a complex Json
-- **FormatConverter**: convert YAML to JSON and viceversa
-- **EpochTimeConverter**: transform unix timestamp to human time and viceversa
-- **Base64Converter**: encode/decode data in Base64 format
-- **URLDecoder**: decode special characters in URLs
-
-To be added in future releases:
-
-- generate self-signed tls certificates
-- generate k8s kubeconfig from service-account secret token
-- convert yaml/json to golang struct
-
-___
-
-## General information
-
-- Html by boostrap4 [jumbotron](https://getbootstrap.com/docs/4.0/examples/jumbotron)
-- You can install it inside your organization to avoid unsafe online password generators
-- Nothing is stored server-side, no database is used, everything is ephemeral
-- This tool does not need internet access (all the assets are served locally)
-- Works fine even if you are behind a proxy
-
-___
-
-## How to run it locally without containers
-
-- Install golang on your local vm (go >= 1.27)
-  - on linux, export:
-    - `echo "export GOPATH=$HOME/go" >> ~/.bashrc`
-    - `echo "export GO111MODULE=on" >> ~/.bashrc`
-  - create your go folders `mkdir -p ~/go/{bin,pkg,src}`
-- Get the app: `cd ~/go/src/ && git clone https://github.com/sfarosu/go-tooling-portal.git`
-- Build the app: `cd ~/go/src/github.com/sfarosu/go-tooling-portal && go build .`
-- Run the app: `./go-tooling-portal`
-- Access it in your browser at: [http://localhost:8100](http://localhost:8100)
-  - metrics available at: [http://localhost:8100/metrics](http://localhost:8100/metrics)
+- **Htpasswd Generator**: Generate htpasswd entries using Apache-variant MD5 (`apr1`), MD5, SHA256, or SHA512.
+- **Password Generator**: Generate random passwords with a configurable length and character sets.
+- **SSH Key Generator**: Generate SSH key pairs.
+- **JSON Prettifier**: Format or minify JSON.
+- **Format Converter**: Convert between YAML and JSON.
+- **Time Converter**: Convert between Unix timestamps and human-readable dates and times.
+- **Base64 Converter**: Encode or decode data using Base64.
+- **URL Decoder**: Parse URLs and decode their components and query parameters.
 
 ___
 
@@ -77,30 +46,7 @@ ___
 
 ___
 
-## GitHub release guide
+## Docs
 
-### Prerequisites tools
-
-- make
-- git
-- docker
-- bumpversion `sudo apt install bumpversion / brew install bumpversion`
-- go
-- goreleaser; install [docs](https://goreleaser.com/install/)
-
-> **_NOTE:_** in addition, if running Debian and possibly Ubuntu derivatives, the `qemu-user-static` package needs to be installed as it's needed by docker to build against arm64 arch
-
-### Prerequisites steps
-
-- your GitHub personal token is exported into the `GITHUB_TOKEN` env var
-- docker is started
-- master branch should be selected and the repo must NOT be in dirty state
-
-### Publish a new GitHub release
-
-```bash
-cd go-tooling-portal
-git checkout master && git pull origin master
-make help # list all available targets
-make all # run all publishing targets
-```
+- For setup, development, tests, and API documentation, see the [Developer Guide](docs/developer-guide.md).
+- For versioning and release instructions, see the [Release Guide](docs/release-guide.md).

@@ -54,9 +54,9 @@ type JsonPrettyHTMXOutput struct {
 // HTMX-compatible HTML fragment rendered dynamically by the API and injected into the page via HTMX
 var jsonPrettyResultTmpl = template.Must(template.New("jsonpretty-result").Parse(`
 <div class="d-flex justify-content-center">
-  <div class="input-group" style="max-width: 1024px; width: 100%;">
+  <div class="input-group" style="width: 100%;">
     <textarea class="form-control custom-output" id="jsonpretty-result-input"
-      readonly aria-label="Result JSON" rows="10">{{.ResultJSON}}</textarea>
+      readonly aria-label="Result JSON" rows="16">{{.ResultJSON}}</textarea>
     <button class="btn btn-graphite" type="button"
       onclick="copyToClipboard('jsonpretty-result-input')"
       aria-label="Copy result to clipboard" tabindex="-1">
