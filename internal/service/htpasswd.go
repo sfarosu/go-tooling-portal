@@ -47,7 +47,7 @@ func GenerateHtpasswd(username string, password string, algorithm string) (strin
 func generateAPR1crypt(username string, password string) (string, error) {
 	hash, err := apr1_crypt.New().Generate([]byte(password), nil)
 	if err != nil {
-		return "", fmt.Errorf("error generating SHA512 htpasswd for user [%v]: %v", username, err)
+		return "", fmt.Errorf("error generating APR1 htpasswd for user [%v]: %v", username, err)
 	}
 
 	return fmt.Sprintf("%s:%s", username, hash), nil

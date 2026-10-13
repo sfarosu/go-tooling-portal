@@ -1,16 +1,13 @@
 package helper
 
 import (
+	"crypto/rand"
 	"fmt"
-	"math/rand"
-	"time"
+	"math/big"
 )
 
 // RandomString generates a random string of a specified size using the selected character types
 func RandomString(size int, Uppercase bool, Lowercase bool, Numbers bool, Specials bool) (string, error) {
-	source := rand.NewSource(time.Now().UnixNano())
-	rng := rand.New(source)
-
 	// optionsActive counts how many choices the user has selected
 	optionsActive := 0
 
@@ -39,39 +36,78 @@ func RandomString(size int, Uppercase bool, Lowercase bool, Numbers bool, Specia
 		optionsActive++
 	}
 
-	// partialResult makes sure that at least ONE element is added from each category the user selects
-	var partialResult []rune
-	if Uppercase {
-		partialResult = append(partialResult, uppercase[rand.Intn(len(uppercase))])
-	}
-	if Lowercase {
-		partialResult = append(partialResult, lowercase[rand.Intn(len(lowercase))])
-	}
-	if Numbers {
-		partialResult = append(partialResult, numbers[rand.Intn(len(numbers))])
-	}
-	if Specials {
-		partialResult = append(partialResult, specials[rand.Intn(len(specials))])
-	}
-
 	// validate that the requested size is at least equal to the number of selected categories
 	if size < optionsActive {
 		return "", fmt.Errorf("password length [%v] must be at least equal to number of selected character classes [%v]", size, optionsActive)
 	}
 
+	// partialResult makes sure that at least ONE element is added from each category the user selects
+	var partialResult []rune
+	if Uppercase {
+		char, err := randomRune(uppercase)
+		if err != nil {
+			return "", err
+		}
+		partialResult = append(partialResult, char)
+	}
+	if Lowercase {
+		char, err := randomRune(lowercase)
+		if err != nil {
+			return "", err
+		}
+		partialResult = append(partialResult, char)
+	}
+	if Numbers {
+		char, err := randomRune(numbers)
+		if err != nil {
+			return "", err
+		}
+		partialResult = append(partialResult, char)
+	}
+	if Specials {
+		char, err := randomRune(specials)
+		if err != nil {
+			return "", err
+		}
+		partialResult = append(partialResult, char)
+	}
+
 	// finalResult is composed of 2 slices and because append always adds the second slice to the end of the first one, we use the last FOR to randomize everything
 	finalResult := make([]rune, size-optionsActive)
 	for i := range finalResult {
-		finalResult[i] = selectedList[rand.Intn(len(selectedList))]
+		char, err := randomRune(selectedList)
+		if err != nil {
+			return "", err
+		}
+		finalResult[i] = char
 	}
 	finalResult = append(finalResult, partialResult...)
 
 	// now that the finalResult is complete we shuffle everything
 	for x := len(finalResult) - 1; x > 0; x-- {
-		y := rng.Intn(x + 1)
-		finalResult[x], finalResult[y] = finalResult[y], finalResult[x]
+		index, err := randomIndex(x + 1)
+		if err != nil {
+			return "", err
+		}
+		finalResult[x], finalResult[index] = finalResult[index], finalResult[x]
 	}
 	return string(finalResult), nil
+}
+
+func randomRune(characters []rune) (rune, error) {
+	index, err := randomIndex(len(characters))
+	if err != nil {
+		return 0, err
+	}
+	return characters[index], nil
+}
+
+func randomIndex(limit int) (int, error) {
+	index, err := rand.Int(rand.Reader, big.NewInt(int64(limit)))
+	if err != nil {
+		return 0, fmt.Errorf("failed to generate secure random value: %w", err)
+	}
+	return int(index.Int64()), nil
 }
 
 // AddSecondDigit adds a leading zero to single-digit numbers

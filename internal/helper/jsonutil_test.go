@@ -93,13 +93,25 @@ func TestUnmarshalJSON(t *testing.T) {
 	tests := []struct {
 		name    string
 		input   []byte
-		want    map[string]any
+		want    any
 		wantErr bool
 	}{
 		{
 			name:    "valid JSON",
 			input:   []byte(`{"foo":"bar","baz":123}`),
 			want:    map[string]any{"foo": "bar", "baz": float64(123)},
+			wantErr: false,
+		},
+		{
+			name:    "valid JSON array",
+			input:   []byte(`[{"foo":"bar"}, 2]`),
+			want:    []any{map[string]any{"foo": "bar"}, float64(2)},
+			wantErr: false,
+		},
+		{
+			name:    "valid JSON scalar",
+			input:   []byte(`"hello"`),
+			want:    "hello",
 			wantErr: false,
 		},
 		{

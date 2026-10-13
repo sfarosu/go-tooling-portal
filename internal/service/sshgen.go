@@ -6,9 +6,10 @@ import (
 	"crypto/elliptic"
 	"crypto/rsa"
 	"crypto/x509"
+	"encoding/binary"
 	"encoding/pem"
 	"errors"
-	"math/rand"
+	"io"
 	"strconv"
 	"strings"
 
@@ -66,9 +67,13 @@ func generateEd25519Key(email string) (string, string, error) {
 
 	// Create a PEM block to encode the private key
 	// The PEM block contains the type "OPENSSH PRIVATE KEY" and the marshaled private key bytes
+	privateKeyBytes, err := marshalED25519PrivateKey(privateKey)
+	if err != nil {
+		return "", "", err
+	}
 	pemKey := &pem.Block{
 		Type:  "OPENSSH PRIVATE KEY",
-		Bytes: marshalED25519PrivateKey(privateKey), // marshals ed25519 correctly
+		Bytes: privateKeyBytes,
 	}
 
 	// Encode the PEM block to a byte slice
@@ -148,7 +153,7 @@ func generateRSAKey(bits int, email string) (string, string, error) {
 
 // The x509 package does not support marshaling ed25519 key types in the format used by openSSH
 // source: https://github.com/mikesmitty/edkey/blob/master/edkey.go#L10
-func marshalED25519PrivateKey(key ed25519.PrivateKey) []byte {
+func marshalED25519PrivateKey(key ed25519.PrivateKey) ([]byte, error) {
 	// Add our key header (followed by a null byte)
 	magic := append([]byte("openssh-key-v1"), 0)
 
@@ -173,7 +178,11 @@ func marshalED25519PrivateKey(key ed25519.PrivateKey) []byte {
 	}{}
 
 	// Set our check ints
-	ci := rand.Uint32()
+	var checkInts [4]byte
+	if _, err := io.ReadFull(cryptorand.Reader, checkInts[:]); err != nil {
+		return nil, err
+	}
+	ci := binary.BigEndian.Uint32(checkInts[:])
 	pk1.Check1 = ci
 	pk1.Check2 = ci
 
@@ -183,8 +192,7 @@ func marshalED25519PrivateKey(key ed25519.PrivateKey) []byte {
 	// Add the pubkey to the optionally-encrypted block
 	pk, ok := key.Public().(ed25519.PublicKey)
 	if !ok {
-		//fmt.Fprintln(os.Stderr, "ed25519.PublicKey type assertion failed on an ed25519 public key. This should never ever happen.")
-		return nil
+		return nil, errors.New("invalid Ed25519 public key")
 	}
 	pubKey := []byte(pk)
 	pk1.Pub = pubKey
@@ -222,5 +230,5 @@ func marshalED25519PrivateKey(key ed25519.PrivateKey) []byte {
 
 	magic = append(magic, ssh.Marshal(w)...)
 
-	return magic
+	return magic, nil
 }

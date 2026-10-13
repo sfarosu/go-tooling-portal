@@ -15,7 +15,7 @@ func TestMarshalYAML(t *testing.T) {
 	}{
 		{
 			name:    "simple map",
-			input:   map[string]interface{}{"foo": "bar", "baz": 123},
+			input:   map[string]any{"foo": "bar", "baz": 123},
 			want:    []string{"foo: bar", "baz: 123"},
 			wantErr: false,
 		},
@@ -49,13 +49,25 @@ func TestUnmarshalYAML(t *testing.T) {
 	tests := []struct {
 		name    string
 		input   []byte
-		want    map[string]interface{}
+		want    any
 		wantErr bool
 	}{
 		{
 			name:    "valid YAML",
 			input:   []byte("foo: bar\nbaz: 123\n"),
-			want:    map[string]interface{}{"foo": "bar", "baz": 123},
+			want:    map[string]any{"foo": "bar", "baz": 123},
+			wantErr: false,
+		},
+		{
+			name:    "valid YAML sequence",
+			input:   []byte("- first\n- second\n"),
+			want:    []any{"first", "second"},
+			wantErr: false,
+		},
+		{
+			name:    "valid YAML scalar",
+			input:   []byte("hello\n"),
+			want:    "hello",
 			wantErr: false,
 		},
 		{
@@ -67,7 +79,7 @@ func TestUnmarshalYAML(t *testing.T) {
 		{
 			name:    "empty input",
 			input:   []byte(""),
-			want:    map[string]interface{}{},
+			want:    nil,
 			wantErr: false,
 		},
 	}
@@ -79,16 +91,6 @@ func TestUnmarshalYAML(t *testing.T) {
 				return
 			}
 			if !tt.wantErr {
-				// Normalize nil and empty map for comparison
-				if got == nil && tt.want == nil {
-					return
-				}
-				if got == nil && len(tt.want) == 0 {
-					return
-				}
-				if tt.want == nil && len(got) == 0 {
-					return
-				}
 				if !reflect.DeepEqual(got, tt.want) {
 					t.Errorf("UnmarshalYAML() = [%v], want [%v]", got, tt.want)
 				}

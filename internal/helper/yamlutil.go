@@ -20,8 +20,8 @@ func MarshalYAML(data any) ([]byte, error) {
 }
 
 // UnmarshalYAML converts a YAML byte slice to a Go data structure
-func UnmarshalYAML(byteData []byte) (map[string]any, error) {
-	var yamlData map[string]any
+func UnmarshalYAML(byteData []byte) (any, error) {
+	var yamlData any
 	err := yaml.Unmarshal([]byte(byteData), &yamlData)
 	if err != nil {
 		return nil, fmt.Errorf("error unmarshaling YAML: %v", err)

@@ -3,6 +3,8 @@ package service
 import (
 	"strings"
 	"testing"
+
+	"golang.org/x/crypto/ssh"
 )
 
 func TestGenerateSSHKeyPair_Ed25519(t *testing.T) {
@@ -18,6 +20,9 @@ func TestGenerateSSHKeyPair_Ed25519(t *testing.T) {
 	}
 	if !strings.HasPrefix(priv, "-----BEGIN OPENSSH PRIVATE KEY-----") {
 		t.Errorf("Private key does not have expected header: %s", priv)
+	}
+	if _, err := ssh.ParseRawPrivateKey([]byte(priv)); err != nil {
+		t.Errorf("generated Ed25519 private key is invalid: %v", err)
 	}
 }
 

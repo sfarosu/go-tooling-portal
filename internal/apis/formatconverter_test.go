@@ -94,7 +94,7 @@ func TestFormatConverter_InvalidYAML(t *testing.T) {
 
 	router := setupTestAPI(RegisterFormatConverter)
 
-	yaml := "name Bob\nage 30" // invalid YAML
+	yaml := "name: [Bob\nage: 30" // invalid YAML
 	inputJSON, _ := json.Marshal(struct {
 		Input string `json:"input"`
 	}{Input: yaml})

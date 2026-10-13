@@ -94,7 +94,7 @@ func TestFormatConverterHtmx_InvalidInput(t *testing.T) {
 
 	bodyStruct := struct {
 		Input string `json:"input"`
-	}{Input: "invalid data !!!"}
+	}{Input: "invalid: [data"}
 
 	bodyJSON, _ := json.Marshal(bodyStruct)
 	req, _ := http.NewRequest("POST", "/api/formatconverter/htmx", bytes.NewReader(bodyJSON))

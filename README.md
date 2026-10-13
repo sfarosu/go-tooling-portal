@@ -34,8 +34,8 @@ ___
 
 ### Docker compose
 
-- Run it with: `docker-compose -f deployments/docker-compose/docker-compose.yaml up`
-- Stop it with: `docker-compose -f deployments/docker-compose/docker-compose.yaml down`
+- Run it with: `docker compose -f deployments/docker-compose/docker-compose.yaml up`
+- Stop it with: `docker compose -f deployments/docker-compose/docker-compose.yaml down`
 - Access it in your browser at: [http://localhost:8100](http://localhost:8100)
 
 ### Kubernetes

@@ -1,22 +1,20 @@
 # Builder image
-FROM --platform=linux/amd64 golang:1.27 AS builder
+FROM golang:1.27 AS builder
 
 WORKDIR /go/src/go-tooling-portal
 
 COPY . /go/src/go-tooling-portal
 
 ENV GO111MODULE=on \
-    GOOS=linux \
-    GOARCH=amd64 \
     CGO_ENABLED=0
 
 RUN go mod download && \
     go build -o go-tooling-portal -ldflags "-X 'github.com/sfarosu/go-tooling-portal/internal/version.BuildDate=$(date '+%Y-%m-%d %H:%M:%S')'-X 'github.com/sfarosu/go-tooling-portal/internal/version.GitShortHash=$(git rev-parse --short HEAD)'"
 
 # Run image
-FROM --platform=linux/amd64 alpine:3.23
+FROM alpine:3.24
 
-RUN apk update && apk add --no-cache --upgrade openssh-client openssl tzdata
+RUN apk add --no-cache tzdata
 
 WORKDIR /app
 

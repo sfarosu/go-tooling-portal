@@ -54,8 +54,8 @@ func MarshalJSONWithSpaces(data any, spaces int) ([]byte, error) {
 }
 
 // UnmarshalJSON converts a JSON byte slice to a Go data structure
-func UnmarshalJSON(byteData []byte) (map[string]any, error) {
-	var jsonData map[string]any
+func UnmarshalJSON(byteData []byte) (any, error) {
+	var jsonData any
 	err := json.Unmarshal([]byte(byteData), &jsonData)
 	if err != nil {
 		return nil, fmt.Errorf("error unmarshaling JSON: %v", err)
