@@ -16,6 +16,7 @@ import (
 	"github.com/sfarosu/go-tooling-portal/internal/helper"
 	"github.com/sfarosu/go-tooling-portal/internal/logger"
 	"github.com/sfarosu/go-tooling-portal/internal/version"
+	webassets "github.com/sfarosu/go-tooling-portal/web"
 	"go.uber.org/automaxprocs/maxprocs"
 )
 
@@ -101,9 +102,8 @@ func setupRouter() http.Handler {
 	apis.RegisterVersion(humaAPI)
 	apis.RegisterVersionHtmx(humaAPI)
 
-	// Serve static files and disable directory listing
-	router.Handle("/", http.StripPrefix("/", helper.DisableDirListing("web")(http.FileServer(http.Dir("web")))))
-	router.Handle("/assets/", http.StripPrefix("/assets", helper.DisableDirListing("web/assets")(http.FileServer(http.Dir("web/assets")))))
+	// Serve embedded static files and disable directory listing.
+	router.Handle("/", helper.DisableDirListing(webassets.Files)(http.FileServer(http.FS(webassets.Files))))
 
 	return apis.WrapHTMXValidationErrors(router)
 }

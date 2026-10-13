@@ -25,6 +25,8 @@ go build .
 
 By default, the app listens on port `8100`. Open [http://localhost:8100](http://localhost:8100). To choose another address or port, pass `-addr`, for example `go run . -addr :8080`.
 
+The web pages, stylesheets, scripts, and favicon are embedded in the Go binary, so a built executable can run without a separate `web/` directory.
+
 ## Tests and coverage
 
 Run all Go tests with:

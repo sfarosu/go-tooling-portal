@@ -18,7 +18,6 @@ RUN apk add --no-cache tzdata
 
 WORKDIR /app
 
-COPY ./web/ ./web
 COPY ./scripts/ ./scripts
 COPY --from=builder /go/src/go-tooling-portal/go-tooling-portal .
 

@@ -34,6 +34,38 @@ func Test_setupRouter(t *testing.T) {
 	}
 }
 
+func Test_setupRouterServesEmbeddedAssets(t *testing.T) {
+	router := setupRouter()
+	tests := []struct {
+		path         string
+		contentType  string
+		bodyContains string
+		status       int
+	}{
+		{path: "/", contentType: "text/html", bodyContains: "Go Tooling Portal", status: http.StatusOK},
+		{path: "/assets/styles.css", contentType: "text/css", bodyContains: "body {", status: http.StatusOK},
+		{path: "/assets/", contentType: "text/html", bodyContains: "404", status: http.StatusNotFound},
+	}
+
+	for _, test := range tests {
+		t.Run(test.path, func(t *testing.T) {
+			req := httptest.NewRequest(http.MethodGet, test.path, nil)
+			rr := httptest.NewRecorder()
+			router.ServeHTTP(rr, req)
+
+			if rr.Code != test.status {
+				t.Fatalf("GET %s returned status %d, want %d: %s", test.path, rr.Code, test.status, rr.Body.String())
+			}
+			if contentType := rr.Header().Get("Content-Type"); !strings.Contains(contentType, test.contentType) {
+				t.Errorf("GET %s Content-Type = %q, want it to contain %q", test.path, contentType, test.contentType)
+			}
+			if !strings.Contains(rr.Body.String(), test.bodyContains) {
+				t.Errorf("GET %s body does not contain %q", test.path, test.bodyContains)
+			}
+		})
+	}
+}
+
 func Test_setupRouterOpenAPIDocumentation(t *testing.T) {
 	router := setupRouter()
 	req := httptest.NewRequest(http.MethodGet, "/openapi.json", nil)

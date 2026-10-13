@@ -3,21 +3,17 @@ package helper
 import (
 	"net/http"
 	"net/http/httptest"
-	"os"
-	"path/filepath"
 	"testing"
+	"testing/fstest"
 )
 
 func TestDisableDirListing(t *testing.T) {
-	// Create a temporary directory structure for testing
-	tmpDir := t.TempDir()
-	// Create a directory and a file inside it
-	dirPath := filepath.Join(tmpDir, "dir")
-	filePath := filepath.Join(dirPath, "file.txt")
-	indexPath := filepath.Join(dirPath, "index.html")
-	os.Mkdir(dirPath, 0755)
-	os.WriteFile(filePath, []byte("file content"), 0644)
-	os.WriteFile(indexPath, []byte("index content"), 0644)
+	root := fstest.MapFS{
+		"404.html":       &fstest.MapFile{Data: []byte("custom not found")},
+		"dir/file.txt":   &fstest.MapFile{Data: []byte("file content")},
+		"dir/index.html": &fstest.MapFile{Data: []byte("index content")},
+		"empty/file.txt": &fstest.MapFile{Data: []byte("file content")},
+	}
 
 	// Handler that just writes "ok"
 	finalHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -25,33 +21,35 @@ func TestDisableDirListing(t *testing.T) {
 		w.Write([]byte("ok"))
 	})
 
-	middleware := DisableDirListing(tmpDir)(finalHandler)
+	middleware := DisableDirListing(root)(finalHandler)
 
 	tests := []struct {
 		name       string
 		path       string
-		setupIndex bool
 		wantStatus int
 		wantBody   string
 	}{
 		{
 			name:       "directory with index.html returns OK",
 			path:       "/dir/",
-			setupIndex: true,
 			wantStatus: http.StatusOK,
 			wantBody:   "ok",
 		},
 		{
 			name:       "directory without index.html returns 404",
-			path:       "/dir/",
-			setupIndex: false,
+			path:       "/empty/",
 			wantStatus: http.StatusNotFound,
-			wantBody:   "404 page not found\n",
+			wantBody:   "custom not found",
+		},
+		{
+			name:       "missing file returns custom 404",
+			path:       "/missing.txt",
+			wantStatus: http.StatusNotFound,
+			wantBody:   "custom not found",
 		},
 		{
 			name:       "file path passes through",
 			path:       "/dir/file.txt",
-			setupIndex: true,
 			wantStatus: http.StatusOK,
 			wantBody:   "ok",
 		},
@@ -59,13 +57,6 @@ func TestDisableDirListing(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			// Remove or create index.html as needed
-			if tt.setupIndex {
-				os.WriteFile(indexPath, []byte("index content"), 0644)
-			} else {
-				os.Remove(indexPath)
-			}
-
 			req := httptest.NewRequest("GET", tt.path, nil)
 			rr := httptest.NewRecorder()
 
