@@ -11,7 +11,7 @@ Install and configure:
 - Docker credentials that can push to `docker.io/sfarosu/go-tooling-portal`.
 - On Debian/Ubuntu systems building the ARM64 Docker image, `qemu-user-static` may also be required.
 
-The release prechecks require the `master` branch to be checked out, a clean working tree, and no existing `dist/` directory. Docker must be running, and the GitHub token and Docker login must be valid.
+The release prechecks require the `main` branch to be checked out, a clean working tree, and no existing `dist/` directory. Docker must be running, and the GitHub token and Docker login must be valid.
 
 ## Publish a release
 
@@ -21,11 +21,11 @@ First review the available targets:
 make help
 ```
 
-Then, from a clean checkout of `master`, pull the latest changes and run:
+Then, from a clean checkout of `main`, pull the latest changes and run:
 
 ```sh
-git checkout master
-git pull origin master
+git checkout main
+git pull origin main
 make all
 ```
 

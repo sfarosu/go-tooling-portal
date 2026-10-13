@@ -3,7 +3,7 @@
 BUMP_LEVEL := patch
 TOOLS := make git docker bumpversion go goreleaser
 DOCKER_REPO := docker.io/sfarosu/go-tooling-portal
-DEFAULT_GIT_BRANCH := master
+DEFAULT_GIT_BRANCH := main
 
 prechecks:
 	@echo "#################################"

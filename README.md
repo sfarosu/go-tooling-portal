@@ -22,7 +22,7 @@ ___
 ### Docker build
 
 - Make sure you have docker and git installed on your machine
-- Git clone the repo: `cd ~ && git clone https://github.com/sfarosu/go-tooling-portal.git && cd ~/go-tooling-portal && git checkout master`
+- Git clone the repo: `cd ~ && git clone https://github.com/sfarosu/go-tooling-portal.git && cd ~/go-tooling-portal && git checkout main`
 - Build the image: `cd ~/go-tooling-portal && docker build -t docker.io/sfarosu/go-tooling-portal:latest -f Dockerfile .`
 - Run the container daemonized : `docker run --rm -d -p 8100:8100 docker.io/sfarosu/go-tooling-portal`
 - Access it in your browser at: [http://localhost:8100](http://localhost:8100)
