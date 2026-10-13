@@ -4,7 +4,9 @@ RUN apk add --no-cache tzdata
 
 WORKDIR /app
 
-COPY go-tooling-portal /app/
+ARG TARGETOS
+ARG TARGETARCH
+COPY ${TARGETOS}/${TARGETARCH}/go-tooling-portal /app/
 COPY scripts/ /app/scripts
 
 RUN chown -R 10001:root /app && \
