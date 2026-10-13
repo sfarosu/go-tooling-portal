@@ -7,7 +7,6 @@ import (
 	"strconv"
 
 	"github.com/danielgtaylor/huma/v2"
-	"github.com/sfarosu/go-tooling-portal/internal/logger"
 	"github.com/sfarosu/go-tooling-portal/internal/service"
 )
 
@@ -89,7 +88,7 @@ func RegisterBase64ConverterHtmx(api huma.API) {
 		// Perform base64 conversion
 		base64Conversion, err := service.Base64Convert(input.Body.Input, input.Body.Operation, input.Body.Format)
 		if err != nil {
-			logger.Logger.Error(
+			logError(ctx,
 				"failed to process base64 conversion",
 				"input", input.Body.Input,
 				"operation", input.Body.Operation,
@@ -111,7 +110,7 @@ func RegisterBase64ConverterHtmx(api huma.API) {
 				"Base64Conversion": base64Conversion,
 			})
 			if err != nil {
-				logger.Logger.Error("failed to render base64 conversion result", "error", err)
+				logError(ctx, "failed to render base64 conversion result", "error", err)
 				return nil, huma.Error500InternalServerError("failed to render base64 conversion result")
 			}
 			resp := &Base64ConverterHTMXOutput{

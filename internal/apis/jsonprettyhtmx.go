@@ -94,7 +94,7 @@ func RegisterJsonPrettyHtmx(api huma.API) {
 			// Unpretty (minify) JSON
 			result, err := service.UnprettyJSON(input.Body.Input)
 			if err != nil {
-				logger.Logger.Error("failed to unpretty json", "input", input.Body.Input, "error", err)
+				logError(ctx, "failed to unpretty json", "input", input.Body.Input, "error", err)
 				if input.HtmxHeader {
 					return &JsonPrettyHTMXOutput{
 						ContentType: "text/html; charset=utf-8",
@@ -107,7 +107,7 @@ func RegisterJsonPrettyHtmx(api huma.API) {
 				body, err := renderHTMXTemplate(jsonPrettyResultTmpl, map[string]string{"ResultJSON": result})
 				if err != nil {
 					if logger.Logger != nil {
-						logger.Logger.Error("failed to render JSON prettifier result", "error", err)
+						logError(ctx, "failed to render JSON prettifier result", "error", err)
 					}
 					return nil, huma.Error500InternalServerError("failed to render JSON prettifier result")
 				}
@@ -132,7 +132,7 @@ func RegisterJsonPrettyHtmx(api huma.API) {
 		// Prettify JSON
 		result, err := service.PrettyJSONWithSpaces(input.Body.Input, spaces)
 		if err != nil {
-			logger.Logger.Error(
+			logError(ctx,
 				"failed to prettify json",
 				"input", input.Body.Input,
 				"spaces", input.Body.Spaces,
@@ -153,7 +153,7 @@ func RegisterJsonPrettyHtmx(api huma.API) {
 			})
 			if err != nil {
 				if logger.Logger != nil {
-					logger.Logger.Error("failed to render JSON prettifier result", "error", err)
+					logError(ctx, "failed to render JSON prettifier result", "error", err)
 				}
 				return nil, huma.Error500InternalServerError("failed to render JSON prettifier result")
 			}

@@ -8,7 +8,6 @@ import (
 	"strconv"
 
 	"github.com/danielgtaylor/huma/v2"
-	"github.com/sfarosu/go-tooling-portal/internal/logger"
 	"github.com/sfarosu/go-tooling-portal/internal/service"
 )
 
@@ -140,7 +139,7 @@ func RegisterSSHGenHtmx(api huma.API) {
 		// Generate the SSH key pair
 		privKey, pubKey, err := service.GenerateSSHKeyPair(input.Body.Algorithm, input.Body.EcdsaBits, input.Body.RsaBits, input.Body.Email)
 		if err != nil {
-			logger.Logger.Error(
+			logError(ctx,
 				"failed to generate ssh key pair",
 				"algorithm", input.Body.Algorithm,
 				"ecdsaBits", input.Body.EcdsaBits,
@@ -164,7 +163,7 @@ func RegisterSSHGenHtmx(api huma.API) {
 				"PublicKey":  pubKey,
 			})
 			if err != nil {
-				logger.Logger.Error("failed to render SSH key result", "error", err)
+				logError(ctx, "failed to render SSH key result", "error", err)
 				return nil, huma.Error500InternalServerError("failed to render SSH key result")
 			}
 			return &SSHGenHTMXOutput{

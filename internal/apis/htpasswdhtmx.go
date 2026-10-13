@@ -7,7 +7,6 @@ import (
 	"strconv"
 
 	"github.com/danielgtaylor/huma/v2"
-	"github.com/sfarosu/go-tooling-portal/internal/logger"
 	"github.com/sfarosu/go-tooling-portal/internal/service"
 )
 
@@ -89,7 +88,7 @@ func RegisterHtpasswdHtmx(api huma.API) {
 		// Generate htpasswd
 		generatedHtPassword, err := service.GenerateHtpasswd(input.Body.Username, input.Body.Password, input.Body.Algorithm)
 		if err != nil {
-			logger.Logger.Error(
+			logError(ctx,
 				"failed to generate htpasswd",
 				"username", input.Body.Username,
 				"algorithm", input.Body.Algorithm,
@@ -110,7 +109,7 @@ func RegisterHtpasswdHtmx(api huma.API) {
 				"Htpasswd": generatedHtPassword,
 			})
 			if err != nil {
-				logger.Logger.Error("failed to render htpasswd result", "error", err)
+				logError(ctx, "failed to render htpasswd result", "error", err)
 				return nil, huma.Error500InternalServerError("failed to render htpasswd result")
 			}
 			resp := &HtpasswdHTMXOutput{

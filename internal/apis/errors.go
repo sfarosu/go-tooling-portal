@@ -2,12 +2,16 @@ package apis
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"html/template"
 	"net/http"
 	"net/http/httptest"
 	"strings"
+
+	"github.com/sfarosu/go-tooling-portal/internal/logger"
+	"github.com/sfarosu/go-tooling-portal/internal/requestid"
 )
 
 // WrapHTMXValidationErrors converts HTMX schema-validation failures into
@@ -50,6 +54,13 @@ func WrapHTMXValidationErrors(next http.Handler) http.Handler {
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte(generateHTMXError(errors.New(strings.Join(messages, ": ")))))
 	})
+}
+
+func logError(ctx context.Context, message string, args ...any) {
+	if requestID := requestid.FromContext(ctx); requestID != "" {
+		args = append([]any{"request-id", requestID}, args...)
+	}
+	logger.Logger.Error(message, args...)
 }
 
 func copyResponse(w http.ResponseWriter, recorder *httptest.ResponseRecorder) {

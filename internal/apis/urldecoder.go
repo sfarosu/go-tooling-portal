@@ -41,7 +41,7 @@ func RegisterURLDecoder(api huma.API) {
 		result, err := service.URLDecode(input.Body.URL)
 		if err != nil {
 			if logger.Logger != nil {
-				logger.Logger.Error("failed to decode URL", "error", err)
+				logError(ctx, "failed to decode URL", "error", err)
 			}
 			return nil, huma.Error400BadRequest("URL decoding failed: " + err.Error())
 		}

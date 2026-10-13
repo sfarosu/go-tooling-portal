@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/sfarosu/go-tooling-portal/internal/logger"
+	"github.com/sfarosu/go-tooling-portal/internal/requestid"
 )
 
 type statusRecorder struct {
@@ -28,7 +29,7 @@ func loggingMiddleware(next http.Handler) http.Handler {
 		start := time.Now()
 		rec := &statusRecorder{ResponseWriter: w, status: 200}
 
-		reqID := getRequestID(r.Context())
+		reqID := requestid.FromContext(r.Context())
 
 		logger.Logger.Info(
 			"incoming-request",

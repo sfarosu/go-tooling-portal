@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/danielgtaylor/huma/v2"
-	"github.com/sfarosu/go-tooling-portal/internal/logger"
 	"github.com/sfarosu/go-tooling-portal/internal/service"
 )
 
@@ -60,7 +59,7 @@ func RegisterPassgen(api huma.API) {
 		// Generate password
 		generatedPassword, err := service.GeneratePassword(length, input.Body.Uppercase, input.Body.Lowercase, input.Body.Numbers, input.Body.Symbols)
 		if err != nil {
-			logger.Logger.Error(
+			logError(ctx,
 				"failed to generate password",
 				"length", length,
 				"uppercase", input.Body.Uppercase,

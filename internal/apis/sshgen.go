@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/danielgtaylor/huma/v2"
-	"github.com/sfarosu/go-tooling-portal/internal/logger"
 	"github.com/sfarosu/go-tooling-portal/internal/service"
 )
 
@@ -67,7 +66,7 @@ func RegisterSSHGen(api huma.API) {
 		// Generate SSH key pair
 		privKey, pubKey, err := service.GenerateSSHKeyPair(input.Body.Algorithm, input.Body.EcdsaBits, input.Body.RsaBits, input.Body.Email)
 		if err != nil {
-			logger.Logger.Error(
+			logError(ctx,
 				"failed to generate SSH key pair",
 				"algorithm", input.Body.Algorithm,
 				"ecdsaBits", input.Body.EcdsaBits,

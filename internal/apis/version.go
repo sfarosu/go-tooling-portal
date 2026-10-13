@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/danielgtaylor/huma/v2"
-	"github.com/sfarosu/go-tooling-portal/internal/logger"
 	"github.com/sfarosu/go-tooling-portal/internal/version"
 )
 
@@ -36,7 +35,7 @@ func RegisterVersion(api huma.API) {
 		},
 	}, func(ctx context.Context, input *struct{}) (*VersionOutput, error) {
 		if version.Version == "" {
-			logger.Logger.Error("internal server error, unable to retrieve api version information")
+			logError(ctx, "internal server error, unable to retrieve api version information")
 			return nil, huma.Error500InternalServerError("internal server error, unable to retrieve api version information")
 		}
 

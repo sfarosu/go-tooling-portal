@@ -162,7 +162,7 @@ func RegisterTimeConverterHtmx(api huma.API) {
 		result, err := service.TimeConvert(req)
 		if err != nil {
 			if logger.Logger != nil {
-				logger.Logger.Error(
+				logError(ctx,
 					"failed to process time conversion",
 					"epochToHumanMode", input.Body.EpochToHumanMode,
 					"humanToEpochMode", input.Body.HumanToEpochMode,
@@ -193,7 +193,7 @@ func RegisterTimeConverterHtmx(api huma.API) {
 			})
 			if err != nil {
 				if logger.Logger != nil {
-					logger.Logger.Error("failed to render time conversion result", "error", err)
+					logError(ctx, "failed to render time conversion result", "error", err)
 				}
 				return nil, huma.Error500InternalServerError("failed to render time conversion result")
 			}

@@ -8,7 +8,6 @@ import (
 	"strconv"
 
 	"github.com/danielgtaylor/huma/v2"
-	"github.com/sfarosu/go-tooling-portal/internal/logger"
 	"github.com/sfarosu/go-tooling-portal/internal/service"
 )
 
@@ -124,7 +123,7 @@ func RegisterPassgenHtmx(api huma.API) {
 		// Generate password
 		generatedPassword, err := service.GeneratePassword(length, uppercase, lowercase, numbers, symbols)
 		if err != nil {
-			logger.Logger.Error(
+			logError(ctx,
 				"failed to generate password",
 				"length", length,
 				"uppercase", uppercase,
@@ -147,7 +146,7 @@ func RegisterPassgenHtmx(api huma.API) {
 				"Password": generatedPassword,
 			})
 			if err != nil {
-				logger.Logger.Error("failed to render generated password", "error", err)
+				logError(ctx, "failed to render generated password", "error", err)
 				return nil, huma.Error500InternalServerError("failed to render generated password")
 			}
 			resp := &PassgenHTMXOutput{

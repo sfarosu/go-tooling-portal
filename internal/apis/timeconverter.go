@@ -89,7 +89,7 @@ func RegisterTimeConverter(api huma.API) {
 		result, err := service.TimeConvert(req)
 		if err != nil {
 			if logger.Logger != nil {
-				logger.Logger.Error(
+				logError(ctx,
 					"failed to process time conversion",
 					"epochToHumanMode", input.Body.EpochToHumanMode,
 					"humanToEpochMode", input.Body.HumanToEpochMode,

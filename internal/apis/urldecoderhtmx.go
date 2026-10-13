@@ -72,7 +72,7 @@ func RegisterURLDecoderHtmx(api huma.API) {
 		result, err := service.URLDecode(input.Body.URL)
 		if err != nil {
 			if logger.Logger != nil {
-				logger.Logger.Error("failed to decode URL", "error", err)
+				logError(ctx, "failed to decode URL", "error", err)
 			}
 			if input.HtmxHeader {
 				return &URLDecoderHTMXOutput{
@@ -90,7 +90,7 @@ func RegisterURLDecoderHtmx(api huma.API) {
 		var buffer bytes.Buffer
 		if err := urlDecoderResultTmpl.Execute(&buffer, map[string]string{"Result": result}); err != nil {
 			if logger.Logger != nil {
-				logger.Logger.Error("failed to render URL decoder result", "error", err)
+				logError(ctx, "failed to render URL decoder result", "error", err)
 			}
 			return nil, huma.Error500InternalServerError("failed to render URL decoder result")
 		}

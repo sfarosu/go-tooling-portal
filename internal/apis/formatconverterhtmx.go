@@ -7,7 +7,6 @@ import (
 	"strconv"
 
 	"github.com/danielgtaylor/huma/v2"
-	"github.com/sfarosu/go-tooling-portal/internal/logger"
 	"github.com/sfarosu/go-tooling-portal/internal/service"
 )
 
@@ -87,7 +86,7 @@ func RegisterFormatConverterHtmx(api huma.API) {
 		// Process format conversion
 		formatConversion, err := service.FormatConvert(input.Body.Input)
 		if err != nil {
-			logger.Logger.Error(
+			logError(ctx,
 				"failed to perform format conversion",
 				"input", input.Body.Input,
 				"error", err,
@@ -107,7 +106,7 @@ func RegisterFormatConverterHtmx(api huma.API) {
 				"FormatConversion": formatConversion,
 			})
 			if err != nil {
-				logger.Logger.Error("failed to render format conversion result", "error", err)
+				logError(ctx, "failed to render format conversion result", "error", err)
 				return nil, huma.Error500InternalServerError("failed to render format conversion result")
 			}
 			resp := &FormatConverterHTMXOutput{

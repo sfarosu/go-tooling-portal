@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/danielgtaylor/huma/v2"
-	"github.com/sfarosu/go-tooling-portal/internal/logger"
 	"github.com/sfarosu/go-tooling-portal/internal/service"
 )
 
@@ -46,7 +45,7 @@ func RegisterFormatConverter(api huma.API) {
 		// Process format conversion
 		formatConversion, err := service.FormatConvert(input.Body.Input)
 		if err != nil {
-			logger.Logger.Error(
+			logError(ctx,
 				"failed to perform format conversion",
 				"input", input.Body.Input,
 				"error", err,

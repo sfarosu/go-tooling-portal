@@ -1,12 +1,15 @@
 package server
 
 import (
+	"bytes"
 	"encoding/json"
+	"log/slog"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 
+	"github.com/sfarosu/go-tooling-portal/internal/logger"
 	"github.com/sfarosu/go-tooling-portal/internal/version"
 )
 
@@ -63,6 +66,40 @@ func Test_setupRouterServesEmbeddedAssets(t *testing.T) {
 				t.Errorf("GET %s body does not contain %q", test.path, test.bodyContains)
 			}
 		})
+	}
+}
+
+func Test_requestIDCorrelatesHandlerAndCompletionLogs(t *testing.T) {
+	previousLogger := logger.Logger
+	var logOutput bytes.Buffer
+	logger.Logger = slog.New(slog.NewTextHandler(&logOutput, nil))
+	t.Cleanup(func() {
+		logger.Logger = previousLogger
+	})
+
+	handler := requestIDMiddleware(loggingMiddleware(setupRouter()))
+	req := httptest.NewRequest(http.MethodPost, "/api/formatconverter", strings.NewReader(`{"input":"not: [valid"}`))
+	req.Header.Set("Content-Type", "application/json")
+	rr := httptest.NewRecorder()
+	handler.ServeHTTP(rr, req)
+
+	requestID := rr.Header().Get("X-Request-ID")
+	if requestID == "" {
+		t.Fatal("response is missing X-Request-ID")
+	}
+	if rr.Code != http.StatusBadRequest {
+		t.Fatalf("request returned status %d, want %d: %s", rr.Code, http.StatusBadRequest, rr.Body.String())
+	}
+
+	logs := logOutput.String()
+	if !strings.Contains(logs, `msg="failed to perform format conversion"`) {
+		t.Fatalf("handler error log missing: %s", logs)
+	}
+	if !strings.Contains(logs, `msg=request-completed`) {
+		t.Fatalf("request completion log missing: %s", logs)
+	}
+	if count := strings.Count(logs, `request-id=`+requestID); count < 3 {
+		t.Fatalf("request ID %q appears in %d log entries, want handler, incoming, and completion logs: %s", requestID, count, logs)
 	}
 }
 

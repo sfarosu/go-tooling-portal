@@ -71,7 +71,7 @@ func RegisterVersionHtmx(api huma.API) {
 	}, func(ctx context.Context, input *VersionHTMXInput) (*VersionHTMXOutput, error) {
 		// Validation: ensure we have version info
 		if version.Version == "" {
-			logger.Logger.Error("internal server error, unable to retrieve api version information")
+			logError(ctx, "internal server error, unable to retrieve api version information")
 
 			if input.HtmxHeader {
 				return &VersionHTMXOutput{
@@ -89,7 +89,7 @@ func RegisterVersionHtmx(api huma.API) {
 			})
 			if err != nil {
 				if logger.Logger != nil {
-					logger.Logger.Error("failed to render version result", "error", err)
+					logError(ctx, "failed to render version result", "error", err)
 				}
 				return nil, huma.Error500InternalServerError("failed to render version result")
 			}

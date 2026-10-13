@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/danielgtaylor/huma/v2"
-	"github.com/sfarosu/go-tooling-portal/internal/logger"
 	"github.com/sfarosu/go-tooling-portal/internal/service"
 )
 
@@ -50,7 +49,7 @@ func RegisterJsonPretty(api huma.API) {
 			// Unpretty (minify) JSON
 			result, err := service.UnprettyJSON(input.Body.Input)
 			if err != nil {
-				logger.Logger.Error(
+				logError(ctx,
 					"failed to unpretty json",
 					"input", input.Body.Input,
 					"error", err,
@@ -70,7 +69,7 @@ func RegisterJsonPretty(api huma.API) {
 
 		prettyfiedJSON, err := service.PrettyJSONWithSpaces(input.Body.Input, input.Body.Spaces)
 		if err != nil {
-			logger.Logger.Error(
+			logError(ctx,
 				"failed to prettify json",
 				"input", input.Body.Input,
 				"spaces", input.Body.Spaces,
