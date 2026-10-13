@@ -52,49 +52,25 @@ release:
     owner: sfarosu
     name: go-tooling-portal
 
-# If running on Debian, make sure `qemu-user-static` package is installed; needed by docker to build against arm64 arch
-dockers:
-  - dockerfile: Dockerfile-Goreleaser
-    use: buildx
-    goos: linux
-    goarch: amd64
-    image_templates:
-      - "docker.io/sfarosu/{{ .ProjectName }}:latest-amd64"
-      - "docker.io/sfarosu/{{ .ProjectName }}:{{ .Version }}-amd64"
-    build_flag_templates:
-      - "--pull"
-      - "--platform=linux/amd64"
-      - "--label=org.opencontainers.image.created={{ .Date }}"
-      - "--label=org.opencontainers.image.title={{ .ProjectName }}"
-      - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
-      - "--label=org.opencontainers.image.version={{ .Version }}"
+dockers_v2:
+  - id: multi-arch
+    dockerfile: Dockerfile-Goreleaser
+    ids:
+      - release-build
+    images:
+      - "docker.io/sfarosu/{{ .ProjectName }}"
+    tags:
+      - latest
+      - "{{ .Version }}"
+    platforms:
+      - linux/amd64
+      - linux/arm64
+    flags:
+      - --pull
+    labels:
+      org.opencontainers.image.created: "{{ .Date }}"
+      org.opencontainers.image.title: "{{ .ProjectName }}"
+      org.opencontainers.image.revision: "{{ .FullCommit }}"
+      org.opencontainers.image.version: "{{ .Version }}"
     extra_files:
       - scripts
-
-  - dockerfile: Dockerfile-Goreleaser
-    use: buildx
-    goos: linux
-    goarch: arm64
-    image_templates:
-      - "docker.io/sfarosu/{{ .ProjectName }}:latest-arm64"
-      - "docker.io/sfarosu/{{ .ProjectName }}:{{ .Version }}-arm64"
-    build_flag_templates:
-      - "--pull"
-      - "--platform=linux/arm64"
-      - "--label=org.opencontainers.image.created={{ .Date }}"
-      - "--label=org.opencontainers.image.title={{ .ProjectName }}"
-      - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
-      - "--label=org.opencontainers.image.version={{ .Version }}"
-    extra_files:
-      - scripts
-
-docker_manifests:
-- name_template: "docker.io/sfarosu/{{ .ProjectName }}:latest"
-  image_templates:
-    - "docker.io/sfarosu/{{ .ProjectName }}:latest-amd64"
-    - "docker.io/sfarosu/{{ .ProjectName }}:latest-arm64"
-
-- name_template: "docker.io/sfarosu/{{ .ProjectName }}:{{ .Version }}"
-  image_templates:
-    - "docker.io/sfarosu/{{ .ProjectName }}:{{ .Version }}-amd64"
-    - "docker.io/sfarosu/{{ .ProjectName }}:{{ .Version }}-arm64"
