@@ -31,8 +31,6 @@ archives:
     ids:
       - release-build
     formats: [ 'tar.gz' ]
-    files:
-      - web
 
 checksum:
   name_template: 'checksums.txt'
@@ -72,7 +70,6 @@ dockers:
       - "--label=org.opencontainers.image.version={{ .Version }}"
     extra_files:
       - scripts
-      - web
 
   - dockerfile: Dockerfile-Goreleaser
     use: buildx
@@ -90,7 +87,6 @@ dockers:
       - "--label=org.opencontainers.image.version={{ .Version }}"
     extra_files:
       - scripts
-      - web
 
 docker_manifests:
 - name_template: "docker.io/sfarosu/{{ .ProjectName }}:latest"

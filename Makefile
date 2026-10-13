@@ -1,9 +1,9 @@
-.PHONY: prechecks tests bumpversion gitpushtags goreleaser help
+.PHONY: prechecks unit-tests bumpversion gitpushtags goreleaser help
 
 BUMP_LEVEL := patch
 TOOLS := make git docker bumpversion go goreleaser
 DOCKER_REPO := docker.io/sfarosu/go-tooling-portal
-DEFAULT_GIT_BRANCH := master
+DEFAULT_GIT_BRANCH := main
 
 prechecks:
 	@echo "#################################"
@@ -68,14 +68,14 @@ prechecks:
 		echo "Verify git repo state ... repository is clean"; \
 	fi
 
-tests:
+unit-tests:
 	@echo "####################################"
-	@echo "######### Running go tests #########"
-	@if ! go test ./... -count=1; then \
-		echo "Go tests failed"; \
+	@echo "######### Running go unit tests #########"
+	@if ! go test -coverprofile=coverage.out ./... -count=1; then \
+		echo "Go unit tests failed"; \
 		exit 1; \
 	else \
-		echo "All go tests passed successfully"; \
+		echo "All go unit tests passed successfully"; \
 	fi
 
 bumpversion:
@@ -108,12 +108,12 @@ goreleaser:
 		echo "goreleaser release successful"; \
 	fi
 
-all: prechecks tests bumpversion gitpushtags goreleaser
+all: prechecks unit-tests bumpversion gitpushtags goreleaser
 
 help:
 	@echo "Available targets:"
 	@echo "  prechecks:       run a set of verifications before doing anything"
-	@echo "  tests:           run a set of unit tests"
+	@echo "  unit-tests:      run a set of unit tests"
 	@echo "  bumpversion:     increment the program version"
 	@echo "  gitpushtags:     publish the commit and tags created by bumpversion"
 	@echo "  goreleaser:      create a GitHub release"
