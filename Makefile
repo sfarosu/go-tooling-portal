@@ -3,6 +3,7 @@
 BUMP_LEVEL := patch
 TOOLS := make git docker bumpversion go goreleaser
 DOCKER_REPO := docker.io/sfarosu/go-tooling-portal
+DOCKER_REGISTRY := docker.io
 DEFAULT_GIT_BRANCH := main
 
 prechecks:
@@ -47,11 +48,12 @@ prechecks:
 		echo "Verify if [dist] folder exists ... success, does not exist"; \
 	fi
 
-	@if ! docker login $(DOCKER_REPO) >/dev/null 2>&1; then \
+	@if ! docker login $(DOCKER_REGISTRY) >/dev/null 2>&1; then \
 		echo "Verify docker login ... ERROR, docker login failed"; \
 		exit 1; \
 	else \
-		echo "Verify docker login ... docker login successful"; \
+		echo "Verify docker login ... authenticated to $(DOCKER_REGISTRY)"; \
+		echo "Ensure the Docker Hub account has Read & Write access to $(DOCKER_REPO)"; \
 	fi
 	
 	@if [ $$(git rev-parse --abbrev-ref HEAD) != $(DEFAULT_GIT_BRANCH) ]; then \
