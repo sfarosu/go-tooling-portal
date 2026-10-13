@@ -10,8 +10,8 @@ import (
 	"strings"
 )
 
-// WrapHTMXValidationErrors converts Huma schema-validation responses into
-// fragments that HTMX can display, without changing regular API responses.
+// WrapHTMXValidationErrors converts HTMX schema-validation failures into
+// swappable HTML fragments while preserving regular API responses.
 func WrapHTMXValidationErrors(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Header.Get("HX-Request") != "true" || !strings.HasPrefix(r.URL.Path, "/api/") || !strings.HasSuffix(r.URL.Path, "/htmx") {
@@ -72,12 +72,12 @@ func renderHTMXTemplate(tmpl *template.Template, data any) ([]byte, error) {
 	return buffer.Bytes(), nil
 }
 
+// generateHTMXError builds an escaped alert fragment for an HTMX result target.
 func generateHTMXError(err error) string {
 	content := `
 <div class="d-flex justify-content-center">
-  <div style="max-width: 680px; width: 100%;">
-    <textarea class="form-control custom-output is-invalid"
-	  readonly aria-label="error" rows="2">ERROR: ` + template.HTMLEscapeString(err.Error()) + `</textarea>
+  <div class="alert htmx-error-alert mb-0" role="alert" style="max-width: 680px; width: 100%; padding: 0.75rem 1rem; border: 1px solid #dc3545; border-radius: 0.375rem; background-color: #b02a37; color: #fff;">
+    <strong>ERROR:</strong> ` + template.HTMLEscapeString(err.Error()) + `
   </div>
 </div>`
 	return content

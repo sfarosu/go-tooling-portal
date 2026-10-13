@@ -82,7 +82,7 @@ func TestSSHGenHtmx_MissingBits(t *testing.T) {
 	if rr.Code != http.StatusOK {
 		t.Errorf("Expected status 200 with HTMX error fragment, got %d, response body %v", rr.Code, rr.Body.String())
 	}
-	if !strings.Contains(rr.Body.String(), "ERROR: ecdsaBits is required for ECDSA algorithm") {
+	if !strings.Contains(rr.Body.String(), `role="alert"`) || !strings.Contains(rr.Body.String(), "ecdsaBits is required for ECDSA algorithm") {
 		t.Errorf("Expected error message for missing ecdsaBits, got: %s", rr.Body.String())
 	}
 }

@@ -96,7 +96,6 @@ func RegisterJsonPrettyHtmx(api huma.API) {
 			if err != nil {
 				logger.Logger.Error("failed to unpretty json", "input", input.Body.Input, "error", err)
 				if input.HtmxHeader {
-					// If it's a htmx request, return an HTML fragment with the error content (return code will be 200 as we want to display it in the UI)
 					return &JsonPrettyHTMXOutput{
 						ContentType: "text/html; charset=utf-8",
 						Body:        []byte(generateHTMXError(err)),
@@ -139,7 +138,6 @@ func RegisterJsonPrettyHtmx(api huma.API) {
 				"spaces", input.Body.Spaces,
 				"error", err)
 			if input.HtmxHeader {
-				// If it's a htmx request, return an HTML fragment with the error content (return code will be 200 as we want to display it in the UI)
 				return &JsonPrettyHTMXOutput{
 					ContentType: "text/html; charset=utf-8",
 					Body:        []byte(generateHTMXError(err)),

@@ -109,11 +109,11 @@ func TestFormatConverterHtmx_InvalidInput(t *testing.T) {
 		t.Errorf("Expected status 200, got %d, response body %v", rr.Code, rr.Body.String())
 	}
 
-	// Extract error text from <textarea>
-	re := regexp.MustCompile(`<textarea[^>]*>([\s\S]*?)</textarea>`)
+	// Extract error text from the alert fragment.
+	re := regexp.MustCompile(`<div class="alert htmx-error-alert mb-0" role="alert"[^>]*>\s*<strong>ERROR:</strong>\s*([\s\S]*?)\s*</div>`)
 	matches := re.FindStringSubmatch(rr.Body.String())
 	if len(matches) < 2 {
-		t.Fatalf("Could not find <textarea> content in HTML")
+		t.Fatalf("Could not find error alert in HTML: %s", rr.Body.String())
 	}
 	errorText := matches[1]
 

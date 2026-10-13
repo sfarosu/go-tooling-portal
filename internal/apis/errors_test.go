@@ -70,6 +70,11 @@ func TestWrapHTMXValidationErrors(t *testing.T) {
 
 func TestGenerateHTMXErrorEscapesHTML(t *testing.T) {
 	result := generateHTMXError(fmt.Errorf("<script>alert(1)</script>"))
+	if !strings.Contains(result, `class="alert htmx-error-alert`) ||
+		!strings.Contains(result, `role="alert"`) ||
+		!strings.Contains(result, `background-color: #b02a37`) {
+		t.Errorf("expected an accessible Bootstrap error alert, got: %s", result)
+	}
 	if strings.Contains(result, "<script>") {
 		t.Fatalf("error fragment contains unescaped markup: %s", result)
 	}

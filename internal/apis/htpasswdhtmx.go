@@ -96,7 +96,6 @@ func RegisterHtpasswdHtmx(api huma.API) {
 				"error", err,
 			)
 			if input.HtmxHeader {
-				// If it's a htmx request, return an HTML fragment with the error content (return code will be 200 as we want to display it in the UI)
 				return &HtpasswdHTMXOutput{
 					ContentType: "text/html; charset=utf-8",
 					Body:        []byte(generateHTMXError(err)),
