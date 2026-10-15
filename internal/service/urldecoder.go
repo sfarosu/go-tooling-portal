@@ -6,7 +6,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/sfarosu/go-tooling-portal/internal/helper"
+	"github.com/sfarosu/go-tooling-portal/internal/util/generalutil"
 )
 
 type URLDecodedData struct {
@@ -56,7 +56,7 @@ func URLDecode(input string) (string, error) {
 		}
 	}
 
-	result, err := helper.MarshalYAML(decoded)
+	result, err := generalutil.MarshalYAML(decoded)
 	if err != nil {
 		return "", fmt.Errorf("error formatting decoded URL: %w", err)
 	}

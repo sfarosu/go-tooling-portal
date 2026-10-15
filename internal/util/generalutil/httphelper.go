@@ -1,4 +1,4 @@
-package helper
+package generalutil
 
 import (
 	"io/fs"

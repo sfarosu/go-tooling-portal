@@ -13,8 +13,8 @@ import (
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humago"
 	"github.com/sfarosu/go-tooling-portal/internal/apis"
-	"github.com/sfarosu/go-tooling-portal/internal/helper"
 	"github.com/sfarosu/go-tooling-portal/internal/logger"
+	"github.com/sfarosu/go-tooling-portal/internal/util/generalutil"
 	"github.com/sfarosu/go-tooling-portal/internal/version"
 	webassets "github.com/sfarosu/go-tooling-portal/web"
 	"go.uber.org/automaxprocs/maxprocs"
@@ -103,7 +103,7 @@ func setupRouter() http.Handler {
 	apis.RegisterVersionHtmx(humaAPI)
 
 	// Serve embedded static files and disable directory listing.
-	router.Handle("/", helper.DisableDirListing(webassets.Files)(http.FileServer(http.FS(webassets.Files))))
+	router.Handle("/", generalutil.DisableDirListing(webassets.Files)(http.FileServer(http.FS(webassets.Files))))
 
 	return apis.WrapHTMXValidationErrors(router)
 }

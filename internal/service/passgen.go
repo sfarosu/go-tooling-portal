@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/sfarosu/go-tooling-portal/internal/helper"
+	"github.com/sfarosu/go-tooling-portal/internal/util/generalutil"
 )
 
 // GeneratePassword produces a random password with the requested length and character classes.
@@ -22,8 +22,8 @@ func GeneratePassword(length int, uppercase, lowercase, numbers, symbols bool) (
 		return "", errors.New("at least one character class must be selected")
 	}
 
-	// helper.RandomString returns a generated string based on the options
-	pwd, err := helper.RandomString(length, uppercase, lowercase, numbers, symbols)
+	// RandomString returns a generated string based on the options.
+	pwd, err := generalutil.RandomString(length, uppercase, lowercase, numbers, symbols)
 	if err != nil {
 		return "", err
 	}

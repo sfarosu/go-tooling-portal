@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/sfarosu/go-tooling-portal/internal/helper"
+	"github.com/sfarosu/go-tooling-portal/internal/util/generalutil"
 )
 
 // TimeConvertRequest contains the input data for time conversion operations.
@@ -70,7 +70,7 @@ func TimeConvert(req *TimeConvertRequest) (*TimeConvertResult, error) {
 		epochToHuman = true
 		precision := req.Precision
 		if precision == "" {
-			switch helper.GetNumberDigitsAmmount(req.EpochTime) {
+			switch generalutil.GetNumberDigitsAmmount(req.EpochTime) {
 			case 9, 10:
 				precision = "seconds"
 			case 12, 13:
@@ -78,7 +78,7 @@ func TimeConvert(req *TimeConvertRequest) (*TimeConvertResult, error) {
 			case 15, 16:
 				precision = "micros"
 			default:
-				return nil, fmt.Errorf("invalid epoch time precision: %d digits", helper.GetNumberDigitsAmmount(req.EpochTime))
+				return nil, fmt.Errorf("invalid epoch time precision: %d digits", generalutil.GetNumberDigitsAmmount(req.EpochTime))
 			}
 		}
 		switch precision {
