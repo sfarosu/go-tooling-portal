@@ -6,7 +6,7 @@ Go Tooling Portal is a self-hosted web app with developer utilities and an HTTP 
 ## Layout
 - `internal/service/`: tool implementations
 - `internal/apis/`: HTTP and HTMX handlers
-- `internal/server/`: routing, middleware, and server setup
+- `internal/httpserver/`: HTTP routing, middleware, and server setup
 - `internal/mcpserver/`: MCP tools that proxy to the JSON API
 - `internal/util/generalutil/`: shared general-purpose utilities
 - `web/`: HTML, CSS, JavaScript, and embed declaration

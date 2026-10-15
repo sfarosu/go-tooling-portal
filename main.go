@@ -6,8 +6,8 @@ import (
 
 	"flag"
 
+	"github.com/sfarosu/go-tooling-portal/internal/httpserver"
 	"github.com/sfarosu/go-tooling-portal/internal/logger"
-	"github.com/sfarosu/go-tooling-portal/internal/server"
 )
 
 func init() {
@@ -21,5 +21,5 @@ func main() {
 
 	logger.Init(*logLevel)
 
-	server.Start(*addr)
+	httpserver.Start(*addr)
 }
