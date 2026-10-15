@@ -46,3 +46,15 @@ Summarize coverage by function with `go tool cover -func=coverage.out`, or creat
 ## API documentation
 
 With the app running, open the interactive API documentation at [http://localhost:8100/docs](http://localhost:8100/docs). The OpenAPI specification is available at [http://localhost:8100/openapi.json](http://localhost:8100/openapi.json).
+
+The stateless Streamable HTTP MCP endpoint is available at `http://localhost:8100/mcp`. It exposes tools for the JSON API operations and proxies calls through the app's HTTP API; HTMX endpoints are not exposed as MCP tools.
+
+### Test the MCP server with MCP Inspector
+
+With the app running locally, start the [MCP Inspector](https://github.com/modelcontextprotocol/inspector) in another terminal:
+
+```sh
+HOST=127.0.0.1 npx @modelcontextprotocol/inspector
+```
+
+Open the Inspector at [http://localhost:6274](http://localhost:6274), select **Streamable HTTP**, and connect to `http://localhost:8100/mcp`. Binding Inspector to `127.0.0.1` keeps its local servers on loopback and avoids relying on a hostname such as `desktop` that may not resolve on the developer's machine.
