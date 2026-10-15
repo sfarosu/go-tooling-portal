@@ -5,9 +5,11 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/sfarosu/go-tooling-portal/internal/logger"
+	"github.com/sfarosu/go-tooling-portal/internal/metrics"
 	"github.com/sfarosu/go-tooling-portal/internal/requestid"
 )
 
@@ -67,6 +69,13 @@ func loggingMiddleware(next http.Handler) http.Handler {
 		logger.Logger.Info(component+"-incoming-request", requestLogArgs...)
 
 		next.ServeHTTP(rec, r)
+
+		if component == "api" && strings.HasPrefix(r.URL.Path, "/api/") {
+			metrics.RecordAPIRequest(r.URL.Path)
+		}
+		if component == "mcp" && toolName != "" {
+			metrics.RecordMCPToolCall(toolName)
+		}
 
 		duration := time.Since(start).Milliseconds()
 		completionLogArgs := []any{

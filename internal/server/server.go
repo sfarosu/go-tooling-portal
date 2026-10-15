@@ -16,6 +16,7 @@ import (
 	"github.com/sfarosu/go-tooling-portal/internal/apis"
 	"github.com/sfarosu/go-tooling-portal/internal/logger"
 	"github.com/sfarosu/go-tooling-portal/internal/mcpserver"
+	"github.com/sfarosu/go-tooling-portal/internal/metrics"
 	"github.com/sfarosu/go-tooling-portal/internal/util/generalutil"
 	"github.com/sfarosu/go-tooling-portal/internal/version"
 	webassets "github.com/sfarosu/go-tooling-portal/web"
@@ -123,14 +124,26 @@ func setupRouter(apiBaseURL string) (http.Handler, error) {
 	apis.RegisterVersion(humaAPI)
 	apis.RegisterVersionHtmx(humaAPI)
 
+	apiEndpoints := make([]string, 0, len(humaAPI.OpenAPI().Paths))
+	for path := range humaAPI.OpenAPI().Paths {
+		apiEndpoints = append(apiEndpoints, path)
+	}
+	metrics.InitializeAPIEndpoints(apiEndpoints)
+
 	mcpHandler, err := mcpserver.NewHandler(apiBaseURL)
 	if err != nil {
 		return nil, fmt.Errorf("create MCP handler: %w", err)
 	}
 	router.Handle("/mcp", mcpHandler)
+	router.Handle("/metrics", metrics.Handler())
 
 	// Serve embedded static files and disable directory listing.
 	router.Handle("/", generalutil.DisableDirListing(webassets.Files)(http.FileServer(http.FS(webassets.Files))))
+
+	endpoints := []string{"/", "/docs", "/metrics", "/mcp"}
+	if logger.Logger != nil {
+		logger.Logger.Info("http-endpoints-registered", "endpoints", endpoints)
+	}
 
 	return apis.WrapHTMXValidationErrors(router), nil
 }

@@ -15,6 +15,7 @@ import (
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	"github.com/sfarosu/go-tooling-portal/internal/logger"
+	"github.com/sfarosu/go-tooling-portal/internal/metrics"
 )
 
 func TestMCPToolsProxyToAPIWithRequestIDs(t *testing.T) {
@@ -91,6 +92,13 @@ func TestMCPToolsProxyToAPIWithRequestIDs(t *testing.T) {
 	}
 	if !reflect.DeepEqual(names, wantNames) {
 		t.Fatalf("MCP tools = %v, want %v", names, wantNames)
+	}
+	metricsResponse := httptest.NewRecorder()
+	metrics.Handler().ServeHTTP(metricsResponse, httptest.NewRequest(http.MethodGet, "/metrics", nil))
+	for _, name := range wantNames {
+		if !strings.Contains(metricsResponse.Body.String(), `tool="`+name+`"`) {
+			t.Errorf("MCP metrics missing zero-value tool series %q: %s", name, metricsResponse.Body.String())
+		}
 	}
 	urlDecoderSchemaFound := false
 	for _, tool := range tools.Tools {

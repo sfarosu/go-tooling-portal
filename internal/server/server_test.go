@@ -3,6 +3,7 @@ package server
 import (
 	"bytes"
 	"encoding/json"
+	"io"
 	"log/slog"
 	"net"
 	"net/http"
@@ -11,6 +12,7 @@ import (
 	"testing"
 
 	"github.com/sfarosu/go-tooling-portal/internal/logger"
+	"github.com/sfarosu/go-tooling-portal/internal/metrics"
 	"github.com/sfarosu/go-tooling-portal/internal/version"
 )
 
@@ -41,6 +43,29 @@ func Test_setupRouter(t *testing.T) {
 	}
 }
 
+func Test_setupRouterLogsRegisteredHTTPEndpoints(t *testing.T) {
+	previousLogger := logger.Logger
+	var logOutput bytes.Buffer
+	logger.Logger = slog.New(slog.NewTextHandler(&logOutput, nil))
+	t.Cleanup(func() {
+		logger.Logger = previousLogger
+	})
+
+	if _, err := setupRouter("http://127.0.0.1"); err != nil {
+		t.Fatalf("setupRouter() returned an error: %v", err)
+	}
+
+	logs := logOutput.String()
+	for _, endpoint := range []string{"/", "/docs", "/metrics", "/mcp"} {
+		if !strings.Contains(logs, endpoint) {
+			t.Errorf("startup endpoint log does not contain %q: %s", endpoint, logs)
+		}
+	}
+	if strings.Contains(logs, "/api/") || strings.Contains(logs, "/openapi.json") {
+		t.Fatalf("startup endpoint log contains detailed routes: %s", logs)
+	}
+}
+
 func Test_setupRouterServesEmbeddedAssets(t *testing.T) {
 	router, err := setupRouter("http://127.0.0.1")
 	if err != nil {
@@ -55,6 +80,7 @@ func Test_setupRouterServesEmbeddedAssets(t *testing.T) {
 		{path: "/", contentType: "text/html", bodyContains: "Go Tooling Portal", status: http.StatusOK},
 		{path: "/assets/styles.css", contentType: "text/css", bodyContains: "body {", status: http.StatusOK},
 		{path: "/assets/", contentType: "text/html", bodyContains: "404", status: http.StatusNotFound},
+		{path: "/metrics", contentType: "text/plain", status: http.StatusOK},
 	}
 
 	for _, test := range tests {
@@ -73,6 +99,74 @@ func Test_setupRouterServesEmbeddedAssets(t *testing.T) {
 				t.Errorf("GET %s body does not contain %q", test.path, test.bodyContains)
 			}
 		})
+	}
+}
+
+func Test_requestMetricsCountAPIEndpointsAndMCPTools(t *testing.T) {
+	previousLogger := logger.Logger
+	logger.Logger = slog.New(slog.NewTextHandler(io.Discard, nil))
+	t.Cleanup(func() {
+		logger.Logger = previousLogger
+	})
+
+	handler := loggingMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+
+	apiRequest := httptest.NewRequest(http.MethodGet, "/api/metrics-test", nil)
+	handler.ServeHTTP(httptest.NewRecorder(), apiRequest)
+
+	mcpRequest := httptest.NewRequest(
+		http.MethodPost,
+		"/mcp",
+		strings.NewReader(`{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"metrics-test-tool","arguments":{}}}`),
+	)
+	handler.ServeHTTP(httptest.NewRecorder(), mcpRequest)
+
+	metricsResponse := httptest.NewRecorder()
+	metrics.Handler().ServeHTTP(metricsResponse, httptest.NewRequest(http.MethodGet, "/metrics", nil))
+	if metricsResponse.Code != http.StatusOK {
+		t.Fatalf("GET /metrics returned status %d, want %d", metricsResponse.Code, http.StatusOK)
+	}
+	for _, metric := range []string{
+		`go_tooling_portal_api_requests_total{endpoint="/api/metrics-test"`,
+		`go_tooling_portal_mcp_tool_calls_total{`,
+		`tool="metrics-test-tool"`,
+	} {
+		if !strings.Contains(metricsResponse.Body.String(), metric) {
+			t.Errorf("metrics output missing %q: %s", metric, metricsResponse.Body.String())
+		}
+	}
+	if strings.Contains(metricsResponse.Body.String(), `namespace="go-tooling-portal"`) {
+		t.Fatal("metrics output contains the removed namespace label")
+	}
+}
+
+func Test_setupRouterInitializesCountersForEveryAPIEndpoint(t *testing.T) {
+	router, err := setupRouter("http://127.0.0.1")
+	if err != nil {
+		t.Fatalf("setupRouter() returned an error: %v", err)
+	}
+
+	openAPIResponse := httptest.NewRecorder()
+	router.ServeHTTP(openAPIResponse, httptest.NewRequest(http.MethodGet, "/openapi.json", nil))
+	var document struct {
+		Paths map[string]json.RawMessage `json:"paths"`
+	}
+	if err := json.Unmarshal(openAPIResponse.Body.Bytes(), &document); err != nil {
+		t.Fatalf("decode OpenAPI document: %v", err)
+	}
+
+	metricsResponse := httptest.NewRecorder()
+	metrics.Handler().ServeHTTP(metricsResponse, httptest.NewRequest(http.MethodGet, "/metrics", nil))
+	for path := range document.Paths {
+		if !strings.HasPrefix(path, "/api/") {
+			continue
+		}
+		series := `endpoint="` + path + `"`
+		if !strings.Contains(metricsResponse.Body.String(), series) {
+			t.Errorf("metrics output missing endpoint series %q", path)
+		}
 	}
 }
 

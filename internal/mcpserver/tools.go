@@ -11,6 +11,7 @@ import (
 	"github.com/google/jsonschema-go/jsonschema"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	"github.com/sfarosu/go-tooling-portal/internal/logger"
+	"github.com/sfarosu/go-tooling-portal/internal/metrics"
 	"github.com/sfarosu/go-tooling-portal/internal/requestid"
 )
 
@@ -244,6 +245,7 @@ func registerTool[In any](
 	if err != nil {
 		return fmt.Errorf("infer input schema for tool %q: %w", name, err)
 	}
+	metrics.InitializeMCPTool(name)
 	if configureSchema != nil {
 		configureSchema(inputSchema)
 	}

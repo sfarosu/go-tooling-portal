@@ -49,6 +49,8 @@ With the app running, open the interactive API documentation at [http://localhos
 
 The stateless Streamable HTTP MCP endpoint is available at `http://localhost:8100/mcp`. It exposes tools for the JSON API operations and proxies calls through the app's HTTP API; HTMX endpoints are not exposed as MCP tools.
 
+Prometheus metrics are exposed at `http://localhost:8100/metrics`.
+
 ### Test the MCP server with MCP Inspector
 
 With the app running locally, start the [MCP Inspector](https://github.com/modelcontextprotocol/inspector) in another terminal:
