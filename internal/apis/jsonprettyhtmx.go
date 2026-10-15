@@ -94,7 +94,7 @@ func RegisterJsonPrettyHtmx(api huma.API) {
 			// Unpretty (minify) JSON
 			result, err := service.UnprettyJSON(input.Body.Input)
 			if err != nil {
-				logError(ctx, "failed to unpretty json", "input", input.Body.Input, "error", err)
+				logError(ctx, "failed to unpretty json", "error", err)
 				if input.HtmxHeader {
 					return &JsonPrettyHTMXOutput{
 						ContentType: "text/html; charset=utf-8",
@@ -134,7 +134,6 @@ func RegisterJsonPrettyHtmx(api huma.API) {
 		if err != nil {
 			logError(ctx,
 				"failed to prettify json",
-				"input", input.Body.Input,
 				"spaces", input.Body.Spaces,
 				"error", err)
 			if input.HtmxHeader {

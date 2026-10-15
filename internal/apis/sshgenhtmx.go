@@ -144,7 +144,6 @@ func RegisterSSHGenHtmx(api huma.API) {
 				"algorithm", input.Body.Algorithm,
 				"ecdsaBits", input.Body.EcdsaBits,
 				"rsaBits", input.Body.RsaBits,
-				"email", input.Body.Email,
 				"error", err,
 			)
 			if input.HtmxHeader {

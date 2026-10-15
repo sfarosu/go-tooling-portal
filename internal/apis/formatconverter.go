@@ -47,7 +47,6 @@ func RegisterFormatConverter(api huma.API) {
 		if err != nil {
 			logError(ctx,
 				"failed to perform format conversion",
-				"input", input.Body.Input,
 				"error", err,
 			)
 			return nil, huma.Error400BadRequest("format conversion failed: " + err.Error())

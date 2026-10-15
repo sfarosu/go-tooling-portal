@@ -11,7 +11,7 @@ import (
 func TestSSHGen_Ed25519(t *testing.T) {
 	router := setupTestAPI(RegisterSSHGen)
 
-	body := `{"algorithm":"ed25519","ecdsaBits":"","rsaBits":"","email":"alice@example.com"}`
+	body := `{"algorithm":"ed25519"}`
 	req, _ := http.NewRequest("POST", "/api/sshgen", bytes.NewBufferString(body))
 	req.Header.Set("Content-Type", "application/json")
 
@@ -65,7 +65,7 @@ func TestSSHGen_RSA(t *testing.T) {
 func TestSSHGen_MissingBits(t *testing.T) {
 	router := setupTestAPI(RegisterSSHGen)
 
-	body := `{"algorithm":"ecdsa","ecdsaBits":"","rsaBits":"","email":"nobody@example.com"}`
+	body := `{"algorithm":"ecdsa"}`
 	req, _ := http.NewRequest("POST", "/api/sshgen", bytes.NewBufferString(body))
 	req.Header.Set("Content-Type", "application/json")
 

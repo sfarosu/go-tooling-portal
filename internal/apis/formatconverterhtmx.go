@@ -88,7 +88,6 @@ func RegisterFormatConverterHtmx(api huma.API) {
 		if err != nil {
 			logError(ctx,
 				"failed to perform format conversion",
-				"input", input.Body.Input,
 				"error", err,
 			)
 			if input.HtmxHeader {

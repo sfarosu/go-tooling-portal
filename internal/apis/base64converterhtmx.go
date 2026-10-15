@@ -90,7 +90,6 @@ func RegisterBase64ConverterHtmx(api huma.API) {
 		if err != nil {
 			logError(ctx,
 				"failed to process base64 conversion",
-				"input", input.Body.Input,
 				"operation", input.Body.Operation,
 				"format", input.Body.Format,
 				"error", err,

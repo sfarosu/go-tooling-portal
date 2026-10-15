@@ -90,7 +90,6 @@ func RegisterHtpasswdHtmx(api huma.API) {
 		if err != nil {
 			logError(ctx,
 				"failed to generate htpasswd",
-				"username", input.Body.Username,
 				"algorithm", input.Body.Algorithm,
 				"error", err,
 			)

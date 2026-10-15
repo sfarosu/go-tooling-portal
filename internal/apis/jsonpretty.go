@@ -51,7 +51,6 @@ func RegisterJsonPretty(api huma.API) {
 			if err != nil {
 				logError(ctx,
 					"failed to unpretty json",
-					"input", input.Body.Input,
 					"error", err,
 				)
 				return nil, huma.Error400BadRequest("failed to unpretty JSON: " + err.Error())
@@ -71,7 +70,6 @@ func RegisterJsonPretty(api huma.API) {
 		if err != nil {
 			logError(ctx,
 				"failed to prettify json",
-				"input", input.Body.Input,
 				"spaces", input.Body.Spaces,
 				"error", err)
 			return nil, huma.Error400BadRequest("failed to prettify JSON: " + err.Error())

@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"fmt"
+	"net"
 	"net/http"
 	"os"
 	"os/signal"
@@ -14,6 +15,7 @@ import (
 	"github.com/danielgtaylor/huma/v2/adapters/humago"
 	"github.com/sfarosu/go-tooling-portal/internal/apis"
 	"github.com/sfarosu/go-tooling-portal/internal/logger"
+	"github.com/sfarosu/go-tooling-portal/internal/mcpserver"
 	"github.com/sfarosu/go-tooling-portal/internal/util/generalutil"
 	"github.com/sfarosu/go-tooling-portal/internal/version"
 	webassets "github.com/sfarosu/go-tooling-portal/web"
@@ -36,12 +38,31 @@ func Start(addr string) {
 		logger.Logger.Error("error setting maxprocs", "error", errMax)
 	}
 
-	router := setupRouter()
+	listener, err := net.Listen("tcp", addr)
+	if err != nil {
+		logger.Logger.Error("error starting the server", "address", addr, "error", err)
+		os.Exit(1)
+	}
+
+	apiBaseURL, err := mcpAPIBaseURL(listener.Addr())
+	if err != nil {
+		_ = listener.Close()
+		logger.Logger.Error("error determining MCP API address", "address", listener.Addr(), "error", err)
+		os.Exit(1)
+	}
+
+	router, err := setupRouter(apiBaseURL)
+	if err != nil {
+		_ = listener.Close()
+		logger.Logger.Error("error setting up router", "error", err)
+		os.Exit(1)
+	}
 
 	srv := setupServer(addr, requestIDMiddleware(loggingMiddleware(router)))
 
-	err := startupLogging(addr)
+	err = startupLogging(addr)
 	if err != nil {
+		_ = listener.Close()
 		logger.Logger.Error("error during startup logging", "error", err)
 		os.Exit(1)
 	}
@@ -52,7 +73,7 @@ func Start(addr string) {
 
 	// Run server in a goroutine
 	go func() {
-		err := srv.ListenAndServe()
+		err := srv.Serve(listener)
 		if err != nil && err != http.ErrServerClosed {
 			logger.Logger.Error("error starting the server", "address", addr, "error", err)
 			os.Exit(1)
@@ -65,7 +86,7 @@ func Start(addr string) {
 }
 
 // setupRouter configures the HTTP router, registers the API endpoints, and static file serving
-func setupRouter() http.Handler {
+func setupRouter(apiBaseURL string) (http.Handler, error) {
 	router := http.NewServeMux()
 
 	// Register API endpoints
@@ -102,10 +123,33 @@ func setupRouter() http.Handler {
 	apis.RegisterVersion(humaAPI)
 	apis.RegisterVersionHtmx(humaAPI)
 
+	mcpHandler, err := mcpserver.NewHandler(apiBaseURL)
+	if err != nil {
+		return nil, fmt.Errorf("create MCP handler: %w", err)
+	}
+	router.Handle("/mcp", mcpHandler)
+
 	// Serve embedded static files and disable directory listing.
 	router.Handle("/", generalutil.DisableDirListing(webassets.Files)(http.FileServer(http.FS(webassets.Files))))
 
-	return apis.WrapHTMXValidationErrors(router)
+	return apis.WrapHTMXValidationErrors(router), nil
+}
+
+func mcpAPIBaseURL(addr net.Addr) (string, error) {
+	tcpAddr, ok := addr.(*net.TCPAddr)
+	if !ok {
+		return "", fmt.Errorf("expected TCP listener address, got %T", addr)
+	}
+
+	ip := tcpAddr.IP
+	if ip == nil || ip.IsUnspecified() {
+		if ip != nil && ip.To4() == nil {
+			ip = net.IPv6loopback
+		} else {
+			ip = net.IPv4(127, 0, 0, 1)
+		}
+	}
+	return "http://" + net.JoinHostPort(ip.String(), fmt.Sprint(tcpAddr.Port)), nil
 }
 
 // setupServer creates and configures the HTTP server.

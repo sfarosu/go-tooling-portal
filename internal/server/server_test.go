@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"log/slog"
+	"net"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -21,7 +22,10 @@ func Test_setupRouter(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			router := setupRouter()
+			router, err := setupRouter("http://127.0.0.1")
+			if err != nil {
+				t.Fatalf("setupRouter() returned an error: %v", err)
+			}
 			if router == nil {
 				t.Fatal("setupRouter() returned nil")
 			}
@@ -38,7 +42,10 @@ func Test_setupRouter(t *testing.T) {
 }
 
 func Test_setupRouterServesEmbeddedAssets(t *testing.T) {
-	router := setupRouter()
+	router, err := setupRouter("http://127.0.0.1")
+	if err != nil {
+		t.Fatalf("setupRouter() returned an error: %v", err)
+	}
 	tests := []struct {
 		path         string
 		contentType  string
@@ -77,9 +84,15 @@ func Test_requestIDCorrelatesHandlerAndCompletionLogs(t *testing.T) {
 		logger.Logger = previousLogger
 	})
 
-	handler := requestIDMiddleware(loggingMiddleware(setupRouter()))
+	router, err := setupRouter("http://127.0.0.1")
+	if err != nil {
+		t.Fatalf("setupRouter() returned an error: %v", err)
+	}
+	handler := requestIDMiddleware(loggingMiddleware(router))
 	req := httptest.NewRequest(http.MethodPost, "/api/formatconverter", strings.NewReader(`{"input":"not: [valid"}`))
 	req.Header.Set("Content-Type", "application/json")
+	mcpRequestID := "e6512b20-9ec9-4c42-b93b-d7fcf32440e7"
+	req.Header.Set("MCP-Request-ID", mcpRequestID)
 	rr := httptest.NewRecorder()
 	handler.ServeHTTP(rr, req)
 
@@ -90,21 +103,108 @@ func Test_requestIDCorrelatesHandlerAndCompletionLogs(t *testing.T) {
 	if rr.Code != http.StatusBadRequest {
 		t.Fatalf("request returned status %d, want %d: %s", rr.Code, http.StatusBadRequest, rr.Body.String())
 	}
+	if got := rr.Header().Get("MCP-Request-ID"); got != mcpRequestID {
+		t.Fatalf("response MCP-Request-ID = %q, want %q", got, mcpRequestID)
+	}
 
 	logs := logOutput.String()
 	if !strings.Contains(logs, `msg="failed to perform format conversion"`) {
 		t.Fatalf("handler error log missing: %s", logs)
 	}
-	if !strings.Contains(logs, `msg=request-completed`) {
+	if strings.Contains(logs, `"input"`) || strings.Contains(logs, "not: [valid") {
+		t.Fatalf("API logs include the submitted payload: %s", logs)
+	}
+	if !strings.Contains(logs, `msg=api-request-completed`) {
 		t.Fatalf("request completion log missing: %s", logs)
+	}
+	if !strings.Contains(logs, `msg=api-incoming-request`) {
+		t.Fatalf("API incoming request log missing: %s", logs)
+	}
+	if requestID != mcpRequestID {
+		t.Fatalf("API request ID = %q, want propagated MCP request ID %q", requestID, mcpRequestID)
 	}
 	if count := strings.Count(logs, `request-id=`+requestID); count < 3 {
 		t.Fatalf("request ID %q appears in %d log entries, want handler, incoming, and completion logs: %s", requestID, count, logs)
 	}
 }
 
+func Test_mcpRequestLogsIdentifyMCPComponent(t *testing.T) {
+	previousLogger := logger.Logger
+	var logOutput bytes.Buffer
+	logger.Logger = slog.New(slog.NewTextHandler(&logOutput, nil))
+	t.Cleanup(func() {
+		logger.Logger = previousLogger
+	})
+
+	router, err := setupRouter("http://127.0.0.1")
+	if err != nil {
+		t.Fatalf("setupRouter() returned an error: %v", err)
+	}
+	handler := requestIDMiddleware(loggingMiddleware(router))
+	req := httptest.NewRequest(http.MethodGet, "/mcp", nil)
+	rr := httptest.NewRecorder()
+	handler.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusMethodNotAllowed {
+		t.Fatalf("GET /mcp returned status %d, want %d", rr.Code, http.StatusMethodNotAllowed)
+	}
+	logs := logOutput.String()
+	if !strings.Contains(logs, `msg=mcp-incoming-request`) || !strings.Contains(logs, `msg=mcp-request-completed`) {
+		t.Fatalf("MCP request logs do not identify the component: %s", logs)
+	}
+	requestID := rr.Header().Get("X-Request-ID")
+	if requestID == "" || rr.Header().Get("MCP-Request-ID") != requestID {
+		t.Fatalf("MCP response identifiers do not share a request ID: X-Request-ID=%q MCP-Request-ID=%q", requestID, rr.Header().Get("MCP-Request-ID"))
+	}
+	if count := strings.Count(logs, `request-id=`+requestID); count != 2 {
+		t.Fatalf("MCP request ID %q appears in %d log entries, want exactly two transport entries: %s", requestID, count, logs)
+	}
+	if strings.Contains(logs, `mcp-request-id=`) || strings.Contains(logs, `mcp-http-request-id=`) {
+		t.Fatalf("MCP logs contain redundant request ID fields: %s", logs)
+	}
+}
+
+func Test_directAPIRequestUsesOneRequestIDAcrossLogs(t *testing.T) {
+	previousLogger := logger.Logger
+	var logOutput bytes.Buffer
+	logger.Logger = slog.New(slog.NewTextHandler(&logOutput, nil))
+	t.Cleanup(func() {
+		logger.Logger = previousLogger
+	})
+
+	router, err := setupRouter("http://127.0.0.1")
+	if err != nil {
+		t.Fatalf("setupRouter() returned an error: %v", err)
+	}
+	handler := requestIDMiddleware(loggingMiddleware(router))
+	req := httptest.NewRequest(http.MethodGet, "/api/version", nil)
+	rr := httptest.NewRecorder()
+	handler.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Fatalf("GET /api/version returned status %d: %s", rr.Code, rr.Body.String())
+	}
+	requestID := rr.Header().Get("X-Request-ID")
+	if requestID == "" {
+		t.Fatal("API response is missing X-Request-ID")
+	}
+	logs := logOutput.String()
+	if count := strings.Count(logs, `request-id=`+requestID); count != 2 {
+		t.Fatalf("API request ID %q appears in %d log entries, want exactly two: %s", requestID, count, logs)
+	}
+	if !strings.Contains(logs, `msg=api-incoming-request`) || !strings.Contains(logs, `msg=api-request-completed`) {
+		t.Fatalf("API request logs are missing lifecycle events: %s", logs)
+	}
+	if strings.Contains(logs, `mcp-request-id=`) {
+		t.Fatalf("direct API request unexpectedly has an MCP request ID: %s", logs)
+	}
+}
+
 func Test_setupRouterOpenAPIDocumentation(t *testing.T) {
-	router := setupRouter()
+	router, err := setupRouter("http://127.0.0.1")
+	if err != nil {
+		t.Fatalf("setupRouter() returned an error: %v", err)
+	}
 	req := httptest.NewRequest(http.MethodGet, "/openapi.json", nil)
 	rr := httptest.NewRecorder()
 	router.ServeHTTP(rr, req)
@@ -186,6 +286,7 @@ func Test_setupServer(t *testing.T) {
 	}{
 		{name: "server config", addr: ":12345"},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			handler := http.NewServeMux()
@@ -207,6 +308,41 @@ func Test_setupServer(t *testing.T) {
 			}
 			if srv.IdleTimeout != serverIdleTimeout {
 				t.Errorf("setupServer() IdleTimeout = [%v], want [%v]", srv.IdleTimeout, serverIdleTimeout)
+			}
+		})
+	}
+}
+
+func Test_mcpAPIBaseURLUsesReachableLoopback(t *testing.T) {
+	tests := []struct {
+		name string
+		addr net.Addr
+		want string
+	}{
+		{
+			name: "IPv4 wildcard",
+			addr: &net.TCPAddr{IP: net.IPv4zero, Port: 8100},
+			want: "http://127.0.0.1:8100",
+		},
+		{
+			name: "IPv6 wildcard",
+			addr: &net.TCPAddr{IP: net.IPv6zero, Port: 8100},
+			want: "http://[::1]:8100",
+		},
+		{
+			name: "loopback",
+			addr: &net.TCPAddr{IP: net.IPv4(127, 0, 0, 1), Port: 8100},
+			want: "http://127.0.0.1:8100",
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			got, err := mcpAPIBaseURL(test.addr)
+			if err != nil {
+				t.Fatalf("mcpAPIBaseURL() error = %v", err)
+			}
+			if got != test.want {
+				t.Fatalf("mcpAPIBaseURL() = %q, want %q", got, test.want)
 			}
 		})
 	}
